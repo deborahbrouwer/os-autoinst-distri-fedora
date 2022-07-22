@@ -353,9 +353,10 @@ sub load_postinstall_tests() {
 
     # load the ADVISORY / KOJITASK post-install test - this records which
     # update or task packages were actually installed during the test. Don't
-    # do this for INSTALL test(s); these are checking that an installer image
-    # built from the update works and do not install the update themselves.
-    if (get_var("ADVISORY_OR_TASK") && !get_var("INSTALL")) {
+    # do this for netinst tests; as these just use the default install repo,
+    # they will not get the packages from the update. But installs from live
+    # image and ostree installer image should get them.
+    if (get_var("ADVISORY_OR_TASK") && get_var("TEST") ne "install_default_update_netinst") {
         # don't do this for support server unless the update is for the same
         # release as the support server disk image, as we don't install the
         # updates on support server when they differ

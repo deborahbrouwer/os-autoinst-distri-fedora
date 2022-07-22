@@ -40,11 +40,11 @@ sub run {
     assert_script_run "echo \"include('/etc/mock/fedora-${version}-${arch}.cfg')\" > /etc/mock/openqa.cfg";
     # make the side and workarounds repos and the serial device available inside the mock root
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_enable\'] = True" >> /etc/mock/openqa.cfg';
-    assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/opt/update_repo\', \'/opt/update_repo\'))" >> /etc/mock/openqa.cfg';
-    assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/opt/workarounds_repo\', \'/opt/workarounds_repo\'))" >> /etc/mock/openqa.cfg';
+    assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/mnt/update_repo\', \'/mnt/update_repo\'))" >> /etc/mock/openqa.cfg';
+    assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/mnt/workarounds_repo\', \'/mnt/workarounds_repo\'))" >> /etc/mock/openqa.cfg';
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/dev/' . $serialdev . '\', \'/dev/' . $serialdev . '\'))" >> /etc/mock/openqa.cfg';
     # add the side repo and workarounds to the config
-    assert_script_run 'printf "config_opts[\'dnf.conf\'] += \"\"\"\n[advisory]\nname=Advisory repo\nbaseurl=file:///opt/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n\n[workarounds]\nname=Workarounds repo\nbaseurl=file:///opt/workarounds_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n\"\"\"" >> /etc/mock/openqa.cfg';
+    assert_script_run 'printf "config_opts[\'dnf.conf\'] += \"\"\"\n[advisory]\nname=Advisory repo\nbaseurl=file:///mnt/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n\n[workarounds]\nname=Workarounds repo\nbaseurl=file:///mnt/workarounds_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n\"\"\"" >> /etc/mock/openqa.cfg';
     # replace metalink with mirrorlist so we don't get slow mirrors
     repos_mirrorlist("/etc/mock/openqa.cfg");
     # upload the config so we can check it's OK
@@ -54,9 +54,9 @@ sub run {
     assert_script_run 'cd fedora-kickstarts';
     assert_script_run "git checkout ${branch}";
     # now add the side repo to the appropriate repo ks
-    assert_script_run 'echo "repo --name=advisory --baseurl=file:///opt/update_repo" >> ' . $repoks;
+    assert_script_run 'echo "repo --name=advisory --baseurl=file:///mnt/update_repo" >> ' . $repoks;
     # and the workarounds repo
-    assert_script_run 'echo "repo --name=workarounds --baseurl=file:///opt/workarounds_repo" >> ' . $repoks;
+    assert_script_run 'echo "repo --name=workarounds --baseurl=file:///mnt/workarounds_repo" >> ' . $repoks;
     # FIXME: this is a workaround for #2119518, disabling oomd so it
     # doesn't go crazy killing things
     my $relnum = get_release_number;

@@ -452,7 +452,7 @@ sub repos_mirrorlist {
 
 sub cleanup_workaround_repo {
     # clean up the workaround repo (see next).
-    script_run "rm -rf /opt/workarounds_repo";
+    script_run "rm -rf /mnt/workarounds_repo";
     script_run "rm -f /etc/yum.repos.d/workarounds.repo";
 }
 
@@ -472,10 +472,10 @@ sub setup_workaround_repo {
     # (in this case we need the repo to exist but do not want to use
     # it on the actual support_server system)
     unless (get_var("TEST") eq "support_server" && $version ne get_var("CURRREL")) {
-        assert_script_run 'printf "[workarounds]\nname=Workarounds repo\nbaseurl=file:///opt/workarounds_repo\nenabled=1\nmetadata_expire=1\ngpgcheck=0" > /etc/yum.repos.d/workarounds.repo';
+        assert_script_run 'printf "[workarounds]\nname=Workarounds repo\nbaseurl=file:///mnt/workarounds_repo\nenabled=1\nmetadata_expire=1\ngpgcheck=0" > /etc/yum.repos.d/workarounds.repo';
     }
-    assert_script_run "mkdir -p /opt/workarounds_repo";
-    assert_script_run "pushd /opt/workarounds_repo";
+    assert_script_run "mkdir -p /mnt/workarounds_repo";
+    assert_script_run "pushd /mnt/workarounds_repo";
     my %workarounds = (
         "35" => [],
         "36" => [],
@@ -553,20 +553,13 @@ sub _repo_setup_compose {
 sub _repo_setup_updates {
     # Appropriate repo setup steps for testing a Bodhi update
     # Check if we already ran, bail if so
-    return unless script_run "test -f /etc/yum.repos.d/advisory.repo";
+    return if (get_var("_ADVISORY_REPO_DONE"));
     my $version = get_var("VERSION");
     my $currrel = get_var("CURRREL", "0");
-    repos_mirrorlist();
     # this can be used for debugging repo config if something is wrong
     # unless (script_run 'pushd /etc/yum.repos.d && tar czvf yumreposd.tar.gz * && popd') {
     #     upload_logs "/etc/yum.repos.d/yumreposd.tar.gz";
     # }
-    if ($version > $currrel) {
-        # Disable updates-testing so other bad updates don't break us
-        disable_updates_repos(both => 0);
-    }
-    # set up the workaround repo
-    setup_workaround_repo;
 
     # Set up an additional repo containing the update or task packages. We do
     # this rather than simply running a one-time update because it may be the
@@ -574,7 +567,7 @@ sub _repo_setup_updates {
     # installed by one of the tests; by setting up a repo containing the
     # update and enabling it here, we ensure all later 'dnf install' calls
     # will get the packages from the update.
-    assert_script_run "mkdir -p /opt/update_repo";
+    assert_script_run "mkdir -p /mnt/update_repo";
     # if NUMDISKS is above 1, assume we want to put the update repo on
     # the other disk (to avoid huge updates exhausting space on the main
     # disk)
@@ -583,10 +576,28 @@ sub _repo_setup_updates {
         # partition.
         assert_script_run "echo 'type=83' | sfdisk /dev/vdb";
         assert_script_run "mkfs.ext4 /dev/vdb1";
-        assert_script_run "echo '/dev/vdb1 /opt/update_repo ext4 defaults 1 2' >> /etc/fstab";
-        assert_script_run "mount /opt/update_repo";
+        assert_script_run "echo '/dev/vdb1 /mnt/update_repo ext4 defaults 1 2' >> /etc/fstab";
+        assert_script_run "mount /mnt/update_repo";
     }
-    assert_script_run "cd /opt/update_repo";
+    assert_script_run "cd /mnt/update_repo";
+    # on CANNED, we need to enter the toolbox at this point
+    if (get_var("CANNED")) {
+        type_string "toolbox -y enter\n";
+        # look for the little purple dot
+        assert_screen "console_in_toolbox", 180;
+    }
+    # use mirrorlist not metalink in repo configs
+    repos_mirrorlist();
+    # Disable updates-testing so other bad updates don't break us
+    disable_updates_repos(both => 0) if ($version > $currrel);
+    # set up the workaround repo
+    setup_workaround_repo;
+    if (get_var("CANNED")) {
+        # install and use en_US.UTF-8 locale for consistent sort
+        # ordering
+        assert_script_run "dnf -y install glibc-langpack-en", 300;
+        assert_script_run "export LC_ALL=en_US.UTF-8";
+    }
     script_run "dnf -y install bodhi-client createrepo koji", 300;
 
     # download the packages
@@ -614,14 +625,17 @@ sub _repo_setup_updates {
     }
 
     # log the exact packages in the update at test time, with their
-    # source packages and epochs
-    assert_script_run 'rpm -qp *.rpm --qf "%{SOURCERPM} %{EPOCH} %{NAME}-%{VERSION}-%{RELEASE}\n" | sort -u > /var/log/updatepkgs.txt';
-    upload_logs "/var/log/updatepkgs.txt";
+    # source packages and epochs. we use /mnt as the path for this
+    # and similar files because, on ostree-based installs where we
+    # have to use a toolbox container for part of this, it's common
+    # to the host system and container
+    assert_script_run 'rpm -qp *.rpm --qf "%{SOURCERPM} %{EPOCH} %{NAME}-%{VERSION}-%{RELEASE}\n" | sort -u > /mnt/updatepkgs.txt';
+    upload_logs "/mnt/updatepkgs.txt";
     # also log just the binary package names: this is so we can check
     # later whether any package from the update *should* have been
     # installed, but was not
-    assert_script_run 'rpm -qp *.rpm --qf "%{NAME} " > /var/log/updatepkgnames.txt';
-    upload_logs "/var/log/updatepkgnames.txt";
+    assert_script_run 'rpm -qp *.rpm --qf "%{NAME} " > /mnt/updatepkgnames.txt';
+    upload_logs "/mnt/updatepkgnames.txt";
 
     # create the repo metadata
     assert_script_run "createrepo .", timeout => 180;
@@ -630,9 +644,14 @@ sub _repo_setup_updates {
     # (in this case we need the repo to exist but do not want to use
     # it on the actual support_server system)
     unless (get_var("TEST") eq "support_server" && $version ne get_var("CURRREL")) {
-        assert_script_run 'printf "[advisory]\nname=Advisory repo\nbaseurl=file:///opt/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0" > /etc/yum.repos.d/advisory.repo';
-        # run an update now (except for upgrade tests)
-        script_run "dnf -y update", 900 unless (get_var("UPGRADE"));
+        assert_script_run 'printf "[advisory]\nname=Advisory repo\nbaseurl=file:///mnt/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0" > /etc/yum.repos.d/advisory.repo';
+        # run an update now (except for upgrade or CANNED tests)
+        script_run "dnf -y update", 900 unless (get_var("UPGRADE") || get_var("CANNED"));
+    }
+    # exit the toolbox on CANNED
+    if (get_var("CANNED")) {
+        type_string "exit\n";
+        wait_still_screen 5;
     }
     # mark via a variable that we've set up the update/task repo and done
     # all the logging stuff above
@@ -1072,16 +1091,16 @@ sub advisory_get_installed_packages {
     assert_script_run 'rpm -qa --qf "%{SOURCERPM} %{EPOCH} %{NAME}-%{VERSION}-%{RELEASE}\n" | sort -u > /tmp/allpkgs.txt', timeout => 90;
     # this finds lines which appear in both files
     # http://www.unix.com/unix-for-dummies-questions-and-answers/34549-find-matching-lines-between-2-files.html
-    if (script_run 'comm -12 /tmp/allpkgs.txt /var/log/updatepkgs.txt > /var/log/testedpkgs.txt') {
+    if (script_run 'comm -12 /tmp/allpkgs.txt /mnt/updatepkgs.txt > /mnt/testedpkgs.txt') {
         # occasionally, for some reason, it's unhappy about sorting;
         # we shouldn't fail the test in this case, just upload the
         # files so we can see why...
         upload_logs "/tmp/allpkgs.txt", failok => 1;
-        upload_logs "/var/log/updatepkgs.txt", failok => 1;
+        upload_logs "/mnt/updatepkgs.txt", failok => 1;
     }
     # we'll try and upload the output even if comm 'failed', as it
     # does in fact still write it in some cases
-    upload_logs "/var/log/testedpkgs.txt", failok => 1;
+    upload_logs "/mnt/testedpkgs.txt", failok => 1;
 }
 
 sub advisory_check_nonmatching_packages {
@@ -1101,7 +1120,7 @@ sub advisory_check_nonmatching_packages {
     script_run 'touch /tmp/installedupdatepkgs.txt';
     # this creates /tmp/installedupdatepkgs.txt as a sorted list of installed
     # packages with the same name as packages from the update, in the same form
-    # as /var/log/updatepkgs.txt. The '--last | head -1' tries to handle the
+    # as /mnt/updatepkgs.txt. The '--last | head -1' tries to handle the
     # problem of installonly packages like the kernel, where we wind up with
     # *multiple* versions installed after the update; the first line of output
     # for any given package with --last is the most recent version, i.e. the
@@ -1112,14 +1131,14 @@ sub advisory_check_nonmatching_packages {
     # (we need four to reach bash, and half of them get eaten by perl or
     # something along the way). Yes, it only works with *single* quotes. Yes,
     # I hate escaping
-    script_run 'for pkg in $(cat /var/log/updatepkgnames.txt); do rpm -q $pkg && rpm -q $pkg --last | head -1 | cut -d" " -f1 | sed -e \'s,\^,\\\\\\\\^,g\' | xargs rpm -q --qf "%{SOURCERPM} %{EPOCH} %{NAME}-%{VERSION}-%{RELEASE}\n" >> /tmp/installedupdatepkgs.txt; done', timeout => 180;
+    script_run 'for pkg in $(cat /mnt/updatepkgnames.txt); do rpm -q $pkg && rpm -q $pkg --last | head -1 | cut -d" " -f1 | sed -e \'s,\^,\\\\\\\\^,g\' | xargs rpm -q --qf "%{SOURCERPM} %{EPOCH} %{NAME}-%{VERSION}-%{RELEASE}\n" >> /tmp/installedupdatepkgs.txt; done', timeout => 180;
     script_run 'sort -u -o /tmp/installedupdatepkgs.txt /tmp/installedupdatepkgs.txt';
     # for debugging, may as well always upload these, can't hurt anything
     upload_logs "/tmp/installedupdatepkgs.txt", failok => 1;
-    upload_logs "/var/log/updatepkgs.txt", failok => 1;
+    upload_logs "/mnt/updatepkgs.txt", failok => 1;
     # if any line appears in installedupdatepkgs.txt but not updatepkgs.txt,
     # we have a problem.
-    if (script_run 'comm -23 /tmp/installedupdatepkgs.txt /var/log/updatepkgs.txt > /var/log/installednotupdatedpkgs.txt') {
+    if (script_run 'comm -23 /tmp/installedupdatepkgs.txt /mnt/updatepkgs.txt > /mnt/installednotupdatedpkgs.txt') {
         # occasionally, for some reason, it's unhappy about sorting;
         # we shouldn't fail the test in this case, just make a note
         # of it so we can look why...
@@ -1127,8 +1146,8 @@ sub advisory_check_nonmatching_packages {
     }
     # this exits 1 if the file is zero-length, 0 if it's longer
     # if it's 0, that's *BAD*: we want to upload the file and fail
-    unless (script_run 'test -s /var/log/installednotupdatedpkgs.txt') {
-        upload_logs "/var/log/installednotupdatedpkgs.txt", failok => 1;
+    unless (script_run 'test -s /mnt/installednotupdatedpkgs.txt') {
+        upload_logs "/mnt/installednotupdatedpkgs.txt", failok => 1;
         my $message = "Package(s) from update not installed when it should have been! See installednotupdatedpkgs.txt";
         if ($args{fatal}) {
             set_var("_ACNMP_DONE", "1");
