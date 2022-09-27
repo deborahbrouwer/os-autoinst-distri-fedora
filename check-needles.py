@@ -123,6 +123,11 @@ for hashname in ("jlJmL", "7XGzO", "ps61y", "OvXj~", "GqYOp", "VEFrP"):
     testliterals.append(f"contacts_contact_added_{hashname}")
 for info in ("home", "personal", "work"):
     testliterals.append(f"contacts_label_{info}")
+# Needles for Maps
+for location in ("vilnius", "denali", "wellington", "scarborough", "pune"):
+    testliterals.append(f"maps_select_{location}")
+    testliterals.append(f"maps_found_{location}")
+    testliterals.append(f"maps_info_{location}")
 # variable-y in custom_change_device but we only have one value
 testliterals.append("anaconda_part_device_sda")
 # for Anaconda help related needles.
