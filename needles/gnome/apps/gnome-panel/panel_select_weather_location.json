@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "tags": [
+    "panel_select_weather_location"
+  ],
+  "area": [
+    {
+      "xpos": 616,
+      "ypos": 567,
+      "width": 184,
+      "height": 22,
+      "type": "match"
+    }
+  ]
+}

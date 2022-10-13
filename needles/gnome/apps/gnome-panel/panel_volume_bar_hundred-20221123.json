@@ -1,0 +1,16 @@
+{
+  "area": [
+    {
+      "height": 25,
+      "ypos": 110,
+      "width": 357,
+      "xpos": 639,
+      "type": "match",
+      "match": 60
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "panel_volume_bar_hundred"
+  ]
+}

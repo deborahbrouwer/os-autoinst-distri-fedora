@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "xpos": 648,
+      "ypos": 211,
+      "width": 103,
+      "height": 23,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "panel_ctrl_darkmode"
+  ]
+}

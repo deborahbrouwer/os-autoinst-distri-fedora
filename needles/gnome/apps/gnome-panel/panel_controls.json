@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "xpos": 923,
+      "ypos": 6,
+      "width": 89,
+      "height": 23,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "panel_controls"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "tags": [
+    "panel_ctrl_screenshot"
+  ],
+  "area": [
+    {
+      "xpos": 645,
+      "ypos": 68,
+      "width": 23,
+      "height": 20,
+      "type": "match"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "tags": [
+    "panel_screenshot_trigger"
+  ],
+  "area": [
+    {
+      "xpos": 483,
+      "ypos": 643,
+      "width": 57,
+      "height": 56,
+      "type": "match"
+    }
+  ]
+}

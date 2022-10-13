@@ -59,6 +59,7 @@ for testpath in testpaths:
 # versioned backgrounds and release IDs
 for rel in range(30, 100):
     testliterals.append(f"{rel}_background")
+    testliterals.append(f"{rel}_background_dark")
     testliterals.append(f"version_{rel}_ident")
 # anaconda id needles, using tell_source
 for source in ("workstation", "generic", "server"):
@@ -128,6 +129,10 @@ for location in ("vilnius", "denali", "wellington", "poysdorf", "pune"):
     testliterals.append(f"maps_select_{location}")
     testliterals.append(f"maps_found_{location}")
     testliterals.append(f"maps_info_{location}")
+# Needles for Gnome Panel
+for percentage in ("zero", "fifty", "hundred"):
+    testliterals.append(f"panel_volume_bar_{percentage}")
+    testliterals.append(f"panel_volume_indicator_{percentage}")
 # variable-y in custom_change_device but we only have one value
 testliterals.append("anaconda_part_device_sda")
 # for Anaconda help related needles.
