@@ -1313,7 +1313,7 @@ sub check_prerelease {
     # the check.
 
     # bail if this is an update test
-    return if (get_var("ADVISORY OR TASK"));
+    return if (get_var("ADVISORY_OR_TASK"));
 
     # 0 means "tags MUST NOT be shown", 1 means "tags MUST be shown",
     # any other value means we don't care
