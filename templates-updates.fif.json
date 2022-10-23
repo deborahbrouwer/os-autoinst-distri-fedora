@@ -47,7 +47,7 @@
             "settings": {
                 "DESKTOP": "kde",
                 "NUMDISKS": "2",
-                "RETRY": "1"
+                "RETRY": "2"
             },
             "version": "*"
         },
