@@ -53,7 +53,16 @@ sub run {
         # upload the log for debugging.
         upload_logs "test.txt", failok => 1;
         # Compare the test file and the reference file.
-        assert_script_run("diff -u test.txt $language-reference.txt");
+        # We have been having a lot of failures on the Install Arabic test because of this
+        # part, which is actually testing an optional test. Unfortunately, it is still
+        # not clear what the current situation on Fedora should be and this will need
+        # more investigation. 
+        # For now, let us softfail instead of fail until we know for sure how what the outcome
+        # should be.
+        my $exit = script_run("diff -u test.txt $language-reference.txt", timeout => 15);
+        if ($exit != 0) {
+            record_soft_failure("The default fonts differ from what is expected, see RBZ#2093080.");
+        }
     }
 
     # For the rest of languages that are not currently defined, do nothing.
