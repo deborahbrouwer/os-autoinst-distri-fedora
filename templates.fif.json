@@ -2867,6 +2867,7 @@
             "settings": {
                 "+HDD_1": "disk_f%UP1REL%_server_3_%ARCH%.qcow2",
                 "BOOTFROM": "c",
+                "MAX_JOB_TIME": "10800",
                 "NICTYPE": "tap",
                 "PARALLEL_WITH": "upgrade_server_domain_controller",
                 "POSTINSTALL": "_setup_browser freeipa_webui freeipa_password_change freeipa_client",
@@ -2905,6 +2906,7 @@
             "settings": {
                 "+HDD_1": "disk_f%UP1REL%_server_3_%ARCH%.qcow2",
                 "BOOTFROM": "c",
+                "MAX_JOB_TIME": "10800",
                 "NICTYPE": "tap",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "POSTINSTALL": "role_deploy_domain_controller_check",
