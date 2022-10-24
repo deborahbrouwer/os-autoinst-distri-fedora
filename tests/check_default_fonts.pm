@@ -56,7 +56,7 @@ sub run {
         # We have been having a lot of failures on the Install Arabic test because of this
         # part, which is actually testing an optional test. Unfortunately, it is still
         # not clear what the current situation on Fedora should be and this will need
-        # more investigation. 
+        # more investigation.
         # For now, let us softfail instead of fail until we know for sure how what the outcome
         # should be.
         my $exit = script_run("diff -u test.txt $language-reference.txt", timeout => 15);
