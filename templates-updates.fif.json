@@ -5,6 +5,7 @@
             "distri": "fedora",
             "flavor": "updates-container",
             "settings": {
+                "+HDD_1": "disk_f%VERSION%_server_3_%ARCH%.qcow2",
                 "NUMDISKS": "2",
                 "RETRY": "1"
             },
@@ -15,6 +16,7 @@
             "distri": "fedora",
             "flavor": "updates-container",
             "settings": {
+                "+HDD_1": "disk_f%VERSION%_server_3_%ARCH%.qcow2",
                 "NUMDISKS": "2",
                 "RETRY": "1"
             },
@@ -25,6 +27,7 @@
             "distri": "fedora",
             "flavor": "updates-container",
             "settings": {
+                "+HDD_1": "disk_f%VERSION%_server_3_%ARCH%.qcow2",
                 "NUMDISKS": "2",
                 "RETRY": "1"
             },
@@ -45,6 +48,7 @@
             "distri": "fedora",
             "flavor": "updates-kde",
             "settings": {
+                "+HDD_1": "disk_f%VERSION%_kde_4_%ARCH%.qcow2",
                 "DESKTOP": "kde",
                 "NUMDISKS": "2",
                 "RETRY": "2"
@@ -56,6 +60,7 @@
             "distri": "fedora",
             "flavor": "updates-server",
             "settings": {
+                "+HDD_1": "disk_f%VERSION%_server_3_%ARCH%.qcow2",
                 "RETRY": "1"
             },
             "version": "*"
@@ -65,6 +70,7 @@
             "distri": "fedora",
             "flavor": "updates-server",
             "settings": {
+                "+HDD_1": "disk_f%VERSION%_server_3_%ARCH%.qcow2",
                 "RETRY": "1"
             },
             "version": "*"
@@ -74,6 +80,7 @@
             "distri": "fedora",
             "flavor": "updates-server-upgrade",
             "settings": {
+                "+HDD_1": "disk_f%VERSION%_server_3_%ARCH%.qcow2",
                 "NUMDISKS": "2",
                 "RETRY": "1"
             },
@@ -104,6 +111,7 @@
             "distri": "fedora",
             "flavor": "updates-server",
             "settings": {
+                "+HDD_1": "disk_f%VERSION%_server_3_%ARCH%.qcow2",
                 "RETRY": "1"
             },
             "version": "*"
@@ -118,21 +126,23 @@
                 "LIVE": "1",
                 "NUMDISKS": "2",
                 "PACKAGE_SET": "default",
-                "RETRY": "1"
+                "RETRY": "1",
+                "SUBVARIANT": "workstation"
             },
             "version": "*"
         },
         "fedora-updates-kde-live-iso-x86_64-*": {
             "arch": "x86_64",
             "distri": "fedora",
-	    "flavor": "updates-kde-live-iso",
+            "flavor": "updates-kde-live-iso",
             "settings": {
                 "DESKTOP": "kde",
                 "HDDSIZEGB": "15",
                 "LIVE": "1",
                 "NUMDISKS": "2",
                 "PACKAGE_SET": "default",
-                "RETRY": "1"
+                "RETRY": "1",
+                "SUBVARIANT": "kde"
             },
             "version": "*"
         },
@@ -153,6 +163,7 @@
             "flavor": "updates-workstation",
             "settings": {
                 "DESKTOP": "gnome",
+                "+HDD_1": "disk_f%VERSION%_desktop_4_%ARCH%.qcow2",
                 "NUMDISKS": "2",
                 "RETRY": "1"
             },
