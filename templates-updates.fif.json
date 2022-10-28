@@ -127,7 +127,7 @@
                 "NUMDISKS": "2",
                 "PACKAGE_SET": "default",
                 "RETRY": "1",
-                "SUBVARIANT": "workstation"
+                "SUBVARIANT": "Workstation"
             },
             "version": "*"
         },
@@ -142,7 +142,7 @@
                 "NUMDISKS": "2",
                 "PACKAGE_SET": "default",
                 "RETRY": "1",
-                "SUBVARIANT": "kde"
+                "SUBVARIANT": "KDE"
             },
             "version": "*"
         },
