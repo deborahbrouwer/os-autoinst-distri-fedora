@@ -1230,13 +1230,11 @@ sub tell_source {
     # except Workstation and Server, there are no graphical differences
     # between various spins and isos.
     my $iso = get_var('SUBVARIANT');
-    if ($iso eq 'Workstation' or $iso eq 'Server') {
-        $iso = lc($iso);
-    }
-    elsif ($iso eq 'AtomicHost') {
+    $iso = lc($iso);
+    if ($iso eq 'atomichost') {
         $iso = 'atomic';
     }
-    elsif ($iso eq 'Silverblue') {
+    elsif ($iso eq 'silverblue') {
         $iso = 'workstation';
     }
     else {
