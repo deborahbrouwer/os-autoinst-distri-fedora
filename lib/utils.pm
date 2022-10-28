@@ -1231,7 +1231,10 @@ sub tell_source {
     # between various spins and isos.
     my $iso = get_var('SUBVARIANT');
     $iso = lc($iso);
-    if ($iso eq 'atomichost') {
+    if ($iso eq 'workstation' or $iso eq 'server') {
+        # do nothing, but don't hit else
+    }
+    elsif ($iso eq 'atomichost') {
         $iso = 'atomic';
     }
     elsif ($iso eq 'silverblue') {
