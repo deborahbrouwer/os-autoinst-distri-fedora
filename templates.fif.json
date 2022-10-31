@@ -209,6 +209,7 @@
                 "HDDSIZEGB": "15",
                 "LIVE": "1",
                 "PACKAGE_SET": "default",
+                "QEMURAM": 4096,
                 "TEST_TARGET": "ISO"
             },
             "version": "*"
