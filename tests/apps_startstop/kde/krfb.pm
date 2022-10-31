@@ -12,6 +12,7 @@ sub run {
     menu_launch_type 'krfb';
     # Check that it is started
     assert_screen 'krfb_runs';
+    wait_still_screen(3);
     # Close the application
     quit_with_shortcut();
 }
