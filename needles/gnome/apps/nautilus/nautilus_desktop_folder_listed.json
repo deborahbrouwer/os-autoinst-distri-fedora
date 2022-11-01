@@ -1,0 +1,16 @@
+{
+  "properties": [],
+  "tags": [
+    "nautilus_desktop_folder_listed"
+  ],
+  "area": [
+    {
+      "xpos": 270,
+      "ypos": 139,
+      "width": 97,
+      "height": 20,
+      "type": "match",
+      "match": "90"
+    }
+  ]
+}
