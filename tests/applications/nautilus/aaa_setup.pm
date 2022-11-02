@@ -38,11 +38,6 @@ sub run {
 
     # This will test the common directory structure. The structure is always created when a user is created, so let's see if it has been created correctly.
     assert_screen("nautilus_available_directories");
-
-    # Sometimes, Nautilus do not respond to keyboard shortcuts because
-    # it does not have correct focus. Click inside the file list view
-    # to get the focus correctly.
-    assert_and_click("nautilus_desktop_folder_listed");
 }
 
 sub test_flags {

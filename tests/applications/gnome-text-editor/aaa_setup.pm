@@ -44,14 +44,6 @@ sub run {
 
     # Check that the document has been opened
     assert_screen("gte_text_file_opened");
-
-    # Sometimes, we experienced that the application did not have
-    # correct focus when the cursor was outside of the text area,
-    # therefore we perform an extra click to place the cursor
-    # inside the text area.
-    assert_and_click("gte_line_word");
-    # Move to cursor to the beginning of the file.
-    send_key("ctrl-home");
 }
 
 sub test_flags {
