@@ -50,6 +50,8 @@ sub run {
     # therefore we perform an extra click to place the cursor
     # inside the text area.
     assert_and_click("gte_line_word");
+    # Move to cursor to the beginning of the file.
+    send_key("ctrl-home");
 }
 
 sub test_flags {
