@@ -446,6 +446,10 @@
             "machine": "64bit",
             "product": "fedora-Cloud_Base-qcow2-qcow2-x86_64-*"
         },
+        "fedora-Cloud_Base-qcow2-qcow2-x86_64-*-uefi": {
+            "machine": "uefi",
+            "product": "fedora-Cloud_Base-qcow2-qcow2-x86_64-*"
+        },
         "fedora-CoreOS-colive-iso-x86_64-*-64bit": {
             "machine": "64bit",
             "product": "fedora-CoreOS-colive-iso-x86_64-*"
