@@ -8,14 +8,6 @@ sub run {
     # do the 'repo setup' steps, which set up a repo containing the
     # update packages and run 'dnf update'
     $self->root_console(tty => 3);
-    # stop the graphical desktop; this should help with a problem
-    # we're having in Rawhide as of 2022-10 where KDE update tests
-    # are frequently getting OOM killed here:
-    # https://bugzilla.redhat.com/show_bug.cgi?id=2133829
-    script_run "systemctl isolate multi-user.target";
-    # switch back to our tty if that kicked us to tty1
-    wait_still_screen 3;
-    $self->root_console(tty => 3);
     repo_setup;
     if (get_var("ADVISORY_BOOT_TEST")) {
         # to test boot stuff - in case the update touched grub2, or dracut,
