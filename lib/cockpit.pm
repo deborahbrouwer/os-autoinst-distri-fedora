@@ -29,6 +29,10 @@ sub start_cockpit {
         wait_screen_change { send_key "tab"; };
         type_safely get_var("USER_PASSWORD", "weakpassword");
         send_key "ret";
+        assert_and_click "cockpit_admin_enable";
+        assert_screen "cockpit_admin_password";
+        type_safely get_var("USER_PASSWORD", "weakpassword");
+        send_key "ret";
         assert_screen "cockpit_main";
         # wait for any animation or other weirdness
         # can't use wait_still_screen because of that damn graph
