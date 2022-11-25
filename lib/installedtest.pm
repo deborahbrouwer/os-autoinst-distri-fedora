@@ -63,7 +63,7 @@ sub post_fail_hook {
     # rely on dnf always working (it fails in emergency mode, not sure
     # why), so try it. if we don't get a return code, process may be
     # stuck waiting on network or something, so hit ctrl-c
-    unless (script_run "dnf -y install tar", 180) {
+    unless (script_run "dnf -y install tar", 300) {
         unless (is_serial_terminal) {
             send_key "ctrl-c";
         }
