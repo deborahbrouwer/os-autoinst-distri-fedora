@@ -415,6 +415,9 @@ sub disable_firefox_studies {
         # enable rpm-ostree /usr overlay so we can write to /usr
         assert_script_run "rpm-ostree usroverlay";
     }
+    # if the first file exists, we've already run, so we can skip
+    # running again
+    return unless (script_run 'test -f $(rpm --eval %_libdir)/firefox/distribution/policies.json');
     # create a config file that disables Firefox's dumb 'shield
     # studies' so they don't break tests:
     # https://bugzilla.mozilla.org/show_bug.cgi?id=1529626
@@ -435,10 +438,6 @@ sub disable_firefox_studies {
     assert_script_run 'mkdir -p $(rpm --eval %_libdir)/firefox/browser/defaults/preferences';
     assert_script_run 'printf "// required comment\npref(\'general.config.filename\', \'openqa-overrides.cfg\');\npref(\'general.config.obscure_value\', 0);\n" > $(rpm --eval %_libdir)/firefox/browser/defaults/preferences/openqa-overrides.js';
     assert_script_run 'printf "// required comment\npref(\'browser.urlbar.quicksuggest.shouldShowOnboardingDialog\', false);\npref(\'privacy.restrict3rdpartystorage.rollout.enabledByDefault\', false);\n" > $(rpm --eval %_libdir)/firefox/openqa-overrides.cfg';
-    # for debugging
-    upload_logs "/usr/lib64/firefox/browser/defaults/preferences/openqa-overrides.js", failok => 1;
-    upload_logs "/usr/lib64/firefox/openqa-overrides.cfg", failok => 1;
-    upload_logs "/usr/lib64/firefox/distribution/policies.json", failok => 1;
 }
 
 sub repos_mirrorlist {
