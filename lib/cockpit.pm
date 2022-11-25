@@ -23,7 +23,6 @@ sub start_cockpit {
     # https://bugzilla.redhat.com/show_bug.cgi?id=1439429
     assert_script_run "sed -i -e 's,enable_xauth=1,enable_xauth=0,g' /usr/bin/startx";
     disable_firefox_studies;
-    assert_script_run "export MOZ_LOG_FILE=/tmp/firefox.log";
     # run firefox directly in X as root. never do this, kids!
     type_string "startx /usr/bin/firefox -width 1024 -height 768 http://localhost:9090\n";
     assert_screen "cockpit_login", 60;

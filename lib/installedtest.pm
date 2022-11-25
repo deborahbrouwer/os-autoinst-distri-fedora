@@ -120,11 +120,6 @@ sub post_fail_hook {
         upload_logs "/var/lib/pgsql/initdb_postgresql.log";
     }
 
-    # update Firefox default log (for startx firefox tests)
-    unless (script_run 'test -f /tmp/firefox.log') {
-        upload_logs "/tmp/firefox.log";
-    }
-
     # Upload /var/log
     # lastlog can mess up tar sometimes and it's not much use
     unless (script_run "tar czvf /tmp/var_log.tar.gz --exclude='lastlog' /var/log") {
