@@ -31,7 +31,7 @@ sub run {
     # note: we can't use wait_screen_change, wait_still_screen or
     # check_type_string in cockpit because of that fucking constantly
     # scrolling graph
-    start_cockpit(1);
+    start_cockpit(login => 1);
     # to activate the right pane
     assert_and_click "cockpit_main";
     send_key "pgdn";
