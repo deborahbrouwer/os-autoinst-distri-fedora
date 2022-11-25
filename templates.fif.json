@@ -2294,7 +2294,6 @@
                 "PARALLEL_WITH": "server_role_deploy_domain_controller",
                 "POSTINSTALL": "realmd_join_cockpit freeipa_webui freeipa_password_change freeipa_client",
                 "POST_STATIC": "172.16.2.102 client002.test.openqa.fedoraproject.org",
-                "RETRY": "3",
                 "ROOT_PASSWORD": "weakpassword",
                 "USER_LOGIN": "false",
                 "WORKER_CLASS": "tap"
@@ -2859,7 +2858,6 @@
                 "POSTINSTALL": "_setup_browser freeipa_webui freeipa_password_change freeipa_client",
                 "POST_STATIC": "172.16.2.103 client003.test.openqa.fedoraproject.org",
                 "PREUPGRADE": "realmd_join_sssd",
-                "RETRY": "3",
                 "ROOT_PASSWORD": "weakpassword",
                 "TEST_TARGET": "COMPOSE",
                 "UPGRADE": "1",
