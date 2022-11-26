@@ -2258,7 +2258,7 @@
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "WORKER_CLASS": "tap2"
             }
         },
         "podman_client": {
@@ -2277,7 +2277,7 @@
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "WORKER_CLASS": "tap2"
             }
         },
         "realmd_join_cockpit": {
@@ -2455,7 +2455,7 @@
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "WORKER_CLASS": "tap2"
             }
         },
         "server_freeipa_replication_master": {
@@ -2475,7 +2475,7 @@
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "WORKER_CLASS": "tap2"
             }
         },
         "server_freeipa_replication_replica": {
@@ -2496,7 +2496,7 @@
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "WORKER_CLASS": "tap2"
             }
         },
         "server_realmd_join_kickstart": {
@@ -2862,7 +2862,7 @@
                 "TEST_TARGET": "COMPOSE",
                 "UPGRADE": "1",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "WORKER_CLASS": "tap2"
             }
         },
         "upgrade_server_64bit": {
@@ -2900,7 +2900,7 @@
                 "TEST_TARGET": "COMPOSE",
                 "UPGRADE": "1",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "WORKER_CLASS": "tap2"
             }
         }
     }
