@@ -25,13 +25,12 @@ sub run {
 
     # Start the application
     menu_launch_type("nautilus");
+    # Check that is started
+    assert_screen 'apps_run_files';
     wait_still_screen("2");
 
     # Fullsize the Nautilus window.
     wait_screen_change { send_key("super-up"); };
-
-    # Check that is started
-    assert_screen 'apps_run_files';
 
     # Click to change the Directory view to listings.
     assert_and_click("nautilus_toggle_view", timeout => '30', button => 'left', mousehide => '1');
