@@ -601,9 +601,24 @@ sub _repo_setup_updates {
     script_run "dnf -y install bodhi-client createrepo koji", 300;
 
     # download the packages
-    if (get_var("ADVISORY_NVRS")) {
+    if (get_var("ADVISORY_NVRS") || get_var("ADVISORY_NVRS_1")) {
         # regular update case
-        foreach my $nvr (split(/ /, get_var("ADVISORY_NVRS"))) {
+        # old style single ADVISORY_NVRS var
+        my @nvrs = split(/ /, get_var("ADVISORY_NVRS"));
+        unless (@nvrs) {
+            # new style chunked ADVISORY_NVRS_N vars
+            my $count = 1;
+            while ($count) {
+                if (get_var("ADVISORY_NVRS_$count")) {
+                    push @nvrs, split(/ /, get_var("ADVISORY_NVRS_$count"));
+                    $count++;
+                }
+                else {
+                    $count = 0;
+                }
+            }
+        }
+        foreach my $nvr (@nvrs) {
             my $kojitime = 600;
             # texlive has a ridiculous number of subpackages
             $kojitime = 1500 if ((rindex $nvr, "texlive", 0) == 0);
