@@ -61,8 +61,8 @@ sub run {
     assert_script_run 'git clone https://pagure.io/pungi-fedora.git';
     assert_script_run 'cd pungi-fedora/';
     assert_script_run "git checkout ${branch}";
-    # FIXME FIXME change 'ostree' to 'main' on/after merge
-    assert_script_run 'wget https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/ostree/f/ostree-parse-pungi.py', timeout => 120;
+    # change 'ostree' to 'main' on/after merge
+    assert_script_run 'wget https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/ostree-parse-pungi.py', timeout => 120;
     my $loraxargs = script_output "python3 ostree-parse-pungi.py $lcsubv $arch";
 
     # this 'temporary file cleanup' thing can actually wipe bits of
