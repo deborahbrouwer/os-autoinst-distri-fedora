@@ -129,7 +129,7 @@ sub post_fail_hook {
     # Sometimes useful for diagnosing FreeIPA issues
     upload_logs "/etc/nsswitch.conf", failok => 1;
 
-    if (get_var("FLAVOR") eq "updates-everything-boot-iso") {
+    if (get_var("TEST") eq "installer_build") {
         # for installer creation test
         script_run "df -h";
         upload_logs "/root/imgbuild/pylorax.log", failok => 1;
@@ -148,6 +148,15 @@ sub post_fail_hook {
             assert_script_run "tar cvzf anaconda.tar.gz anaconda/";
             upload_logs "anaconda.tar.gz";
         }
+    }
+
+    if (get_var("TEST") eq "ostree_build") {
+        # for ostree and installer creation test
+        script_run "df -h";
+        upload_logs "/tmp/ostree.log", failok => 1;
+        upload_logs "/var/tmp/imgbuild/pylorax.log", failok => 1;
+        upload_logs "/var/tmp/imgbuild/lorax.log", failok => 1;
+        upload_logs "/var/tmp/imgbuild/program.log", failok => 1;
     }
 }
 
