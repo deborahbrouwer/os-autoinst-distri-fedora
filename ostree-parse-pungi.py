@@ -43,6 +43,6 @@ for addtempvar in args["add_template_var"]:
 
 # this is where the previous step of the openQA test created the
 # ostree repo
-cmd = cmd.replace("https://kojipkgs.fedoraproject.org/compose/ostree/repo/", "file:///ostree/repo")
+cmd = cmd.replace("https://kojipkgs.fedoraproject.org/compose/ostree/repo/", "file:///var/tmp/ostree/repo")
 
 print(cmd)

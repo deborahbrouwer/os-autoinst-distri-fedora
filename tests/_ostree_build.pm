@@ -23,6 +23,12 @@ sub run {
     my $arch = get_var("ARCH");
     my $subv = get_var("SUBVARIANT");
     my $lcsubv = lc($subv);
+    # mount our nice big empty scratch disk as /var/tmp
+    assert_script_run "rm -rf /var/tmp/*";
+    assert_script_run "echo 'type=83' | sfdisk /dev/vdc";
+    assert_script_run "mkfs.ext4 /dev/vdc1";
+    assert_script_run "echo '/dev/vdc1 /var/tmp ext4 defaults 1 2' >> /etc/fstab";
+    assert_script_run "mount /var/tmp";
     assert_script_run "cd /";
     # usually a good idea for this kinda thing
     assert_script_run "setenforce Permissive";
@@ -41,8 +47,8 @@ sub run {
     upload_logs "fedora-$lcsubv.yaml";
     assert_script_run 'popd';
     # now make the ostree repo
-    assert_script_run "mkdir -p /ostree";
-    assert_script_run "ostree --repo=/ostree/repo init --mode=archive";
+    assert_script_run "mkdir -p /var/tmp/ostree";
+    assert_script_run "ostree --repo=/var/tmp/ostree/repo init --mode=archive";
     # PULL SOME LEVERS! PULL SOME LEVERS!
     # This shadows pungi/ostree/tree.py
     # FIXME: when https://fedoraproject.org/wiki/Changes/FedoraSilverblueUnifiedCore
@@ -51,7 +57,7 @@ sub run {
     # disables updating the ref with the new commit, and we *do* want
     # to do that. pungi updates the ref itself, I don't want to copy
     # all that work in here
-    assert_script_run "rpm-ostree compose tree --repo=/ostree/repo/ --add-metadata-string=version=${advortask} --force-nocache /workstation-ostree-config/fedora-$lcsubv.yaml > /tmp/ostree.log 2>&1", 4500;
+    assert_script_run "rpm-ostree compose tree --repo=/var/tmp/ostree/repo/ --add-metadata-string=version=${advortask} --force-nocache /workstation-ostree-config/fedora-$lcsubv.yaml > /tmp/ostree.log 2>&1", 4500;
     upload_logs "/tmp/ostree.log";
     # check out the ostree installer lorax templates
     assert_script_run 'cd /';
@@ -69,11 +75,6 @@ sub run {
     # the lorax install root while lorax is still running...
     assert_script_run "systemctl stop systemd-tmpfiles-clean.timer";
     # create the installer ISO
-    assert_script_run "rm -rf /var/tmp/*";
-    assert_script_run "echo 'type=83' | sfdisk /dev/vdc";
-    assert_script_run "mkfs.ext4 /dev/vdc1";
-    assert_script_run "echo '/dev/vdc1 /var/tmp ext4 defaults 1 2' >> /etc/fstab";
-    assert_script_run "mount /var/tmp";
     assert_script_run "mkdir -p /var/tmp/imgbuild";
     assert_script_run "cd /var/tmp/imgbuild";
 
