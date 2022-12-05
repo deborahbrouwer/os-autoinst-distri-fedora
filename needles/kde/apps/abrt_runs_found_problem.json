@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "tags": [
+    "abrt_runs_found_problem"
+  ],
+  "area": [
+    {
+      "xpos": 394,
+      "ypos": 231,
+      "width": 63,
+      "height": 17,
+      "type": "match"
+    }
+  ]
+}

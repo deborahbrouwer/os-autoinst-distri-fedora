@@ -10,7 +10,10 @@ sub run {
     # Start the application
     menu_launch_type('abrt');
     # Check that it is started
-    assert_screen 'abrt_runs';
+    unless (check_screen('abrt_runs')) {
+        assert_screen('abrt_runs_found_problem');
+        record_soft_failure("Abrt has reported issues.");
+    }
     # Close the application
     quit_with_shortcut();
 }
