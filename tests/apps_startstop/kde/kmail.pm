@@ -11,7 +11,7 @@ sub run {
     # Start the application
     menu_launch_type 'kmail';
     # Cancel Kmail data wizard
-    assert_and_click 'kde_cancel_button';
+    assert_and_click 'kde_cancel_button', timeout => 60;
     # Sometimes, the Kmail window is shown over the settings window.
     # If that is the case, assert that Kmail is running and exit.
     unless (check_screen("kmail_runs")) {

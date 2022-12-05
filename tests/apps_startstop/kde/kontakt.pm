@@ -11,7 +11,7 @@ sub run {
     # Start the application
     menu_launch_type 'kontact';
     # Get rid of personal data
-    assert_and_click 'kde_cancel_button';
+    assert_and_click 'kde_cancel_button', timeout => 60;
     if (check_screen("enable_unified_mailboxes", 3)) {
         assert_and_click "enable_unified_mailboxes";
     }
