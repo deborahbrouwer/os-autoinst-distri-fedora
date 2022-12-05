@@ -11,7 +11,7 @@ sub run {
     # Start the application
     menu_launch_type 'konversation';
     # Connect to Freenode
-    assert_and_click 'konversation_connect';
+    assert_and_click 'konversation_connect', timeout => 60;
     # Check that it is started
     assert_screen 'konversation_runs';
     # Close the application

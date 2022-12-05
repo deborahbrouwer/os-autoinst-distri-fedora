@@ -11,7 +11,7 @@ sub run {
     # Start the application
     menu_launch_type 'dnfdragora';
     # Check that it is started
-    assert_screen 'dnfdragora_runs';
+    assert_screen 'dnfdragora_runs', timeout => 60;
     sleep 60;
     wait_still_screen 5;
     # Close the application

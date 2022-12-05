@@ -13,7 +13,7 @@ sub run {
     sleep 5;
     # Firewall requires password to be entered and confirmed to start.
     # View password
-    assert_screen "auth_required";
+    assert_screen "auth_required", timeout => 60;
     my $password = get_var('ROOT_PASSWORD', 'weakpassword');
     type_very_safely $password;
     send_key 'ret';

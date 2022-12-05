@@ -11,7 +11,7 @@ sub run {
     # Start the application
     menu_launch_type 'kmag';
     # Check that it is started
-    assert_screen 'kmag_runs';
+    assert_screen 'kmag_runs', timeout => 60;
     # Close the application
     quit_with_shortcut();
 }

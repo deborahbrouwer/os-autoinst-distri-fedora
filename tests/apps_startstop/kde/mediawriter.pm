@@ -11,7 +11,7 @@ sub run {
     # Start the application
     menu_launch_type 'mediawriter';
     # Check that it is started
-    assert_screen 'fmw_runs';
+    assert_screen 'fmw_runs', timeout => 60;
     # Close the application
     quit_with_shortcut();
 }

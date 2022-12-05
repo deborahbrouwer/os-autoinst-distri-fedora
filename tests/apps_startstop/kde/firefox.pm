@@ -13,7 +13,7 @@ sub run {
     # Check that it is started; this needle is from
     # needles/firefox, it already existed before the 'apps' tests
     # were created
-    assert_screen 'firefox';
+    assert_screen 'firefox', timeout => 60;
     # Close the application
     send_key 'alt-f4';
     wait_still_screen 2;

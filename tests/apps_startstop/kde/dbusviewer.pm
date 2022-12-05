@@ -10,7 +10,7 @@ sub run {
 
     menu_launch_type 'dbusviewer';
     # Check that it is started
-    assert_screen 'dbusviewer_runs';
+    assert_screen 'dbusviewer_runs', timeout => 60;
     # Close the application
     quit_with_shortcut();
 }

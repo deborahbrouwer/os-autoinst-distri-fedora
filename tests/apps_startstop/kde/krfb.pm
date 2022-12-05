@@ -11,7 +11,7 @@ sub run {
     # Start the application
     menu_launch_type 'krfb';
     # Check that it is started
-    assert_screen 'krfb_runs';
+    assert_screen 'krfb_runs', timeout => 60;
     wait_still_screen(3);
     # Close the application
     quit_with_shortcut();

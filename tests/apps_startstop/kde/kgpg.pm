@@ -11,7 +11,7 @@ sub run {
     # Start the application
     menu_launch_type 'kgpg';
     # Deal with the first wizard screen
-    assert_and_click 'kde_next';
+    assert_and_click 'kde_next', timeout => 60;
     wait_still_screen 2;
     # Deal with the second wizard screen
     assert_and_click 'kde_next';
