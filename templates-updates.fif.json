@@ -123,8 +123,8 @@
             "settings": {
                 "CANNED": "1",
                 "DESKTOP": "gnome",
+                "DEPLOY_UPLOAD_TEST": "install_default_update_ostree",
                 "HDDSIZEGB": "15",
-                "NUMDISKS": "2",
                 "PACKAGE_SET": "default",
                 "RETRY": "1",
                 "SUBVARIANT": "Silverblue"
@@ -400,7 +400,8 @@
                 "INSTALL": "1",
                 "ISO": "%ADVISORY_OR_TASK%-%SUBVARIANT%-ostree-%ARCH%.iso",
                 "PACKAGE_SET": "default",
-                "+START_AFTER_TEST": "ostree_build@%ARCH_BASE_MACHINE%"
+                "+START_AFTER_TEST": "ostree_build@%ARCH_BASE_MACHINE%",
+                "STORE_HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2"
             }
         },
         "installer_build": {
@@ -478,6 +479,16 @@
                 "fedora-updates-server-aarch64-*-aarch64": 5,
                 "fedora-updates-server-ppc64le-*-ppc64le": 5,
                 "fedora-updates-server-x86_64-*-64bit": 5
+            }
+        },
+        "rpmostree_overlay": {
+            "profiles": {
+                "fedora-updates-silverblue-dvd_ostree-iso-x86_64-*-64bit": 5
+            }
+        },
+        "rpmostree_rebase": {
+            "profiles": {
+                "fedora-updates-silverblue-dvd_ostree-iso-x86_64-*-64bit": 5
             }
         },
         "server_cockpit_basic": {

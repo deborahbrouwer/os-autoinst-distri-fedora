@@ -2120,33 +2120,6 @@
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%"
             }
         },
-        "iot_rpmostree_overlay": {
-            "profiles": {
-                "fedora-IoT-dvd_ostree-iso-aarch64-*-aarch64": 20,
-                "fedora-IoT-dvd_ostree-iso-x86_64-*-uefi": 20
-            },
-            "settings": {
-                "BOOTFROM": "c",
-                "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "POSTINSTALL": "iot_rpmostree_overlay",
-                "ROOT_PASSWORD": "weakpassword",
-                "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%"
-            }
-        },
-        "iot_rpmostree_rebase": {
-                "profiles": {
-                "fedora-IoT-dvd_ostree-iso-aarch64-*-aarch64": 20,
-                "fedora-IoT-dvd_ostree-iso-x86_64-*-uefi": 40
-            },
-            "settings": {
-                "BOOTFROM": "c",
-                "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "POSTINSTALL": "iot_rpmostree_rebase",
-                "ROOT_PASSWORD": "weakpassword",
-                "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
-                "USER_LOGIN": "false"
-            }
-        },
         "iot_zezere_ignition": {
                 "profiles": {
                 "fedora-IoT-dvd_ostree-iso-aarch64-*-aarch64": 20,
@@ -2343,6 +2316,39 @@
                 "ENTRYPOINT": "text_login_gui fedora_release os_release",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
+                "USER_LOGIN": "false"
+            }
+        },
+        "rpmostree_overlay": {
+            "profiles": {
+                "fedora-CoreOS-colive-iso-x86_64-*-64bit": 20,
+                "fedora-IoT-dvd_ostree-iso-aarch64-*-aarch64": 20,
+                "fedora-IoT-dvd_ostree-iso-x86_64-*-uefi": 20,
+                "fedora-Silverblue-dvd_ostree-iso-ppc64le-*-ppc64le": 50,
+                "fedora-Silverblue-dvd_ostree-iso-x86_64-*-64bit": 50
+            },
+            "settings": {
+                "BOOTFROM": "c",
+                "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
+                "POSTINSTALL": "rpmostree_overlay",
+                "ROOT_PASSWORD": "weakpassword",
+                "+START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%"
+            }
+        },
+        "rpmostree_rebase": {
+                "profiles": {
+                "fedora-CoreOS-colive-iso-x86_64-*-64bit": 20,
+                "fedora-IoT-dvd_ostree-iso-aarch64-*-aarch64": 20,
+                "fedora-IoT-dvd_ostree-iso-x86_64-*-uefi": 20,
+                "fedora-Silverblue-dvd_ostree-iso-ppc64le-*-ppc64le": 50,
+                "fedora-Silverblue-dvd_ostree-iso-x86_64-*-64bit": 50
+            },
+            "settings": {
+                "BOOTFROM": "c",
+                "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
+                "POSTINSTALL": "rpmostree_rebase",
+                "ROOT_PASSWORD": "weakpassword",
+                "+START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false"
             }
         },
