@@ -33,7 +33,7 @@ sub run {
     # usually a good idea for this kinda thing
     assert_script_run "setenforce Permissive";
     # install the tools we need
-    assert_script_run "dnf -y install git lorax flatpak ostree rpm-ostree wget dbus-daemon", 300;
+    assert_script_run "dnf -y install git lorax flatpak ostree rpm-ostree wget dbus-daemon moreutils", 300;
     # now check out workstation-ostree-config
     assert_script_run 'git clone https://pagure.io/workstation-ostree-config.git';
     assert_script_run 'pushd workstation-ostree-config';
@@ -49,6 +49,9 @@ sub run {
     # now make the ostree repo
     assert_script_run "mkdir -p /var/tmp/ostree";
     assert_script_run "ostree --repo=/var/tmp/ostree/repo init --mode=archive";
+    # need this to make the pipeline in the next command fail when
+    # rpm-ostree fails. note: this is a bashism
+    assert_script_run "set -o pipefail";
     # PULL SOME LEVERS! PULL SOME LEVERS!
     # This shadows pungi/ostree/tree.py
     # FIXME: when https://fedoraproject.org/wiki/Changes/FedoraSilverblueUnifiedCore
@@ -57,7 +60,8 @@ sub run {
     # disables updating the ref with the new commit, and we *do* want
     # to do that. pungi updates the ref itself, I don't want to copy
     # all that work in here
-    assert_script_run "rpm-ostree compose tree --repo=/var/tmp/ostree/repo/ --add-metadata-string=version=${advortask} --force-nocache /workstation-ostree-config/fedora-$lcsubv.yaml > /tmp/ostree.log 2>&1", 4500;
+    assert_script_run "rpm-ostree compose tree --repo=/var/tmp/ostree/repo/ --add-metadata-string=version=${advortask} --force-nocache /workstation-ostree-config/fedora-$lcsubv.yaml |& ts " . '[%Y-%m-%d %H:%M:%S]' . " | tee /tmp/ostree.log", 4500;
+    assert_script_run "set +o pipefail";
     upload_logs "/tmp/ostree.log";
     # check out the ostree installer lorax templates
     assert_script_run 'cd /';
