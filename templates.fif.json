@@ -2237,6 +2237,7 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
+                "LOGIN_SNAPSHOT": "1",
                 "POSTINSTALL": "modularity_module_list modularity_enable_disable_module modularity_install_module",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
@@ -2385,6 +2386,7 @@
                 "+HDD_1": "disk_%MACHINE%_cockpit.qcow2",
                 "+START_AFTER_TEST": "server_cockpit_default",
                 "BOOTFROM": "c",
+                "LOGIN_SNAPSHOT": "1",
                 "POSTINSTALL": "server_cockpit_updates server_cockpit_autoupdate",
                 "ROOT_PASSWORD": "weakpassword",
                 "USER_LOGIN": "false"

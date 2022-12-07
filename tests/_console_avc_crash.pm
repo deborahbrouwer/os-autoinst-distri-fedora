@@ -32,7 +32,7 @@ sub run {
 }
 
 sub test_flags {
-    return {};
+    return {fatal => 1};
 }
 
 1;
