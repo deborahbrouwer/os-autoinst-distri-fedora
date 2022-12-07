@@ -53,7 +53,7 @@ sub run {
     $softfailCounter = $softfailCounter + $result;
     $result = search("wellington");
     $softfailCounter = $softfailCounter + $result;
-    $result = search("scarborough");
+    $result = search("poysdorf");
     $softfailCounter = $softfailCounter + $result;
     $result = search("pune");
     $softfailCounter = $softfailCounter + $result;

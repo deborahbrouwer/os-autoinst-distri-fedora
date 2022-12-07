@@ -124,7 +124,7 @@ for hashname in ("jlJmL", "7XGzO", "ps61y", "OvXj~", "GqYOp", "VEFrP"):
 for info in ("home", "personal", "work"):
     testliterals.append(f"contacts_label_{info}")
 # Needles for Maps
-for location in ("vilnius", "denali", "wellington", "scarborough", "pune"):
+for location in ("vilnius", "denali", "wellington", "poysdorf", "pune"):
     testliterals.append(f"maps_select_{location}")
     testliterals.append(f"maps_found_{location}")
     testliterals.append(f"maps_info_{location}")
