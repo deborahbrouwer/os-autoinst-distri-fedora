@@ -19,7 +19,7 @@ sub run {
     assert_script_run "pushd /root/imgbuild";
     assert_script_run "setenforce Permissive";
     # Fedora pungi config always sets rootfs size to 3GiB since F32
-    my $cmd = "lorax -p Fedora -v ${version} -r ${version} --repo=/etc/yum.repos.d/${repo} --rootfs-size 3";
+    my $cmd = "lorax -p Fedora -v ${version} -r ${version} --repo=/etc/yum.repos.d/${repo} --rootfs-size 3 --squashfs-only";
     unless ($version > $currrel) {
         $cmd .= " --isfinal --repo=/etc/yum.repos.d/fedora-updates.repo";
     }
