@@ -10,7 +10,6 @@ sub run {
     # Start the application
     menu_launch_type('abrt');
     assert_screen 'abrt_runs';
-    record_soft_failure("Abrt has reported issues") if (match_has_tag 'abrt_runs_found_problem');
     # Close the application
     quit_with_shortcut();
 }

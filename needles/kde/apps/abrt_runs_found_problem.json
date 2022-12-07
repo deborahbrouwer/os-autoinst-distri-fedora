@@ -1,8 +1,12 @@
 {
-  "properties": [],
+  "properties": [
+    {
+      "name": "workaround",
+      "value": "Abrt reported issues"
+    }
+  ],
   "tags": [
     "abrt_runs",
-    "abrt_runs_found_problem"
   ],
   "area": [
     {
