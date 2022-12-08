@@ -556,6 +556,7 @@ sub _repo_setup_updates {
     return if (get_var("_ADVISORY_REPO_DONE"));
     my $version = get_var("VERSION");
     my $currrel = get_var("CURRREL", "0");
+    my $arch = get_var("ARCH");
     # this can be used for debugging repo config if something is wrong
     # unless (script_run 'pushd /etc/yum.repos.d && tar czvf yumreposd.tar.gz * && popd') {
     #     upload_logs "/etc/yum.repos.d/yumreposd.tar.gz";
@@ -590,6 +591,11 @@ sub _repo_setup_updates {
     repos_mirrorlist();
     # Disable updates-testing so other bad updates don't break us
     disable_updates_repos(both => 0) if ($version > $currrel);
+    # use the buildroot repo on Rawhide: see e.g.
+    # https://pagure.io/fedora-ci/general/issue/376 for why
+    if (get_var("VERSION") eq get_var("RAWREL")) {
+        assert_script_run 'printf "[koji-rawhide]\nname=koji-rawhide\nbaseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/' . $arch . '/\ncost=2000\nenabled=1\ngpgcheck=0\n" > /etc/yum.repos.d/koji-rawhide.repo';
+    }
     # set up the workaround repo
     setup_workaround_repo;
     if (get_var("CANNED")) {
@@ -622,7 +628,7 @@ sub _repo_setup_updates {
             my $kojitime = 600;
             # texlive has a ridiculous number of subpackages
             $kojitime = 1500 if ((rindex $nvr, "texlive", 0) == 0);
-            if (script_run "koji download-build --arch=" . get_var("ARCH") . " --arch=noarch $nvr 2> download.log", $kojitime) {
+            if (script_run "koji download-build --arch=$arch --arch=noarch $nvr 2> download.log", $kojitime) {
                 # if the error was because the build has no packages
                 # for our arch, that's okay, skip it. otherwise, die
                 if (script_run "grep 'No .*available for $nvr' download.log") {
@@ -633,7 +639,7 @@ sub _repo_setup_updates {
     }
     elsif (get_var("KOJITASK")) {
         # Koji task case (KOJITASK will be set)
-        assert_script_run "koji download-task --arch=" . get_var("ARCH") . " --arch=noarch " . get_var("KOJITASK"), 600;
+        assert_script_run "koji download-task --arch=$arch --arch=noarch " . get_var("KOJITASK"), 600;
     }
     else {
         die "Neither ADVISORY_NVRS nor KOJITASK set! Don't know what to do";
