@@ -860,7 +860,6 @@
             "settings": {
                 "PARTITIONING": "custom_blivet_resize_lvm",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "INSTALL": "1",
                 "POSTINSTALL": "disk_custom_resize_lvm_postinstall",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "install_lvm_ext4"
@@ -875,7 +874,6 @@
             "settings": {
                 "PARTITIONING": "custom_resize_lvm",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "INSTALL": "1",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "install_lvm_ext4"
             }
@@ -1453,7 +1451,6 @@
             },
             "settings": {
                 "PARTITIONING": "custom_btrfs_preserve_home",
-                "INSTALL": 1,
                 "ROOT_PASSWORD": "weakpassword",
                 "POSTINSTALL": "btrfs_preserve_home_check_content",
                 "HDD_1": "disk_f%CURRREL%_desktop_4_%ARCH%.qcow2"

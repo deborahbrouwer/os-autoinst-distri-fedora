@@ -666,8 +666,11 @@ sub _repo_setup_updates {
     # it on the actual support_server system)
     unless (get_var("TEST") eq "support_server" && $version ne get_var("CURRREL")) {
         assert_script_run 'printf "[advisory]\nname=Advisory repo\nbaseurl=file:///mnt/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0" > /etc/yum.repos.d/advisory.repo';
-        # run an update now (except for upgrade or CANNED tests)
-        script_run "dnf -y update", 900 unless (get_var("UPGRADE") || get_var("CANNED"));
+        # run an update now, except for upgrade or install tests,
+        # where the updated packages should have been installed
+        # already and we want to fail if they weren't, or CANNED
+        # tests, there's no point updating the toolbox
+        script_run "dnf -y update", 900 unless (get_var("UPGRADE") || get_var("INSTALL") || get_var("CANNED"));
     }
     # exit the toolbox on CANNED
     if (get_var("CANNED")) {
