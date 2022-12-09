@@ -553,7 +553,7 @@ sub _repo_setup_compose {
 sub _repo_setup_updates {
     # Appropriate repo setup steps for testing a Bodhi update
     # Check if we already ran, bail if so
-    return if (get_var("_ADVISORY_REPO_DONE"));
+    return unless script_run "test -f /mnt/updatepkgs.txt";
     my $version = get_var("VERSION");
     my $currrel = get_var("CURRREL", "0");
     my $arch = get_var("ARCH");
@@ -677,9 +677,6 @@ sub _repo_setup_updates {
         type_string "exit\n";
         wait_still_screen 5;
     }
-    # mark via a variable that we've set up the update/task repo and done
-    # all the logging stuff above
-    set_var('_ADVISORY_REPO_DONE', '1');
 }
 
 sub repo_setup {
@@ -1106,12 +1103,14 @@ sub quit_with_shortcut {
 
 }
 
+# For update tests (this only works if we've been through
+# _repo_setup_updates), figure out which packages from the update
+# are currently installed. This is here so we can do it both in
+# _advisory_post and post_fail_hook.
 sub advisory_get_installed_packages {
-    # For update tests (this only works if we've been through
-    # _repo_setup_updates), figure out which packages from the update
-    # are currently installed. This is here so we can do it both in
-    # _advisory_post and post_fail_hook.
-    return unless (get_var("_ADVISORY_REPO_DONE"));
+    # bail out if the file doesn't exist: this is in case we get
+    # here in the post-fail hook but we failed before creating it
+    return if script_run "test -f /mnt/updatepkgs.txt";
     assert_script_run 'rpm -qa --qf "%{SOURCERPM} %{EPOCH} %{NAME}-%{VERSION}-%{RELEASE}\n" | sort -u > /tmp/allpkgs.txt', timeout => 90;
     # this finds lines which appear in both files
     # http://www.unix.com/unix-for-dummies-questions-and-answers/34549-find-matching-lines-between-2-files.html
@@ -1137,7 +1136,9 @@ sub advisory_check_nonmatching_packages {
         fatal => 1,
         @_
     );
-    return unless (get_var("_ADVISORY_REPO_DONE"));
+    # bail out if the file doesn't exist: this is in case we get
+    # here in the post-fail hook but we failed before creating it
+    return if script_run "test -f /mnt/updatepkgnames.txt";
     # if this fails in advisory_post, we don't want to do it *again*
     # unnecessarily in post_fail_hook
     return if (get_var("_ACNMP_DONE"));
