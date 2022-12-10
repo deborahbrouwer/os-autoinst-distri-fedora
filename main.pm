@@ -295,9 +295,11 @@ sub load_postinstall_tests() {
     # install the updates to be tested). Don't do this for UPGRADE tests, as
     # the update gets installed as part of the upgrade in that case and we
     # don't need the extra reboot. Don't do this for INSTALL test(s); these
-    # are checking that an installer image built from the update works and do
-    # not install the update themselves in this manner
-    if (get_var("ADVISORY_OR_TASK") && !get_var("UPGRADE") && !get_var("INSTALL")) {
+    # are checking that an installer image built from the update works, and
+    # packages from the update should have been installed as part of the
+    # install process. Don't do this for START_AFTER_TEST tests, as there we
+    # presume the previous test already did this, and it saves a reboot.
+    if (get_var("ADVISORY_OR_TASK") && !get_var("UPGRADE") && !get_var("INSTALL") && !get_var("START_AFTER_TEST")) {
         autotest::loadtest "tests/_advisory_update.pm";
         # now load the early boot tests again, as _advisory_update reboots
         _load_early_postinstall_tests(2);
