@@ -23,7 +23,9 @@ sub run {
     unless ($version > $currrel) {
         $cmd .= " --isfinal --repo=/etc/yum.repos.d/fedora-updates.repo";
     }
-    $cmd .= " --repo=/etc/yum.repos.d/advisory.repo --repo=/etc/yum.repos.d/workarounds.repo ./results";
+    $cmd .= " --repo=/etc/yum.repos.d/advisory.repo --repo=/etc/yum.repos.d/workarounds.repo";
+    $cmd .= " --repo=/etc/yum.repos.d/koji-rawhide.repo" if ($version eq $rawrel);
+    $cmd .= " ./results";
     assert_script_run $cmd, 2400;
     # good to have the log around for checks
     upload_logs "pylorax.log", failok => 1;

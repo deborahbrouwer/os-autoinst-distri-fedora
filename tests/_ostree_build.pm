@@ -38,11 +38,14 @@ sub run {
     assert_script_run 'git clone https://pagure.io/workstation-ostree-config.git';
     assert_script_run 'pushd workstation-ostree-config';
     assert_script_run "git checkout ${branch}";
-    # now copy the advisory and workaround repo config files in
+    # now copy the advisory, workaround repo and koji-rawhide config files
     assert_script_run 'cp /etc/yum.repos.d/advisory.repo .';
     assert_script_run 'cp /etc/yum.repos.d/workarounds.repo .';
+    assert_script_run 'cp /etc/yum.repos.d/koji-rawhide.repo .' if ($version eq $rawrel);
     # and add them to the config file
-    assert_script_run 'sed -i -e "s,repos:,repos:\n  - advisory\n  - workarounds,g" fedora-' . $lcsubv . '.yaml';
+    my $repl = 'repos:\n  - advisory\n  - workarounds';
+    $repl .= '\n  - koji-rawhide' if ($version eq $rawrel);
+    assert_script_run 'sed -i -e "s,repos:,' . $repl . ',g" fedora-' . $lcsubv . '.yaml';
     # upload the config so we can check it
     upload_logs "fedora-$lcsubv.yaml";
     assert_script_run 'popd';

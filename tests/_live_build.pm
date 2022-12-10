@@ -44,9 +44,15 @@ sub run {
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/mnt/workarounds_repo\', \'/mnt/workarounds_repo\'))" >> /etc/mock/openqa.cfg';
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/dev/' . $serialdev . '\', \'/dev/' . $serialdev . '\'))" >> /etc/mock/openqa.cfg';
     # add the side repo and workarounds to the config
-    assert_script_run 'printf "config_opts[\'dnf.conf\'] += \"\"\"\n[advisory]\nname=Advisory repo\nbaseurl=file:///mnt/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n\n[workarounds]\nname=Workarounds repo\nbaseurl=file:///mnt/workarounds_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n\"\"\"" >> /etc/mock/openqa.cfg';
+    my $repos = 'config_opts[\'dnf.conf\'] += \"\"\"\n[advisory]\nname=Advisory repo\nbaseurl=file:///mnt/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n\n[workarounds]\nname=Workarounds repo\nbaseurl=file:///mnt/workarounds_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n';
+    # also the buildroot repo, for Rawhide
+    if ($version eq $rawrel) {
+        $repos .= '\n[koji-rawhide]\nname=Buildroot repo\nbaseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/\$basearch/\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n';
+    }
+    $repos .= '\"\"\"';
+    assert_script_run 'printf "' . $repos . '" >> /etc/mock/openqa.cfg';
     # replace metalink with mirrorlist so we don't get slow mirrors
-    repos_mirrorlist("/etc/mock/openqa.cfg");
+    repos_mirrorlist("/etc/mock/templates/*.tpl");
     # upload the config so we can check it's OK
     upload_logs "/etc/mock/openqa.cfg";
     # now check out the kickstarts
@@ -57,6 +63,10 @@ sub run {
     assert_script_run 'echo "repo --name=advisory --baseurl=file:///mnt/update_repo" >> ' . $repoks;
     # and the workarounds repo
     assert_script_run 'echo "repo --name=workarounds --baseurl=file:///mnt/workarounds_repo" >> ' . $repoks;
+    # and the buildroot repo, for Rawhide
+    if ($version eq $rawrel) {
+        assert_script_run 'echo "repo --name=koji-rawhide --baseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/\$basearch/" >> ' . $repoks;
+    }
     # FIXME: this is a workaround for #2119518, disabling oomd so it
     # doesn't go crazy killing things
     my $relnum = get_release_number;
