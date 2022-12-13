@@ -142,8 +142,8 @@ sub reboot_system {
     if (check_screen "system_menu_button") {
         # In a logged in desktop, we access power options through system menu
         assert_and_click "system_menu_button";
-        # In KDE since F34, reboot entry is right here, otherwise we need to
-        # enter some kind of power option submenu
+        # In KDE the reboot entry is right here, on GNOME we need to
+        # enter some kind of power option submenu.
         assert_screen ["power_entry", "reboot_entry"];
         click_lastmatch;
         assert_and_click "reboot_entry" if (match_has_tag("power_entry"));
@@ -160,7 +160,8 @@ sub reboot_system {
 sub power_off {
     # Powers-off the machine.
     assert_and_click "system_menu_button";
-    # in KDE since F34, there's no submenu to access, the button is right here
+    # in KDE, there's no submenu to access, the button is right here,
+    # in GNOME we need the submenu
     assert_screen ["power_entry", "power_off_entry"];
     click_lastmatch;
     assert_and_click "power_off_entry" if (match_has_tag("power_entry"));
