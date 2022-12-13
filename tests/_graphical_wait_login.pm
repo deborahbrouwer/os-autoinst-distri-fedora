@@ -74,17 +74,6 @@ sub run {
         # away
         wait_still_screen 5;
         _enter_password($password);
-        # FIXME: workaround RHBZ#2120433 - catch if the login failed
-        # and retry if so
-        my $relnum = get_release_number;
-        if ($relnum > 37 && $desktop eq 'gnome') {
-            unless (check_screen ["getting_started", "apps_menu_button"], 45) {
-                if (check_screen "graphical_login_input") {
-                    record_soft_failure "Login failed, probably #2120433 - retrying";
-                    _enter_password($password);
-                }
-            }
-        }
     }
 
     # For GNOME, handle initial-setup or welcome tour, unless _WELCOME_DONE
