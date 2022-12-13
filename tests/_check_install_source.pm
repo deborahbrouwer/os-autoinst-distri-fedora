@@ -28,17 +28,11 @@ sub run {
             # "repo addrepo" is older format from before Fedora 37,
             # "Add the 'addrepo" is newer format from F37+
             assert_script_run 'grep "\(repo \|Add the \'\)addrepo.*' . ${addrepourl} . '" /tmp/packaging.log';
-            # ...this line tells us it added the repo called 'addrepo' (<F36)...
-            if (script_run 'grep "\(added\|enabled\) repo: .addrepo." /tmp/packaging.log') {
-                # this is F36+
-                assert_script_run 'grep "Added the ' . "'addrepo'" . '" /tmp/anaconda.log';
-            }
-            # ...and one of these tells us it worked (I hope). This one is <F35...
-            if (script_run 'grep "enabled repo.*nfs" /tmp/packaging.log') {
-                # ...these are F35+
-                assert_script_run 'grep "Load metadata for the ' . "'addrepo'" . '" /tmp/anaconda.log';
-                assert_script_run 'grep "Loaded metadata from.*file:///run/install/addrepo.nfs" /tmp/anaconda.log';
-            }
+            # ...this line tells us it added the repo called 'addrepo'
+            assert_script_run 'grep "Added the \'addrepo\'" /tmp/anaconda.log';
+            # ...and this tells us it worked (I hope).
+            assert_script_run 'grep "Load metadata for the \'addrepo\'" /tmp/anaconda.log';
+            assert_script_run 'grep "Loaded metadata from.*file:///run/install/addrepo.nfs" /tmp/anaconda.log';
         }
     }
     if ($repourl =~ /^hd:/) {
@@ -58,29 +52,9 @@ sub run {
     elsif ($repourl) {
         # there are only three hard problems in software development:
         # naming things, cache expiry, off-by-one errors...and quoting
-        # we need single quotes (at the perl level) around the start
-        # of this, so the backslashes are not interpreted by perl but
-        # passed through to ultimately be interpreted by 'grep'
-        # itself. We need double quotes around $repourl so that *is*
-        # interpreted by perl. And we need quotes around the entire
-        # expression at the bash level, and single quotes around the
-        # text 'anaconda' at the level of grep, as the string we're
-        # actually matching on literally has 'anaconda' in it.
-        if (script_run 'grep "enabled repo: ' . "'anaconda'.*${repourl}" . '" /tmp/packaging.log') {
-            # in F35+, the "enabled repo" log line is gone, instead
-            # we'll check some log messages from the dnf manager module
-            # that show up in anaconda.log. Can drop the above branch
-            # and only go with this branch after F34 EOL.
-            #
-            # in F36+, the "added repo: " line in packaging.log is
-            # gone too, instead we get "Added the 'XXX' repository"
-            # in anaconda.log
-            if (script_run 'grep "added repo: ' . "'anaconda'.*${repourl}" . '" /tmp/packaging.log') {
-                assert_script_run 'grep "Added the ' . "'anaconda'" . '" /tmp/anaconda.log';
-            }
-            assert_script_run 'grep "Load metadata for the ' . "'anaconda'" . '" /tmp/anaconda.log';
-            assert_script_run 'grep "Loaded metadata from ' . ".*${repourl}" . '" /tmp/anaconda.log';
-        }
+        assert_script_run 'grep "Added the \'anaconda\'" /tmp/anaconda.log';
+        assert_script_run 'grep "Load metadata for the \'anaconda\'" /tmp/anaconda.log';
+        assert_script_run 'grep "Loaded metadata from.*' . ${repourl} . '" /tmp/anaconda.log';
     }
     if ($repourl) {
         # check we don't have an error indicating our repo wasn't used.
