@@ -785,9 +785,6 @@ sub gnome_initial_setup {
         # except 'language' is never *really* skipped (see above)
         @nexts = grep { $_ ne 'keyboard' } @nexts;
         @nexts = grep { $_ ne 'timezone' } @nexts;
-        # 'additional software sources' screen did not display on F28-F34:
-        # https://gitlab.gnome.org/GNOME/gnome-initial-setup/-/issues/59
-        @nexts = grep { $_ ne 'software' } @nexts if ($relnum < 35);
     }
     else {
         # 'timezone' and 'software' are suppressed for the 'existing user'
