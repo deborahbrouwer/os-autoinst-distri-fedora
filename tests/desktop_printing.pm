@@ -38,13 +38,7 @@ sub run {
     my $desktop = get_var("DESKTOP");
     # Set up some variables to make the test compatible with different desktops.
     # Defaults are for the Gnome desktop.
-    my $version = get_var("VERSION");
-    # FIXME: When we entirely move to version 36 with all the tests
-    # we will get rid of gedit (which ceased to exist on 36).
     my $editor = "gnome-text-editor";
-    if ($version <= 35 and $version ne "Rawhide") {
-        $editor = "gedit";
-    }
     my $viewer = "evince";
     my $maximize = "super-up";
     my $term = "gnome-terminal";
