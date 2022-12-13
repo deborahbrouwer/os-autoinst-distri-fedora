@@ -52,9 +52,8 @@ sub run {
     # we must
     unless (get_var("DESKTOP") eq "gnome") {
         assert_and_click "anaconda_install_root_password";
-        # from anaconda-35.22.1 onwards, we have to click 'enable root
-        # account' before typing the password. For older versions,
-        # clicking this needle does nothing but is harmless
+        # we have to click 'enable root account' before typing the
+        # password
         assert_and_click "anaconda_install_root_password_screen";
         type_safely "weakadminpassword";
         send_key "tab";

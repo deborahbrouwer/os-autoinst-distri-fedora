@@ -11,9 +11,8 @@ sub _set_root_password {
     my $root_password = get_var("ROOT_PASSWORD") || "weakpassword";
     unless (get_var("INSTALLER_NO_ROOT")) {
         assert_and_click "anaconda_install_root_password";
-        # from anaconda-35.22.1 onwards, we have to click 'enable root
-        # account' before typing the password. For older versions,
-        # clicking this needle does nothing but is harmless
+        # we have to click 'enable root account' before typing the
+        #password
         assert_and_click "anaconda_install_root_password_screen";
         # wait out animation
         wait_still_screen 2;
