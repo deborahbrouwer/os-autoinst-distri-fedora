@@ -21,7 +21,8 @@ sub run {
         do_bootloader(postinstall => 0, params => '3');
     }
     boot_to_login_screen;
-    # use tty1 to avoid RHBZ #1821499 on F32 Workstation live
+    # tty1 is used here for historic reasons, but it's not hurting
+    # anything and changing it might, so let's leave it...
     $self->root_console(tty => 1);
     # ensure we actually have some package updates available
     prepare_test_packages;
