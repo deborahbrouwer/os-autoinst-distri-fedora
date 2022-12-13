@@ -60,9 +60,7 @@ sub run {
         $cannedtag = (split /-/, $build)[-1];
     }
     my $name = ucfirst($id);
-    # from F35 onwards, $NAME is "Fedora Linux" not just "Fedora"
-    my $relnum = get_release_number;
-    my $fullname = $relnum > 34 ? $name . " Linux" : $name;
+    my $fullname = $name . " Linux";
     my $rawrel = get_var("RAWREL", '');
     # Should be the version number or Rawhide.
     my $version_id = get_var("VERSION");
