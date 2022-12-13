@@ -34,10 +34,10 @@ sub run {
     assert_script_run "systemctl restart firewalld.service";
     # deploy the server
     my $args = "-U --auto-forwarders --realm=TEST.OPENQA.FEDORAPROJECT.ORG --domain=test.openqa.fedoraproject.org --ds-password=monkeys123 --admin-password=monkeys123 --setup-dns --reverse-zone=2.16.172.in-addr.arpa --allow-zone-overlap";
-    # FIXME: For upgrades to F>34, we turn off dnssec to avoid hitting
+    # FIXME: For upgrades, we turn off dnssec to avoid hitting
     # #1999321
     my $relnum = get_release_number;
-    $args .= ' --no-dnssec-validation' if (get_var("UPGRADE") && $relnum > 34);
+    $args .= ' --no-dnssec-validation' if (get_var("UPGRADE"));
 
     assert_script_run "ipa-server-install $args", 1200;
     # enable and start the systemd service
