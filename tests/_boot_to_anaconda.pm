@@ -89,7 +89,7 @@ sub run {
         # we get anaconda logs. sleep a bit first so we don't get a
         # match for the installer bootloader if it hangs around for a
         # while after do_bootloader finishes (in PXE case it does)
-        sleep 20;
+        sleep 60;
         assert_screen "bootloader", 1800;
     }
     else {
