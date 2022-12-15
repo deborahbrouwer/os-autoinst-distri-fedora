@@ -10,8 +10,8 @@ sub run {
     # Select package set. Minimal is the default, if 'default' is specified, skip selection,
     # but verify correct default in some cases
     my $packageset = get_var('PACKAGE_SET', 'minimal');
-    if ($packageset eq 'default' || get_var('MODULAR')) {
-        # we can't or don't want to check the selected package set in these cases
+    if ($packageset eq 'default') {
+        # we can't or don't want to check the selected package set in this case
         return if (get_var('CANNED') || get_var('LIVE') || get_var('MEMCHECK'));
         $self->root_console;
         my $env = 'custom-environment';

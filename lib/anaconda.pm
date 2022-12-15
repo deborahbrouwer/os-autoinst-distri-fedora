@@ -296,11 +296,8 @@ sub get_full_repo {
     # repo URL with flavor and arch, leave hd & NFS ones alone
     # (as for those tests we just use a mounted ISO and URL is complete)
     if ($repourl !~ m/^(nfs|hd:)/) {
-        # Everything variant doesn't exist for modular composes atm,
-        # only Server
-        my $variant = 'Everything';
-        $variant = 'Server' if (get_var("MODULAR"));
-        $repourl .= "/${variant}/" . get_var("ARCH") . "/os";
+        my $arch = get_var("ARCH");
+        $repourl .= "/Everything/$arch/os";
     }
     return $repourl;
 }
