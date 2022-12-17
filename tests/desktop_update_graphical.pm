@@ -11,6 +11,12 @@ sub run {
     # use a tty console for repo config and package prep
     $self->root_console(tty => 3);
     assert_script_run 'dnf config-manager --set-disabled updates-testing';
+    # for update tests, disable koji-rawhide at this point, otherwise
+    # gnome-software will complain about things being unsigned even
+    # though the repo has gpgcheck=0
+    if (get_var("ADVISORY_OR_TASK") && get_var("VERSION") eq get_var("RAWREL")) {
+        assert_script_run 'dnf config-manager --set-disabled koji-rawhide';
+    }
     prepare_test_packages;
     # get back to the desktop
     desktop_vt;
