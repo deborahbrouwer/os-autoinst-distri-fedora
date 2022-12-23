@@ -29,18 +29,12 @@ sub _pxe_setup {
     if ($arch eq 'x86_64') {
         # x86_64: use syslinux for BIOS, grub2 with 'linuxefi' for UEFI
         assert_script_run "mkdir -p /var/lib/tftpboot/pxelinux.cfg";
-        # FIXME workaround for https://bugzilla.redhat.com/show_bug.cgi?id=2152763:
-        # use a side repo containing a scratch build of grub2 just before the
-        # "Bundle unicode.pf2 with images" change, epoch bumped to 10
-        assert_script_run 'printf "[grub2152763]\nname=2152763 repo\nbaseurl=https://fedorapeople.org/groups/qa/openqa-repos/grub2152763repo/\$basearch\nenabled=1\nmetadata_expire=3600\ngpgcheck=0" > /etc/yum.repos.d/grub2152763.repo';
         # install bootloader packages
         assert_script_run "dnf -y install syslinux", 120;
         assert_script_run "dnf -y --releasever=$ourversion --installroot=/var/tmp/fedora install shim-x64 grub2-efi-x64", 300;
         # copy bootloader files to tftp root
         assert_script_run "cp /usr/share/syslinux/{pxelinux.0,vesamenu.c32,ldlinux.c32,libcom32.c32,libutil.c32} /var/lib/tftpboot";
         assert_script_run "cp /var/tmp/fedora/boot/efi/EFI/fedora/{shim.efi,grubx64.efi} /var/lib/tftpboot";
-        # wipe the workaround repo again, just in case
-        assert_script_run "rm -f /etc/yum.repos.d/grub2152763.repo";
         # bootloader configs
         # BIOS
         assert_script_run "printf 'default vesamenu.c32\nprompt 1\ntimeout 600\n\nlabel linux\n  menu label ^Install Fedora 64-bit\n  menu default\n  kernel fedora/vmlinuz\n  append initrd=fedora/initrd.img inst.ks=file:///ks.cfg ip=dhcp\nlabel local\n  menu label Boot from ^local drive\n  localboot 0xffff\n' >> /var/lib/tftpboot/pxelinux.cfg/default";
