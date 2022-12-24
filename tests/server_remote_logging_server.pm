@@ -32,6 +32,8 @@ sub run {
     assert_script_run 'grep "XXX RSYSLOG TEST MESSAGE" /var/log/messages';
     # tell child test we were successful
     mutex_create("rsyslog_message_received");
+    # give it a few seconds to make sure the client gets it
+    sleep 10;
 }
 
 sub test_flags {
