@@ -2,6 +2,7 @@ use base "installedtest";
 use strict;
 use testapi;
 use lockapi;
+use utils;
 
 sub run {
     my $self = shift;
