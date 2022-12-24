@@ -8,6 +8,7 @@ sub run {
     if (not(check_screen "root_console", 0)) {
         $self->root_console(tty => 3);
     }
+    repo_setup();
     # ensure rsyslog is installed and enabled
     script_run "dnf -y install rsyslog", 180;
     script_run "systemctl enable --now rsyslog.service";
