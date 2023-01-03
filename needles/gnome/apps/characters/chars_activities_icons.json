@@ -1,0 +1,22 @@
+{
+  "area": [
+    {
+      "xpos": 276,
+      "ypos": 501,
+      "width": 93,
+      "height": 81,
+      "type": "match"
+    },
+    {
+      "xpos": 381,
+      "ypos": 402,
+      "width": 85,
+      "height": 78,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "chars_activities_icons"
+  ]
+}
