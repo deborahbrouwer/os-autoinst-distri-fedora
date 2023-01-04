@@ -185,6 +185,23 @@ for location in ("vilnius", "denali", "wellington", "poysdorf", "pune"):
 for percentage in ("zero", "fifty", "hundred"):
     testtags.append(f"panel_volume_bar_{percentage}")
     testtags.append(f"panel_volume_indicator_{percentage}")
+# Needles for Disks
+for number in ("one", "two", "three"):
+    testtags.append(f"disks_partition_{number}_formatted")
+    testtags.append(f"disks_partition_{number}_selected")
+    testtags.append(f"disks_partition_mounted_{number}")
+    testtags.append(f"disks_partition_identifier_{number}")
+    testtags.append(f"disks_partition_select_{number}")
+    testtags.append(f"disks_select_partition_{number}")
+    testtags.append(f"disks_partition_formatted_{number}")
+    testtags.append(f"disks_partition_identifier_{number}")
+for name in ("primavolta",  "secondavolta",  "terciavolta",  "boot",  "root",  "home", "renamed"):
+    testtags.append(f"disks_partition_created_{name}")
+    testtags.append(f"disks_fstype_changed_{name}")
+for typus in ("swap",  "ext4",  "xfs", "linuxroot"):
+    testtags.append(f"disks_select_{typus}")
+    testtags.append(f"disks_select_filesystem_{typus}")
+    testtags.append(f"disks_parttype_changed_{typus}")
 # variable-y in custom_change_device but we only have one value
 testtags.append("anaconda_part_device_sda")
 # for Anaconda help related needles.

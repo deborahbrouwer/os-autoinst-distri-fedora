@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "xpos": 300,
+      "ypos": 380,
+      "width": 138,
+      "height": 20,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "disks_select_swap"
+  ]
+}

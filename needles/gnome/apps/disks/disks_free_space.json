@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "xpos": 696,
+      "ypos": 259,
+      "width": 60,
+      "height": 19,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "disks_free_space"
+  ]
+}

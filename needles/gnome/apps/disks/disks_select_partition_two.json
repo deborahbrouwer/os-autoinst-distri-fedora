@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "type": "match",
+      "xpos": 695,
+      "height": 11,
+      "width": 59,
+      "ypos": 272
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "disks_select_partition_two"
+  ]
+}

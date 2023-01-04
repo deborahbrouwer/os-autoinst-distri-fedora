@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "xpos": 301,
+      "ypos": 269,
+      "width": 55,
+      "height": 16,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "disks_select_partition_one"
+  ]
+}

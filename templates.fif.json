@@ -1021,6 +1021,7 @@
                 "fedora-Silverblue-dvd_ostree-iso-x86_64-*-64bit": 50,
                 "fedora-Workstation-live-iso-ppc64le-*-ppc64le": 20,
                 "fedora-Workstation-live-iso-x86_64-*-64bit": 20,
+                "fedora-Workstation-upgrade-x86_64-*-64bit": 40,
                 "fedora-Workstation-upgrade-aarch64-*-aarch64": 40,
                 "fedora-Workstation-raw_xz-raw.xz-aarch64-*-aarch64": 22
             },
@@ -1037,6 +1038,7 @@
                 "fedora-Silverblue-dvd_ostree-iso-x86_64-*-64bit": 50,
                 "fedora-Workstation-live-iso-ppc64le-*-ppc64le": 20,
                 "fedora-Workstation-live-iso-x86_64-*-64bit": 20,
+                "fedora-Workstation-upgrade-x86_64-*-64bit": 40,
                 "fedora-Workstation-upgrade-aarch64-*-aarch64": 40,
                 "fedora-Workstation-raw_xz-raw.xz-aarch64-*-aarch64": 22
             },
@@ -1053,6 +1055,7 @@
                 "fedora-Silverblue-dvd_ostree-iso-x86_64-*-64bit": 50,
                 "fedora-Workstation-live-iso-ppc64le-*-ppc64le": 20,
                 "fedora-Workstation-live-iso-x86_64-*-64bit": 20,
+                "fedora-Workstation-upgrade-x86_64-*-64bit": 40,
                 "fedora-Workstation-upgrade-aarch64-*-aarch64": 40,
                 "fedora-Workstation-raw_xz-raw.xz-aarch64-*-aarch64": 22
             },
@@ -1069,6 +1072,7 @@
                 "fedora-Silverblue-dvd_ostree-iso-x86_64-*-64bit": 50,
                 "fedora-Workstation-live-iso-ppc64le-*-ppc64le": 20,
                 "fedora-Workstation-live-iso-x86_64-*-64bit": 20,
+                "fedora-Workstation-upgrade-x86_64-*-64bit": 40,
                 "fedora-Workstation-upgrade-aarch64-*-aarch64": 40,
                 "fedora-Workstation-raw_xz-raw.xz-aarch64-*-aarch64": 22
             },
@@ -1079,12 +1083,30 @@
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%"
             }
         },
+        "disks": {
+            "profiles": {
+                "fedora-Silverblue-dvd_ostree-iso-ppc64le-*-ppc64le": 50,
+                "fedora-Silverblue-dvd_ostree-iso-x86_64-*-64bit": 50,
+                "fedora-Workstation-live-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Workstation-live-iso-x86_64-*-64bit": 20,
+                "fedora-Workstation-upgrade-x86_64-*-64bit": 40,
+                "fedora-Workstation-upgrade-aarch64-*-aarch64": 40,
+                "fedora-Workstation-raw_xz-raw.xz-aarch64-*-aarch64": 22
+            },
+            "settings": {
+                "BOOTFROM": "c",
+                "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
+                "POSTINSTALL_PATH": "tests/applications/disks",
+                "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%"
+            }
+        },
         "eog": {
             "profiles": {
                 "fedora-Silverblue-dvd_ostree-iso-ppc64le-*-ppc64le": 50,
                 "fedora-Silverblue-dvd_ostree-iso-x86_64-*-64bit": 50,
                 "fedora-Workstation-live-iso-ppc64le-*-ppc64le": 20,
                 "fedora-Workstation-live-iso-x86_64-*-64bit": 20,
+                "fedora-Workstation-upgrade-x86_64-*-64bit": 40,
                 "fedora-Workstation-upgrade-aarch64-*-aarch64": 40,
                 "fedora-Workstation-raw_xz-raw.xz-aarch64-*-aarch64": 22
             },

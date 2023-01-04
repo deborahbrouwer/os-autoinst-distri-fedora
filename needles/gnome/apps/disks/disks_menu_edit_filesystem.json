@@ -1,15 +1,15 @@
 {
   "area": [
     {
-      "xpos": 590,
-      "ypos": 525,
-      "width": 59,
+      "xpos": 315,
+      "ypos": 233,
+      "width": 123,
       "height": 21,
       "type": "match"
     }
   ],
   "properties": [],
   "tags": [
-    "gnome_button_delete"
+    "disks_menu_edit_filesystem"
   ]
 }
