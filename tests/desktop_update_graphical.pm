@@ -37,10 +37,10 @@ sub run {
         sleep 3;
         menu_launch_type('update');
     }
-    # GNOME Software has a welcome screen, get rid of it if it shows
-    # up (but don't fail if it doesn't, we're not testing that)
-    if ($desktop eq 'gnome' && check_screen 'gnome_software_welcome', 10) {
-        send_key 'ret';
+    # GNOME Software 44+ has a 3rd party source pop-up, get rid of it
+    # if it shows up (but don't fail if it doesn't, we're not testing that)
+    if ($desktop eq 'gnome' && check_screen 'gnome_software_ignore', 10) {
+        click_lastmatch;
     }
     # go to the 'update' interface. We may be waiting some time at a
     # 'Software catalog is being loaded' screen.
