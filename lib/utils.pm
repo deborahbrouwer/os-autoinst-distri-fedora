@@ -670,6 +670,11 @@ sub _repo_setup_updates {
         # already and we want to fail if they weren't, or CANNED
         # tests, there's no point updating the toolbox
         script_run "dnf -y update", 900 unless (get_var("UPGRADE") || get_var("INSTALL") || get_var("CANNED"));
+        # however, on liveinst tests, we need to update the packages
+        # we installed above, just in case they're in the update
+        # under test; otherwise we get a bogus failure for the package
+        # not being updated
+        script_run "dnf -y update bodhi-client createrepo koji", 600 if (get_var("INSTALL") && !get_var("CANNED"));
     }
     # exit the toolbox on CANNED
     if (get_var("CANNED")) {
