@@ -61,19 +61,11 @@ sub add_repo {
     # configure an additional repository
     assert_and_click "anaconda_add_dropdown";
     assert_and_click "anaconda_add";
-    # shift-tab seven times gets us to the scheme box
-    for (my $i = 0; $i < 7; $i++) {
+    # shift-tab four times gets us to the URL box
+    for (my $i = 0; $i < 4; $i++) {
         send_key "shift-tab";
         usleep 100;
     }
-    # select appropriate repo type for the URL by pressing 'down' a given
-    # number of times. default - 1 - is https
-    my $num = 1;
-    for (my $i = 0; $i < $num; $i++) {
-        send_key "down";
-        usleep 100;
-    }
-    send_key "tab";
     type_string $repourl;
     if ($metalink) {
         # select metalink in URL type dropdown
