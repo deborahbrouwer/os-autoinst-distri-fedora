@@ -59,6 +59,7 @@ sub add_repo {
         $repourl =~ s/^ml://;
     }
     # configure an additional repository
+    assert_and_click "anaconda_add_dropdown";
     assert_and_click "anaconda_add";
     # shift-tab seven times gets us to the scheme box
     for (my $i = 0; $i < 7; $i++) {
