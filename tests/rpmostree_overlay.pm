@@ -20,6 +20,13 @@ sub run {
     # disable graphical boot on graphical images
     assert_script_run "systemctl set-default multi-user.target";
 
+    # Try and cancel any running rpm-ostree operations (GNOME Software
+    # may be trying to refresh or something). This often needs to be
+    # done multiple times, so let's go with 6
+    for my $n (1 .. 6) {
+        script_run "rpm-ostree cancel";
+    }
+
     # Install htop as rpm-ostree overlay. Let's have timeout defined
     # quite generously, because it loads the package DBs.
     assert_script_run "rpm-ostree install htop", timeout => 300;
@@ -62,6 +69,11 @@ sub run {
 
     # See if postgresql is started
     assert_script_run "systemctl is-active postgresql";
+
+    # Cancel running operations again
+    for my $n (1 .. 6) {
+        script_run "rpm-ostree cancel";
+    }
 
     # Uninstall htop and postgresql again.
     assert_script_run "rpm-ostree uninstall htop postgresql-server", timeout => 300;
