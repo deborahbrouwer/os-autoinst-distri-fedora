@@ -67,6 +67,9 @@ sub run {
     wait_still_screen(stilltime => 2, similarity_level => 45);
     sleep 2;
     type_very_safely "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/\n";
+    # sometimes there's some stupid header taking up space and we
+    # need to scroll down to see the 'add' button
+    send_key_until_needlematch "firefox_addon_add", "pgdn", 3, 5;
     assert_and_click "firefox_addon_add";
     assert_and_click "firefox_addon_install";
     assert_and_click "firefox_addon_success";
