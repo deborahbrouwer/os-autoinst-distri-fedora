@@ -649,7 +649,7 @@ sub _repo_setup_updates {
     # and similar files because, on ostree-based installs where we
     # have to use a toolbox container for part of this, it's common
     # to the host system and container
-    assert_script_run 'rpm -qp *.rpm --qf "%{SOURCERPM} %{EPOCH} %{NAME}-%{VERSION}-%{RELEASE}\n" | sort -u > /mnt/updatepkgs.txt';
+    assert_script_run 'rpm -qp *.rpm --qf "%{SOURCERPM} %{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE}\n" | sort -u > /mnt/updatepkgs.txt';
     upload_logs "/mnt/updatepkgs.txt";
     # also log just the binary package names: this is so we can check
     # later whether any package from the update *should* have been
@@ -1107,7 +1107,7 @@ sub advisory_get_installed_packages {
     # bail out if the file doesn't exist: this is in case we get
     # here in the post-fail hook but we failed before creating it
     return if script_run "test -f /mnt/updatepkgs.txt";
-    assert_script_run 'rpm -qa --qf "%{SOURCERPM} %{EPOCH} %{NAME}-%{VERSION}-%{RELEASE}\n" | sort -u > /tmp/allpkgs.txt', timeout => 90;
+    assert_script_run 'rpm -qa --qf "%{SOURCERPM} %{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE}\n" | sort -u > /tmp/allpkgs.txt', timeout => 90;
     # this finds lines which appear in both files
     # http://www.unix.com/unix-for-dummies-questions-and-answers/34549-find-matching-lines-between-2-files.html
     if (script_run 'comm -12 /tmp/allpkgs.txt /mnt/updatepkgs.txt > /mnt/testedpkgs.txt') {
@@ -1152,24 +1152,26 @@ sub advisory_check_nonmatching_packages {
     # (we need four to reach bash, and half of them get eaten by perl or
     # something along the way). Yes, it only works with *single* quotes. Yes,
     # I hate escaping
-    script_run 'for pkg in $(cat /mnt/updatepkgnames.txt); do rpm -q $pkg && rpm -q $pkg --last | head -1 | cut -d" " -f1 | sed -e \'s,\^,\\\\\\\\^,g\' | xargs rpm -q --qf "%{SOURCERPM} %{EPOCH} %{NAME}-%{VERSION}-%{RELEASE}\n" >> /tmp/installedupdatepkgs.txt; done', timeout => 180;
+    script_run 'for pkg in $(cat /mnt/updatepkgnames.txt); do rpm -q $pkg && rpm -q $pkg --last | head -1 | cut -d" " -f1 | sed -e \'s,\^,\\\\\\\\^,g\' | xargs rpm -q --qf "%{SOURCERPM} %{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE}\n" >> /tmp/installedupdatepkgs.txt; done', timeout => 180;
     script_run 'sort -u -o /tmp/installedupdatepkgs.txt /tmp/installedupdatepkgs.txt';
     # for debugging, may as well always upload these, can't hurt anything
     upload_logs "/tmp/installedupdatepkgs.txt", failok => 1;
     upload_logs "/mnt/updatepkgs.txt", failok => 1;
-    # if any line appears in installedupdatepkgs.txt but not updatepkgs.txt,
-    # we have a problem.
-    if (script_run 'comm -23 /tmp/installedupdatepkgs.txt /mnt/updatepkgs.txt > /mnt/installednotupdatedpkgs.txt') {
-        # occasionally, for some reason, it's unhappy about sorting;
-        # we shouldn't fail the test in this case, just make a note
-        # of it so we can look why...
-        diag "Installed vs. all update package comparison unexpectedly returned non-zero!";
+    # download the check script and run it
+    # FIXME: change this to main when the PR is merged
+    assert_script_run 'curl -o updvercheck.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/better-check-nonmatching/f/updvercheck.py', timeout => 120;
+    my $advisory = get_var("ADVISORY");
+    my $cmd = 'python3 ./updvercheck.py /mnt/updatepkgs.txt /tmp/installedupdatepkgs.txt';
+    $cmd .= " $advisory" if ($advisory);
+    my $ret = script_run $cmd;
+    # 2 is warnings only, 3 is problems, 1 means the script died in
+    # some other way (probably a bug)
+    if ($ret == 2) {
+        record_soft_failure "Some update package(s) not installed, but this is probably OK, see script output";
     }
-    # this exits 1 if the file is zero-length, 0 if it's longer
-    # if it's 0, that's *BAD*: we want to upload the file and fail
-    unless (script_run 'test -s /mnt/installednotupdatedpkgs.txt') {
-        upload_logs "/mnt/installednotupdatedpkgs.txt", failok => 1;
-        my $message = "Package(s) from update not installed when it should have been! See installednotupdatedpkgs.txt";
+    if ($ret == 1 || $ret == 3) {
+        my $message = "Package(s) from update not installed when it should have been! See script output";
+        $message = "Script failed unexpectedly!" if ($ret == 1);
         if ($args{fatal}) {
             set_var("_ACNMP_DONE", "1");
             die $message;
