@@ -78,7 +78,7 @@ sub run {
     # upload the kickstart so we can check it
     upload_logs "openqa.ks";
     # now install the tools into the mock
-    assert_script_run "mock -r openqa --isolation=simple --install bash coreutils glibc-all-langpacks lorax-lmc-novirt selinux-policy-targeted shadow-utils util-linux", 600;
+    assert_script_run "mock -r openqa --isolation=simple --install bash coreutils glibc-all-langpacks lorax-lmc-novirt selinux-policy-targeted shadow-utils util-linux", 900;
     # now make the image build directory inside the mock root and put the kickstart there
     assert_script_run 'mock -r openqa --isolation=simple --chroot "mkdir -p /chroot_tmpdir"';
     assert_script_run "mock -r openqa --isolation=simple --copyin openqa.ks /chroot_tmpdir";
