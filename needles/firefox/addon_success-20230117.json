@@ -1,22 +1,22 @@
 {
-  "area": [
-    {
-      "height": 17,
-      "width": 62,
-      "type": "match",
-      "ypos": 524,
-      "xpos": 529
-    },
-    {
-      "height": 19,
-      "xpos": 550,
-      "type": "match",
-      "width": 20,
-      "ypos": 128
-    }
-  ],
-  "properties": [],
-  "tags": [
-    "firefox_addon_success"
-  ]
+    "area": [
+        {
+            "height": 17,
+            "type": "match",
+            "width": 42,
+            "xpos": 529,
+            "ypos": 524
+        },
+        {
+            "height": 19,
+            "type": "match",
+            "width": 20,
+            "xpos": 550,
+            "ypos": 128
+        }
+    ],
+    "properties": [],
+    "tags": [
+        "firefox_addon_success"
+    ]
 }
