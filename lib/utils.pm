@@ -1158,8 +1158,7 @@ sub advisory_check_nonmatching_packages {
     upload_logs "/tmp/installedupdatepkgs.txt", failok => 1;
     upload_logs "/mnt/updatepkgs.txt", failok => 1;
     # download the check script and run it
-    # FIXME: change this to main when the PR is merged
-    assert_script_run 'curl -o updvercheck.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/better-check-nonmatching/f/updvercheck.py', timeout => 120;
+    assert_script_run 'curl -o updvercheck.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/updvercheck.py', timeout => 120;
     my $advisory = get_var("ADVISORY");
     my $cmd = 'python3 ./updvercheck.py /mnt/updatepkgs.txt /tmp/installedupdatepkgs.txt';
     $cmd .= " $advisory" if ($advisory);
