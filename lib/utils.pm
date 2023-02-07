@@ -87,7 +87,7 @@ sub boot_to_login_screen {
         }
         assert_screen "login_screen", $args{timeout};
         if (match_has_tag "graphical_login") {
-            wait_still_screen 10, 30;
+            wait_still_screen(timeout => 30, stilltime => 10, similarity_level => 38);
             assert_screen "login_screen";
         }
     }
