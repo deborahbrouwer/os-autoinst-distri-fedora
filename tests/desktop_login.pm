@@ -61,7 +61,7 @@ sub login_user {
     my $user = $args{user};
     my $password = $args{password};
     my $method = $args{method};
-    if (!check_screen "login_$user") {
+    if ($method ne "unlock" && !check_screen "login_$user") {
         # Sometimes, especially in SDDM, we do not get the user list
         # but rather a "screensaver" screen for the DM. If this is the
         # case, hit Escape to bring back the user list.
