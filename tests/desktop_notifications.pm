@@ -58,7 +58,9 @@ sub run {
         }
     }
     # can't use assert_script_run here as long as we're on tty1
-    type_string "systemctl isolate graphical.target\n";
+    # we don't use isolate per:
+    # https://github.com/systemd/systemd/issues/26364#issuecomment-1424900066
+    type_string "systemctl start graphical.target\n";
     # we trust systemd to switch us to the right tty here
     if (get_var("BOOTFROM")) {
         assert_screen 'graphical_login', 60;
