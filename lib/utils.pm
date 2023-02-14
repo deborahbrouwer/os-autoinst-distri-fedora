@@ -582,7 +582,13 @@ sub _repo_setup_updates {
     assert_script_run "cd /mnt/update_repo";
     # on CANNED, we need to enter the toolbox at this point
     if (get_var("CANNED")) {
-        type_string "toolbox -y enter\n";
+        my $tboxcmd = "toolbox -y enter";
+        # FIXME there's no f39 toolbox container yet:
+        # https://github.com/containers/toolbox/issues/1233
+        # drop this workaround when that's fixed
+        $tboxcmd .= " -r 38" if (get_var("VERSION") eq get_var("RAWREL"));
+        type_string "$tboxcmd\n";
+
         # look for the little purple dot
         assert_screen "console_in_toolbox", 180;
     }
