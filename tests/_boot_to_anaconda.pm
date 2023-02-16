@@ -111,8 +111,12 @@ sub run {
             }
         }
         else {
-            # on lives, we have to explicitly launch anaconda
             if (get_var('LIVE')) {
+                if (check_screen "live_overlay_warning", 45) {
+                    record_soft_failure "Got a persistent overlay warning - https://bugzilla.redhat.com/show_bug.cgi?id=2170544";
+                    send_key "ret";
+                }
+                # on lives, we have to explicitly launch anaconda
                 my $count = 5;
                 while ($count > 0) {
                     $count -= 1;
