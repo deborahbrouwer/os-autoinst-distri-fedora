@@ -30,14 +30,8 @@ sub run {
         my $relnum = get_release_number;
         $rebase = $relnum - 1;
         # avoid rebasing from 37 to <37, bad stuff happens
-        # FIXME when
-        # https://github.com/fedora-silverblue/issue-tracker/issues/420
-        # is fixed we should change this to 38
+        # FIXME when 38 branches, we should change this to RELNUM+1
         $rebase = "rawhide" if ($relnum eq "37");
-        # FIXME: avoid rebasing to 38 until
-        # https://github.com/fedora-silverblue/issue-tracker/issues/420
-        # is fixed
-        $rebase = "37" if ($rebase eq "38");
         $target = "fedora/${rebase}/${arch}/silverblue";
     }
     elsif ($current =~ "coreos") {
