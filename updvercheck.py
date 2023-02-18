@@ -43,7 +43,7 @@ problems = []
 warnings = []
 post = set()
 ret = 0
-updstable = None
+updstableobs = None
 with open(instfname, "r", encoding="utf-8") as ifh:
     for iline in ifh.readlines():
         (_, name, epoch, version, release) = iline.strip().split(" ")
@@ -62,19 +62,19 @@ with open(instfname, "r", encoding="utf-8") as ifh:
                 problems.append(f"{msg} and this is not an update test, please check if this is a problem")
                 continue
             # check if the update is stable
-            if updstable is None:
+            if updstableobs is None:
                 try:
                     url = f"https://bodhi.fedoraproject.org/updates/{updalias}"
                     resp = json.loads(urlopen(url).read().decode("utf8"))   # pylint:disable=consider-using-with
-                    updstable = (resp.get("update", {}).get("status", "") == "stable")
+                    updstableobs = (resp.get("update", {}).get("status", "") in ("stable", "obsolete"))
                 except: # pylint:disable=bare-except
                     problems.append(f"{msg} and Bodhi is unreachable.")
                     continue
-            if updstable:
-                warnings.append(f"{msg} and update is stable, this is probably OK.")
+            if updstableobs:
+                warnings.append(f"{msg} and update is stable or obsolete, this is probably OK.")
             else:
-                problems.append(f"{msg} and update is not stable.")
-                post.add("Installed newer than update and update not stable means older version could be pushed over newer if update goes stable.")
+                problems.append(f"{msg} and update is not stable or obsolete.")
+                post.add("Installed newer than update and update not stable or obsolete means older version could be pushed over newer if update goes stable.")
 
 if warnings:
     print("WARNINGS")
