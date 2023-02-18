@@ -12,11 +12,11 @@ sub run {
         # doesn't do input method selection, and anaconda never has,
         # we have to set up the input method manually:
         # https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/3749
-        menu_launch_type "input";
+        menu_launch_type "keyboard";
         unless (check_screen "desktop_add_input_source", 30) {
             # first attempt to run this often fails for some reason
             check_desktop;
-            menu_launch_type "input";
+            menu_launch_type "keyboard";
         }
         assert_and_click "desktop_add_input_source";
         assert_and_click "desktop_input_source_japanese";
