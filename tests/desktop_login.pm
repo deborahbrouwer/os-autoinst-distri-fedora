@@ -70,7 +70,13 @@ sub login_user {
     }
     if ($method ne "unlock") {
         # When we do not just want to unlock the screen, we need to select a user.
-        assert_and_click "login_$user";
+        if (check_screen "login_$user", 30) {
+            click_lastmatch;
+        }
+        else {
+            record_soft_failure "logout seems to be taking too long";
+            assert_and_click "login_$user";
+        }
         wait_still_screen(stilltime => 5, similarity_level => 45);
     }
     if ($method eq "create") {
