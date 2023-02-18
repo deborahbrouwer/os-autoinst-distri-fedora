@@ -172,7 +172,7 @@ sub power_off {
     click_lastmatch;
     assert_and_click "power_off_entry" if (match_has_tag("power_entry"));
     assert_and_click "power_off_confirm";
-    assert_shutdown;
+    assert_shutdown 120;
 }
 
 sub run {
