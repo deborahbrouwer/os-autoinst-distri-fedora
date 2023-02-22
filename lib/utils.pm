@@ -7,7 +7,7 @@ use Exporter;
 
 use lockapi;
 use testapi;
-our @EXPORT = qw/run_with_error_check type_safely type_very_safely desktop_vt boot_to_login_screen console_login console_switch_layout desktop_switch_layout console_loadkeys_us do_bootloader boot_decrypt check_release menu_launch_type repo_setup setup_workaround_repo disable_updates_repos cleanup_workaround_repo console_initial_setup handle_welcome_screen gnome_initial_setup anaconda_create_user check_desktop download_modularity_tests quit_firefox advisory_get_all_packages advisory_get_installed_packages advisory_check_nonmatching_packages start_with_launcher quit_with_shortcut disable_firefox_studies select_rescue_mode copy_devcdrom_as_isofile get_release_number check_left_bar check_top_bar check_prerelease check_version spell_version_number _assert_and_click is_branched rec_log click_unwanted_notifications repos_mirrorlist register_application get_registered_applications solidify_wallpaper check_and_install_git download_testdata make_serial_writable/;
+our @EXPORT = qw/run_with_error_check type_safely type_very_safely desktop_vt boot_to_login_screen console_login console_switch_layout desktop_switch_layout console_loadkeys_us do_bootloader boot_decrypt check_release menu_launch_type repo_setup setup_workaround_repo disable_updates_repos cleanup_workaround_repo console_initial_setup handle_welcome_screen gnome_initial_setup anaconda_create_user check_desktop download_modularity_tests quit_firefox advisory_get_installed_packages advisory_check_nonmatching_packages start_with_launcher quit_with_shortcut disable_firefox_studies select_rescue_mode copy_devcdrom_as_isofile get_release_number check_left_bar check_top_bar check_prerelease check_version spell_version_number _assert_and_click is_branched rec_log click_unwanted_notifications repos_mirrorlist register_application get_registered_applications solidify_wallpaper check_and_install_git download_testdata make_serial_writable/;
 
 # We introduce this global variable to hold the list of applications that have
 # registered during the apps_startstop_test when they have sucessfully run.
@@ -466,7 +466,7 @@ sub setup_workaround_repo {
     # for any release, the hash can be empty and this will do nothing
     my $version = shift || get_var("VERSION");
     cleanup_workaround_repo;
-    script_run "dnf -y install bodhi-client createrepo_c koji", 300;
+    script_run "dnf -y install bodhi-client createrepo koji", 300;
     # write a repo config file, unless this is the support_server test
     # and it is running on a different release than the update is for
     # (in this case we need the repo to exist but do not want to use
@@ -677,6 +677,11 @@ sub _repo_setup_updates {
         # already and we want to fail if they weren't, or CANNED
         # tests, there's no point updating the toolbox
         script_run "dnf -y update", 1200 unless (get_var("UPGRADE") || get_var("INSTALL") || get_var("CANNED"));
+        # however, on liveinst tests, we need to update the packages
+        # we installed above, just in case they're in the update
+        # under test; otherwise we get a bogus failure for the package
+        # not being updated
+        script_run "dnf -y update bodhi-client createrepo koji", 600 if (get_var("INSTALL") && !get_var("CANNED"));
     }
     # exit the toolbox on CANNED
     if (get_var("CANNED")) {
@@ -1115,12 +1120,6 @@ sub quit_with_shortcut {
 
 }
 
-sub advisory_get_all_packages {
-    # skip if it's already been done
-    return unless script_run "test -f /tmp/allpkgs.txt";
-    assert_script_run 'rpm -qa --qf "%{SOURCERPM} %{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE}\n" | sort -u > /tmp/allpkgs.txt', timeout => 90;
-}
-
 # For update tests (this only works if we've been through
 # _repo_setup_updates), figure out which packages from the update
 # are currently installed. This is here so we can do it both in
@@ -1129,7 +1128,7 @@ sub advisory_get_installed_packages {
     # bail out if the file doesn't exist: this is in case we get
     # here in the post-fail hook but we failed before creating it
     return if script_run "test -f /mnt/updatepkgs.txt";
-    advisory_get_all_packages;
+    assert_script_run 'rpm -qa --qf "%{SOURCERPM} %{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE}\n" | sort -u > /tmp/allpkgs.txt', timeout => 90;
     # this finds lines which appear in both files
     # http://www.unix.com/unix-for-dummies-questions-and-answers/34549-find-matching-lines-between-2-files.html
     if (script_run 'comm -12 /tmp/allpkgs.txt /mnt/updatepkgs.txt > /mnt/testedpkgs.txt') {
