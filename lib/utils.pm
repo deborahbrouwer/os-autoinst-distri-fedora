@@ -758,9 +758,16 @@ sub handle_welcome_screen {
     # handle the 'welcome' screen on GNOME and KDE since F38. shared
     # in a few places
     if (check_screen "getting_started", 45) {
-        send_key "alt-f4";
-        # for GNOME 40, alt-f4 doesn't work
-        send_key "esc";
+        if (get_var("DESKTOP") eq "kde") {
+            # just closing it seems to result in it running again on
+            # next boot, so let's click Skip
+            click_lastmatch;
+        }
+        else {
+            send_key "alt-f4";
+            # for GNOME 40, alt-f4 doesn't work
+            send_key "esc";
+        }
         wait_still_screen 5;
     }
     else {
