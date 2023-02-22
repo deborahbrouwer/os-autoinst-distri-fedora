@@ -86,7 +86,12 @@ sub run {
     # neither var is set, without needing an extra condition
     my $sat = get_var("START_AFTER_TEST", "1");
     my $dut = get_var("DEPLOY_UPLOAD_TEST", "2");
-    handle_welcome_screen if ($desktop eq 'gnome' && $sat ne $dut && !get_var("_WELCOME_DONE"));
+    my $relnum = get_release_number;
+    handle_welcome_screen if (
+        ($desktop eq 'gnome' || $desktop eq 'kde' && $relnum > 37) &&
+        $sat ne $dut &&
+        !get_var("_WELCOME_DONE")
+    );
     if (get_var("IMAGE_DEPLOY")) {
         # if this was an image deployment, we also need to create
         # root user now, for subsequent tests to work
