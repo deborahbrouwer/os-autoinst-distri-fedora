@@ -11,7 +11,7 @@ sub run {
     # Wait some time to settle down.
     sleep(5);
     # Go to the menu and click on shortcuts item
-    assert_and_click("gnome_burger_menu");
+    assert_and_click("contacts_left_menu");
     assert_and_click("contacts_menu_shortcuts");
     # Check that the the correct window has shown.
     assert_screen("contacts_shortcuts_shown");

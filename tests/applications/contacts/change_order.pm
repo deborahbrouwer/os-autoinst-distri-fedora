@@ -15,13 +15,13 @@ sub run {
     mouse_set(1, 1);
     # Check the original ordering of contacts
     assert_screen("contacts_contacts_ordered_name");
-    # Open the Menu and click on order item.
-    assert_and_click("gnome_burger_menu");
+    # Open the left menu and click on order item.
+    assert_and_click("contacts_left_menu");
     assert_and_click("contacts_menu_order_surname");
     # Check that the order of contacts changed.
     assert_screen("contacts_contacts_ordered_surname");
     # Repeat the action
-    assert_and_click("gnome_burger_menu");
+    assert_and_click("contacts_left_menu");
     assert_and_click("contacts_menu_order_name");
     # Check that the contacts' order changed again.
     assert_screen("contacts_contacts_ordered_name");
