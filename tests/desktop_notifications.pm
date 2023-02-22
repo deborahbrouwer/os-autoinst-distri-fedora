@@ -67,7 +67,7 @@ sub run {
         wait_still_screen 10, 30;
         # GDM 3.24.1 dumps a cursor in the middle of the screen here...
         mouse_hide;
-        if (get_var("DESKTOP") eq 'gnome') {
+        if ($desktop eq 'gnome') {
             # we have to hit enter to get the password dialog, and it
             # doesn't always work for some reason so just try it three
             # times
@@ -78,6 +78,9 @@ sub run {
         send_key 'ret';
     }
     check_desktop(timeout => 90);
+    # KDE lives on F38+ show the 'welcome tour' here and it messes
+    # with the needles because transparency, let's get rid
+    handle_welcome_screen if ($desktop eq 'kde' && !get_var("BOOTFROM"));
     # now, WE WAIT. this is just an unconditional wait - rather than
     # breaking if we see an update notification appear - so we catch
     # things that crash a few minutes after startup, etc.
