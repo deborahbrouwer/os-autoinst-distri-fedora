@@ -769,11 +769,11 @@ sub handle_welcome_screen {
             send_key "esc";
         }
         wait_still_screen 5;
+        set_var("_WELCOME_DONE", 1);
     }
     else {
         record_soft_failure "Welcome tour missing";
     }
-    set_var("_WELCOME_DONE", 1);
 }
 
 sub gnome_initial_setup {
