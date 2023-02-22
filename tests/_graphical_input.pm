@@ -12,7 +12,11 @@ sub run {
         # doesn't do input method selection, and anaconda never has,
         # we have to set up the input method manually:
         # https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/3749
-        menu_launch_type "keyboard";
+        # 'hotkey' seems to be the only thing we can type for which
+        # the 'keyboard' pane is the top result; searching for
+        # 'keyboard' or 'input' gives us results for uninstalled apps
+        # from Software
+        menu_launch_type "hotkey";
         unless (check_screen "desktop_add_input_source", 30) {
             # first attempt to run this often fails for some reason
             check_desktop;
