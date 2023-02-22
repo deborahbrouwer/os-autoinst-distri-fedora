@@ -88,7 +88,7 @@ sub run {
     my $dut = get_var("DEPLOY_UPLOAD_TEST", "2");
     my $relnum = get_release_number;
     handle_welcome_screen if (
-        ($desktop eq 'gnome' || ($desktop eq 'kde' && $relnum > 37)) &&
+        ($desktop eq 'gnome' || ($desktop eq 'kde' && $relnum > 36)) &&
         $sat ne $dut &&
         !get_var("_WELCOME_DONE")
     );
