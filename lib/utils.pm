@@ -466,7 +466,7 @@ sub setup_workaround_repo {
     # for any release, the hash can be empty and this will do nothing
     my $version = shift || get_var("VERSION");
     cleanup_workaround_repo;
-    script_run "dnf -y install bodhi-client createrepo koji", 300;
+    script_run "dnf -y install bodhi-client createrepo_c koji", 300;
     # write a repo config file, unless this is the support_server test
     # and it is running on a different release than the update is for
     # (in this case we need the repo to exist but do not want to use
@@ -610,7 +610,7 @@ sub _repo_setup_updates {
         assert_script_run "dnf -y install glibc-langpack-en", 300;
         assert_script_run "export LC_ALL=en_US.UTF-8";
     }
-    script_run "dnf -y install bodhi-client createrepo koji", 300;
+    script_run "dnf -y install bodhi-client createrepo_c koji", 300;
 
     # download the packages
     if (get_var("ADVISORY_NVRS") || get_var("ADVISORY_NVRS_1")) {
@@ -677,11 +677,11 @@ sub _repo_setup_updates {
         # already and we want to fail if they weren't, or CANNED
         # tests, there's no point updating the toolbox
         script_run "dnf -y update", 1200 unless (get_var("UPGRADE") || get_var("INSTALL") || get_var("CANNED"));
-        # however, on liveinst tests, we need to update the packages
-        # we installed above, just in case they're in the update
-        # under test; otherwise we get a bogus failure for the package
-        # not being updated
-        script_run "dnf -y update bodhi-client createrepo koji", 600 if (get_var("INSTALL") && !get_var("CANNED"));
+        # on liveinst tests, we'll remove the packages we installed
+        # above (and their deps, which dnf will include automatically),
+        # just in case they're in the update under test; otherwise we
+        # get a bogus failure for the package not being updated
+        script_run "dnf -y remove bodhi-client createrepo koji", 600 if (get_var("INSTALL") && !get_var("CANNED"));
     }
     # exit the toolbox on CANNED
     if (get_var("CANNED")) {
