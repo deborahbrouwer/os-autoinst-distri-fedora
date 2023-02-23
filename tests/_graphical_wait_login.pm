@@ -76,22 +76,17 @@ sub run {
         _enter_password($password);
     }
 
-    # For GNOME, handle initial-setup or welcome tour, unless _WELCOME_DONE
-    # is set (indicating it's been done previously within this test run,
-    # e.g. the second time this module runs on the update flow, or earlier
-    # in the boot process on the INSTALL_NO_USER flow), or START_AFTER_TEST
-    # is set to the same value as DEPLOY_UPLOAD_TEST (in which case it will
-    # have been done by the previous test run)
+    # Handle the welcome tour, unless _WELCOME_DONE is set (indicating
+    # it's been done previously within this test run, e.g. the second
+    # time this module runs on the update flow, or earlier in the boot
+    # process on the INSTALL_NO_USER flow), or START_AFTER_TEST is set
+    # to the same value as DEPLOY_UPLOAD_TEST (in which case it will
+    # have been done by the previous test run).
     # the point of the default values here is to make the check fail if
     # neither var is set, without needing an extra condition
     my $sat = get_var("START_AFTER_TEST", "1");
     my $dut = get_var("DEPLOY_UPLOAD_TEST", "2");
-    my $relnum = get_release_number;
-    handle_welcome_screen if (
-        ($desktop eq 'gnome' || ($desktop eq 'kde' && $relnum > 36)) &&
-        $sat ne $dut &&
-        !get_var("_WELCOME_DONE")
-    );
+    handle_welcome_screen if ($sat ne $dut && !get_var("_WELCOME_DONE"));
     if (get_var("IMAGE_DEPLOY")) {
         # if this was an image deployment, we also need to create
         # root user now, for subsequent tests to work
