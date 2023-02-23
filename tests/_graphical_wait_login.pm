@@ -72,7 +72,7 @@ sub run {
         assert_screen "graphical_login_input";
         # seems like we often double-type on aarch64 if we start right
         # away
-        wait_still_screen 5;
+        wait_still_screen(stilltime => 5, similarity_level => 38);
         _enter_password($password);
     }
 
