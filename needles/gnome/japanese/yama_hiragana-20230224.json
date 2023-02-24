@@ -1,0 +1,17 @@
+{
+  "area": [
+    {
+      "ypos": 57,
+      "width": 29,
+      "height": 17,
+      "xpos": 369,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "DESKTOP-gnome",
+    "LANGUAGE-japanese",
+    "desktop_yama_hiragana"
+  ]
+}

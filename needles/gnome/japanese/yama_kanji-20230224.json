@@ -1,0 +1,17 @@
+{
+  "area": [
+    {
+      "xpos": 371,
+      "type": "match",
+      "width": 12,
+      "ypos": 58,
+      "height": 16
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "DESKTOP-gnome",
+    "LANGUAGE-japanese",
+    "desktop_yama_kanji"
+  ]
+}
