@@ -13,6 +13,8 @@ sub run {
     # Check that it is started
     assert_screen 'krfb_runs', timeout => 60;
     wait_still_screen(3);
+    # close the "remote control requested" window if shown
+    send_key "esc";
     # Close the application
     quit_with_shortcut();
 }
