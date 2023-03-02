@@ -2162,6 +2162,7 @@
             },
             "settings": {
                 "BOOTFROM": "c",
+                "CANNED": "",
                 "HDD_1": "disk_f%CURRREL%_minimal-uefi_3_%ARCH%.qcow2",
                 "NICTYPE": "tap",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
