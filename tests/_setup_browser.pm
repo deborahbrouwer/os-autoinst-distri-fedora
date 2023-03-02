@@ -7,15 +7,14 @@ sub run {
     my $self = shift;
     # set up appropriate repositories
     repo_setup();
-    # install a desktop and firefox so we can actually try it
+    # install X environment
     assert_script_run "dnf -y groupinstall 'base-x'", 300;
-    # FIXME: this should probably be in base-x...X seems to fail without
-    assert_script_run "dnf -y install libglvnd-egl", 180;
-    # try to avoid random weird font selection happening
-    assert_script_run "dnf -y install dejavu-sans-fonts dejavu-sans-mono-fonts dejavu-serif-fonts", 180;
-    # since firefox-85.0-2, firefox doesn't seem to run without this
-    assert_script_run "dnf -y install dbus-glib", 180;
-    assert_script_run "dnf -y install firefox", 180;
+    # install firefox, plus our basic default fonts to try and avoid
+    # random weird font selection happening
+    assert_script_run "dnf -y install firefox google-noto-sans-vf-fonts google-noto-sans-mono-vf-fonts google-noto-serif-vf-fonts", 180;
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1439429
+    assert_script_run "sed -i -e 's,enable_xauth=1,enable_xauth=0,g' /usr/bin/startx";
+    disable_firefox_studies;
 }
 
 sub test_flags {

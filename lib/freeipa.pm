@@ -39,9 +39,6 @@ sub start_webui {
     my $user_screen = "freeipa_webui_user";
     $user_screen = "freeipa_webui_users" if ($user eq 'admin');
 
-    # https://bugzilla.redhat.com/show_bug.cgi?id=1439429
-    assert_script_run "sed -i -e 's,enable_xauth=1,enable_xauth=0,g' /usr/bin/startx";
-    disable_firefox_studies;
     type_string "startx /usr/bin/firefox -width 1024 -height 768 https://ipa001.test.openqa.fedoraproject.org\n";
     assert_screen ["freeipa_webui_login", $user_screen], 60;
     wait_still_screen(stilltime => 5, similarity_level => 45);
