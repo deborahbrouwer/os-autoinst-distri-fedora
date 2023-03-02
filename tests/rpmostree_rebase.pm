@@ -50,10 +50,19 @@ sub run {
     validate_script_output "rpm-ostree status -b", sub { m/$target/ }, 300;
 
     # rollback and reboot
-    validate_script_output "rpm-ostree rollback", sub { m/systemctl reboot/ }, 300;
-    script_run "systemctl reboot", 0;
-
-    boot_to_login_screen;
+    if (get_var("ADVISORY") eq "FEDORA-2023-f6afa6f9e5") {
+        # FIXME: workaround for a very odd phenomenon with this update
+        # https://bodhi.fedoraproject.org/updates/FEDORA-2023-f6afa6f9e5#comment-2919613
+        # if that keeps happening after the update is stable we will
+        # have to do this for all affected releases
+        script_run "rpm-ostree rollback && systemctl reboot", 0;
+        boot_to_login_screen(timeout => 450);
+    }
+    else {
+        validate_script_output "rpm-ostree rollback", sub { m/systemctl reboot/ }, 300;
+        script_run "systemctl reboot", 0;
+        boot_to_login_screen;
+    }
     $self->root_console(tty => 3);
 
     # check to make sure rollback successful
