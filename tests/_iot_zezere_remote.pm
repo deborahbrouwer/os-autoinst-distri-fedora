@@ -40,7 +40,8 @@ sub run {
     assert_and_click "zezere_device_management";
     assert_and_click "zezere_submit_provision";
     assert_and_click "zezere_provision_menu";
-    assert_and_click "zezere_provision_installed";
+    send_key_until_needlematch("zezere_provision_installed", "down", 3, 3);
+    send_key "ret";
     assert_and_click "zezere_provision_schedule";
     # exit
     quit_firefox;
