@@ -8,7 +8,7 @@ sub run {
     # deploy a zezere (Fedora IoT provisioning server) instance
     assert_script_run "dnf --enablerepo=updates-testing -y install zezere", 180;
     # write config file
-    assert_script_run "printf '[global]\nsecret_key = SECRET_KEY\ndebug = yes\nallowed_hosts = localhost, localhost.localdomain, 172.16.2.118\nauth_method = local\n\n[oidc.rp]\nsign_algo = RS256\n\n[database]\nengine = django.db.backends.sqlite3\nname = /var/local/zezere.sqlite3' > /etc/zezere.conf";
+    assert_script_run "printf '[global]\nsecret_key = SECRET_KEY\ndebug = yes\nallowed_hosts = localhost, localhost.localdomain, 172.16.2.118\nsecure_cookie = yes\nauth_method = local\n\n[oidc.rp]\nsign_algo = RS256\n\n[database]\nengine = django.db.backends.sqlite3\nname = /var/local/zezere.sqlite3' > /etc/zezere.conf";
     # write systemd unit file
     assert_script_run "printf '[Unit]\nDescription=Zezere provisioning server\n\n[Service]\nExecStart=/usr/bin/zezere-manage runserver 172.16.2.118:80\n\n[Install]\nWantedBy=multi-user.target' > /etc/systemd/system/zezere.service";
     assert_script_run "systemctl daemon-reload";
