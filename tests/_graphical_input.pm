@@ -20,7 +20,7 @@ sub run {
         unless (check_screen "desktop_add_input_source", 30) {
             # first attempt to run this often fails for some reason
             check_desktop;
-            menu_launch_type "keyboard";
+            menu_launch_type "hotkey";
         }
         assert_and_click "desktop_add_input_source";
         assert_and_click "desktop_input_source_japanese";
