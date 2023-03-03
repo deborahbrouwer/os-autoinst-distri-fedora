@@ -1,0 +1,16 @@
+{
+  "area": [
+    {
+      "ypos": 133,
+      "width": 60,
+      "height": 21,
+      "xpos": 15,
+      "type": "match",
+      "match": 90
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "zezere_login"
+  ]
+}
