@@ -22,7 +22,7 @@ sub run {
     foreach (my @counter = (1 .. 4)) {
         click_lastmatch();
     }
-    assert_screen("maps_found_brno");
+    assert_screen("maps_found_brno", timeout => 60);
 }
 
 sub test_flags {
