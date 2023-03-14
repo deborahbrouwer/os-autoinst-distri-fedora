@@ -17,7 +17,12 @@ sub run {
     if (get_var("ADVISORY_OR_TASK") && get_var("VERSION") eq get_var("RAWREL")) {
         assert_script_run 'dnf config-manager --set-disabled koji-rawhide';
     }
-    prepare_test_packages;
+    # for tests of pykickstart updates, we need to use a different dummy
+    my $package = "python3-kickstart";
+    if (get_var("ADVISORY_OR_TASK")) {
+        $package = "python3-blivet" unless (script_run "grep python3-kickstart /mnt/updatepkgs.txt");
+    }
+    prepare_test_packages $package;
     # get back to the desktop
     desktop_vt;
 
@@ -135,7 +140,7 @@ sub run {
     }
     # back to console to verify updates
     $self->root_console(tty => 3);
-    verify_updated_packages;
+    verify_updated_packages $package;
 }
 
 sub test_flags {
