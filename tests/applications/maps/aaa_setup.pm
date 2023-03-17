@@ -13,6 +13,10 @@ sub run {
     menu_launch_type("Maps");
     # Check it has started, or we got the permission prompt
     assert_screen ['apps_run_maps', 'grant_access'];
+    # sometimes we match apps_run_maps for a split second before
+    # grant_access appears, so handle that
+    wait_still_screen 3;
+    assert_screen ['apps_run_maps', 'grant_access'];
     if (match_has_tag 'grant_access') {
         click_lastmatch;
         assert_screen 'apps_run_maps';
