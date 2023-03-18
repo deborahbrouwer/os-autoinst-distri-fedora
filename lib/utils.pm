@@ -479,7 +479,7 @@ sub setup_workaround_repo {
     my %workarounds = (
         "36" => [],
         "37" => [],
-        "38" => ["FEDORA-2023-a5e10b188a", "FEDORA-2023-a433b7cf46"],
+        "38" => [],
         "39" => [],
     );
     # then we'll download each update for our release:
