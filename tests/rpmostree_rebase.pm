@@ -40,7 +40,7 @@ sub run {
     }
 
     # rebase to the chosen target
-    validate_script_output "rpm-ostree rebase $target", sub { m/systemctl reboot/ }, 300;
+    validate_script_output "rpm-ostree rebase $target --bypass-driver", sub { m/systemctl reboot/ }, 300;
     script_run "systemctl reboot", 0;
 
     boot_to_login_screen;
