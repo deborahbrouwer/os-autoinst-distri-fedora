@@ -12,6 +12,10 @@ sub run {
     # Start the Application
     menu_launch_type("weather");
     assert_screen ["apps_run_weather", "grant_access"];
+    # sometimes we match apps_run_weather for a split second before
+    # grant_access appears, so handle that
+    wait_still_screen 3;
+    assert_screen ['apps_run_weather', 'grant_access'];
     # give access rights if asked
     if (match_has_tag 'grant_access') {
         click_lastmatch;
