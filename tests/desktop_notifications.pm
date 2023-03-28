@@ -57,6 +57,19 @@ sub run {
             console_login(user => 'root', password => get_var('ROOT_PASSWORD', 'weakpassword'));
         }
     }
+    if ($desktop eq 'kde' && get_var("BOOTFROM")) {
+        # need to login as user for this
+        script_run 'exit', 0;
+        console_login(user => get_var('USER_LOGIN', 'test'), password => get_var('USER_PASSWORD', 'weakpassword'));
+        # unset the 'last time notification was shown' setting in case
+        # it got shown during install_default_upload:
+        # https://bugzilla.redhat.com/show_bug.cgi?id=2178311
+        script_run 'kwriteconfig5 --file PlasmaDiscoverUpdates --group Global --key LastNotificationTime --delete', 0;
+        wait_still_screen 5;
+        script_run 'exit', 0;
+        console_login(user => 'root', password => get_var('ROOT_PASSWORD', 'weakpassword'));
+    }
+
     # can't use assert_script_run here as long as we're on tty1
     # we don't use isolate per:
     # https://github.com/systemd/systemd/issues/26364#issuecomment-1424900066
