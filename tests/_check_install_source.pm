@@ -32,7 +32,9 @@ sub run {
             assert_script_run 'grep "Added the \'addrepo\'" /tmp/anaconda.log';
             # ...and this tells us it worked (I hope).
             assert_script_run 'grep "Load metadata for the \'addrepo\'" /tmp/anaconda.log';
-            assert_script_run 'grep "Loaded metadata from.*file:///run/install/addrepo.nfs" /tmp/anaconda.log';
+            # addrepo.nfs is from before Fedora 39, sources/mount-1000-nfs-device
+            # is from F39+
+            assert_script_run 'grep -E "Loaded metadata from.*file:///run/install/(addrepo.nfs|sources/mount-1000-nfs-device)" /tmp/anaconda.log';
         }
     }
     if ($repourl =~ /^hd:/) {
