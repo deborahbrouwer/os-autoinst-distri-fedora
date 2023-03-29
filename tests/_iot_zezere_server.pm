@@ -24,11 +24,11 @@ sub run {
     assert_script_run 'zezere-manage createsuperuser --username admin --email zezere@test.openqa.fedoraproject.org --no-input';
     # set admin password (can't find a non-interactive way sadly)
     type_string "zezere-manage changepassword admin\n";
-    sleep 2;
+    wait_still_screen 5;
     type_string "weakpassword\n";
-    sleep 2;
+    wait_still_screen 5;
     type_string "weakpassword\n";
-    sleep 2;
+    wait_still_screen 5;
     # check DB exists
     assert_script_run "ls -l /var/local/zezere.sqlite3";
     # start server
