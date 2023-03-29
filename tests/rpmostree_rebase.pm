@@ -7,6 +7,13 @@ sub run {
 
     my $self = shift;
     $self->root_console(tty => 3);
+    if (get_var("ARCH") eq "aarch64") {
+        # this should stop audit messages screwing things up
+        assert_script_run "rpm-ostree kargs --append=audit=0";
+        script_run "systemctl reboot", 0;
+        boot_to_login_screen;
+        $self->root_console(tty => 3);
+    }
 
     # list available branches
     my $subv = lc(get_var("SUBVARIANT"));
