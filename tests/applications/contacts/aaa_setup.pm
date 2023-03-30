@@ -23,6 +23,7 @@ sub run {
     # Select Local addressbook and confirm.
     assert_and_click("contacts_select_local_addressbook");
     assert_and_click("gnome_button_done");
+    wait_still_screen(2);
 
     # Make it fill the entire window.
     send_key("super-up");
