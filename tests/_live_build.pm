@@ -73,6 +73,8 @@ sub run {
     if ($relnum > 37) {
         assert_script_run 'sed -i -e "s,%end,-systemd-oomd-defaults\n%end,g" fedora-workstation-common.ks';
     }
+    # FIXME this is only needed from 2023-03-30 till the next Rawhide compose
+    assert_script_run 'sed -i -e "/kde-pim/d" fedora-kde-common.ks';
     # now flatten the kickstart
     assert_script_run "ksflatten -c fedora-live-${lcsubv}.ks -o openqa.ks";
     # upload the kickstart so we can check it
