@@ -14,6 +14,12 @@ sub run {
     assert_screen("chars_love_eyes_dialogue");
     # Click on Copy Character button.
     assert_and_click("gnome_copy_button");
+    # close the character page, so text editor doesn't start under it
+    # we hit esc twice in case the first dismisses the notification
+    wait_still_screen 2;
+    send_key("esc");
+    wait_still_screen 2;
+    send_key("esc");
     # Open text editor.
     menu_launch_type("text editor");
     wait_still_screen(3);
