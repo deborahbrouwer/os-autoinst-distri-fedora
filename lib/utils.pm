@@ -119,8 +119,10 @@ sub desktop_switch_layout {
     my $switcher = "alt-shift";    # anaconda
     $switcher = "super-spc" if $environment eq 'gnome';
     # KDE? not used yet
-    send_key $switcher;
-    assert_screen "${environment}_layout_${layout}", 3;
+    # FIXME we use send_key_until_needlematch because sometimes the
+    # switch just doesn't work in gdm:
+    # https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/6066#note_1707051
+    send_key_until_needlematch("${environment}_layout_${layout}", $switcher, 3, 3);
 }
 
 # this is used at the end of console_login to check if we got a prompt
