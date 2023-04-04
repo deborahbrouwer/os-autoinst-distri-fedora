@@ -10,9 +10,6 @@ sub run {
     # Run the application
     menu_launch_type("Calculator");
     assert_screen("apps_run_calculator");
-    # Make sure that the application will be in the
-    # basic mode.
-    send_key("ctrl-alt-b");
 }
 
 sub test_flags {
