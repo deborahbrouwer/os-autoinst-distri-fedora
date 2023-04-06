@@ -24,7 +24,7 @@ sub run {
     menu_launch_type("text editor");
     # For some reason, text editor often starts *behind* characters,
     # so we may need to hit alt-tab to find it
-    unless(check_screen("apps_run_texteditor", 15)) {
+    unless (check_screen("apps_run_texteditor", 15)) {
         send_key("alt-tab");
         assert_screen("apps_run_texteditor");
     }
