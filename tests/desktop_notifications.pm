@@ -91,9 +91,6 @@ sub run {
         send_key 'ret';
     }
     check_desktop(timeout => 90);
-    # KDE lives on F38+ show the 'welcome tour' here and it messes
-    # with the needles because transparency, let's get rid
-    handle_welcome_screen if ($desktop eq 'kde' && !get_var("BOOTFROM"));
     # now, WE WAIT. this is just an unconditional wait - rather than
     # breaking if we see an update notification appear - so we catch
     # things that crash a few minutes after startup, etc.
