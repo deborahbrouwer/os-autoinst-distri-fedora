@@ -63,7 +63,7 @@ sub run {
     assert_script_run("ls /home/test/Documents/markdown.md", timeout => '60', fail_message => 'The file has not been found in the location.', quiet => '0');
 
     # Verify that the next file has been deleted from the original location
-    assert_script_run("! ls /home/test/Documents/konkurz.md");
+    assert_script_run("! ls /home/test/Documents/evince.pdf");
 }
 
 sub test_flags {
