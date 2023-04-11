@@ -27,14 +27,17 @@ sub run {
             # this line tells us it set up a repo for our URL.
             # "repo addrepo" is older format from before Fedora 37,
             # "Add the 'addrepo" is newer format from F37+
-            assert_script_run 'grep "\(repo \|Add the \'\)addrepo.*' . ${addrepourl} . '" /tmp/packaging.log';
+            if (script_run 'grep "\(repo \|Add the \'\)addrepo.*' . ${addrepourl} . '" /tmp/packaging.log') {
+                # newer path from f39+: message is in syslog and look a bit different
+                assert_script_run 'grep "Add the \'addrepo.*file:///run/install/sources/mount-.000-nfs-device" /tmp/syslog';
+            }
             # ...this line tells us it added the repo called 'addrepo'
-            assert_script_run 'grep "Added the \'addrepo\'" /tmp/anaconda.log';
+            assert_script_run 'grep "Added the \'addrepo\'" /tmp/anaconda.log /tmp/syslog';
             # ...and this tells us it worked (I hope).
-            assert_script_run 'grep "Load metadata for the \'addrepo\'" /tmp/anaconda.log';
+            assert_script_run 'grep "Load metadata for the \'addrepo\'" /tmp/anaconda.log /tmp/syslog';
             # addrepo.nfs is from before Fedora 39, sources/mount-1000-nfs-device
-            # is from F39+
-            assert_script_run 'grep -E "Loaded metadata from.*file:///run/install/(addrepo.nfs|sources/mount-1000-nfs-device)" /tmp/anaconda.log';
+            # or mount-0000-nfs-device is from F39+
+            assert_script_run 'grep -E "Loaded metadata from.*file:///run/install/(addrepo.nfs|sources/mount-.000-nfs-device)" /tmp/anaconda.log /tmp/syslog';
         }
     }
     if ($repourl =~ /^hd:/) {
