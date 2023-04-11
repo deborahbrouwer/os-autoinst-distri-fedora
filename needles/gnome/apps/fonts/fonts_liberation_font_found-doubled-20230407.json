@@ -1,0 +1,20 @@
+{
+  "area": [
+    {
+      "xpos": 34,
+      "type": "match",
+      "ypos": 176,
+      "width": 954,
+      "height": 101
+    }
+  ],
+  "properties": [
+    {
+      "name": "workaround",
+      "value": "fonts shown twice on Silverblue: https://github.com/fedora-silverblue/issue-tracker/issues/449"
+    }
+  ],
+  "tags": [
+    "fonts_liberation_font_found"
+  ]
+}
