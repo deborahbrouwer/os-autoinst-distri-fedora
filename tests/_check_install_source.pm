@@ -57,9 +57,9 @@ sub run {
     elsif ($repourl) {
         # there are only three hard problems in software development:
         # naming things, cache expiry, off-by-one errors...and quoting
-        assert_script_run 'grep "Added the \'anaconda\'" /tmp/anaconda.log';
-        assert_script_run 'grep "Load metadata for the \'anaconda\'" /tmp/anaconda.log';
-        assert_script_run 'grep "Loaded metadata from.*' . ${repourl} . '" /tmp/anaconda.log';
+        assert_script_run 'grep "Added the \'anaconda\'" /tmp/anaconda.log /tmp/syslog';
+        assert_script_run 'grep "Load metadata for the \'anaconda\'" /tmp/anaconda.log /tmp/syslog';
+        assert_script_run 'grep "Loaded metadata from.*' . ${repourl} . '" /tmp/anaconda.log /tmp/syslog';
     }
     if ($repourl) {
         # check we don't have an error indicating our repo wasn't used.
@@ -70,6 +70,11 @@ sub run {
         # not a DVD), and this was causing false failures when running
         # universal tests on netinsts
         assert_script_run '! grep "base repo.*not valid" /tmp/packaging.log | grep -v "cdrom/file"';
+        # above form is before 3b5f8f4a61 , below form is after it; we
+        # don't seem to get the error for the cdrom repo on netinsts as
+        # of Fedora-Rawhide-20230414.n.0 at least. I'm not 100% sure
+        # where this message would wind up, so check everywhere
+        assert_script_run '! grep "base repository is invalid" /tmp/packaging.log /tmp/anaconda.log /tmp/syslog';
     }
     # just for convenience - sometimes it's useful to see this log
     # for a success case
