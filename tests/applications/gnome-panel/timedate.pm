@@ -27,7 +27,11 @@ sub run {
     # Check that when we click on World Clocks area
     # the clock application will be shown.
     assert_and_click("panel_add_world_clocks");
-    assert_and_click("apps_run_clocks");
+    assert_screen(["apps_run_clocks", "grant_access"]);
+    click_lastmatch;
+    if (match_has_tag("grant_access")) {
+        assert_and_click("apps_run_clocks");
+    }
     send_key("alt-f4");
     wait_still_screen(2);
     #
