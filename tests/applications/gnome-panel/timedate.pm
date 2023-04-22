@@ -28,6 +28,10 @@ sub run {
     # the clock application will be shown.
     assert_and_click("panel_add_world_clocks");
     assert_screen(["apps_run_clocks", "grant_access"]);
+    # sometimes we match apps_run_clocks for a split second before
+    # grant_access appears, so handle that
+    wait_still_screen 3;
+    assert_screen(["apps_run_clocks", "grant_access"]);
     click_lastmatch;
     if (match_has_tag("grant_access")) {
         assert_and_click("apps_run_clocks");
@@ -39,6 +43,10 @@ sub run {
     # the Weather app will start.
     assert_and_click("panel_datetime");
     assert_and_click("panel_select_weather_location");
+    assert_screen(["apps_run_weather", "grant_access"]);
+    # sometimes we match apps_run_weather for a split second before
+    # grant_access appears, so handle that
+    wait_still_screen 3;
     assert_screen(["apps_run_weather", "grant_access"]);
     click_lastmatch;
     if (match_has_tag("grant_access")) {
