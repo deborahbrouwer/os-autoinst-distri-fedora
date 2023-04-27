@@ -76,7 +76,8 @@ sub run {
         sleep 5;
     }
 
-    my $tags = ['desktop_package_tool_update_download', 'desktop_package_tool_update_apply'];
+    my $tags = ['desktop_package_tool_update_download', 'desktop_package_tool_update_apply'];    # testtag
+
     # Apply updates, moving the mouse every two minutes to avoid the
     # idle screen blank kicking in. Depending on whether this is KDE
     # or GNOME and what Fedora release, we may see 'apply' right away,

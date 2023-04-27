@@ -36,8 +36,8 @@ sub start_webui {
     my ($user, $password) = @_;
     # if we logged in as 'admin' we should land on the admin 'Active
     # users' screen, otherwise we should land on the user's own page
-    my $user_screen = "freeipa_webui_user";
-    $user_screen = "freeipa_webui_users" if ($user eq 'admin');
+    my $user_screen = "freeipa_webui_user";    # testtag
+    $user_screen = "freeipa_webui_users" if ($user eq 'admin');    # testtag
 
     type_string "startx /usr/bin/firefox -width 1024 -height 768 https://ipa001.test.openqa.fedoraproject.org\n";
     assert_screen ["freeipa_webui_login", $user_screen], 60;

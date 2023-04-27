@@ -19,9 +19,19 @@
 #
 # Author: Adam Williamson <awilliam@redhat.com>
 
-"""This is a check script which checks for unused needles. If none of
-the tags a needle declares is referenced in the tests, it is
-considered unused.
+"""This is a check script which checks for:
+
+1. Unused needles - if none of the tags a needle declares is referenced
+in the tests, it is considered unused.
+2. Tag assertions with no needle - if a test seems to be asserting or
+checking for a tag, but there is no needle with that tag. The code to
+decide what string literals in the tests are tags is not perfect. If
+a literal that *is* a tag is not being counted as one, you may need to
+rejig the code, or add `# testtag` to the end of the line to cue this
+script to consider it a tag. If a tag does not have a - or _ in it, it
+must be added to the `knowns` list.
+3. Image files in the needles directory with no matching JSON file.
+4. JSON files in the needles directory with no matching image file.
 """
 
 import glob
@@ -38,110 +48,152 @@ LIBPATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib")
 DOUBLEQUOTERE = re.compile('"(.*?)"')
 SINGLEQUOTERE = re.compile("'(.*?)'")
 
-# first we're gonna build a big list of all string literals
+# first we're gonna build a big list of all string literals that look
+# like they're needle tags
 testpaths = glob.glob(f"{TESTSPATH}/**/*.pm", recursive=True)
 testpaths.extend(glob.glob(f"{LIBPATH}/**/*.pm", recursive=True))
-testliterals = []
+testtags = []
 for testpath in testpaths:
     # skip if it's a symlink
     if os.path.islink(testpath):
         continue
     # otherwise, scan it for string literals
     with open(testpath, "r") as testfh:
-        testtext = testfh.read()
-    for match in DOUBLEQUOTERE.finditer(testtext):
-        testliterals.append(match[1])
-    for match in SINGLEQUOTERE.finditer(testtext):
-        testliterals.append(match[1])
+        testlines = testfh.readlines()
+    for line in testlines:
+        matchfuncs = (
+            "assert_screen",
+            "assert_and_click",
+            "check_screen",
+            "start_with_launcher",
+            "send_key_until_needlematch",
+            "# testtag"
+        )
+        for matchfunc in matchfuncs:
+            if matchfunc == "# testtag" and matchfunc in line:
+                # for the comment tag we should take all literals from
+                # the whole line
+                start = 0
+            else:
+                # for match functions we should only take literals
+                # after the function name
+                start = line.find(matchfunc)
+            # fortunately `find` returns -1 for 'no match'
+            if start > -1:
+                for match in DOUBLEQUOTERE.finditer(line[start:]):
+                    testtags.append(match[1])
+                for match in SINGLEQUOTERE.finditer(line[start:]):
+                    testtags.append(match[1])
+                if matchfunc == "send_key_until_needlematch":
+                    # strip last match because it'll be the key to hit
+                    testtags.pop()
 
+# filter the list a bit for matches that aren't tags. Almost all our
+# tags have a - or an _ in them, except a small number of weirdos;
+# this filters out a lot of false matches (like keypresses)
+knowns = ("_", "-", "bootloader", "browser", "firefox")
+testtags = [tag for tag in testtags if
+            tag and
+            not tag.isdigit() and
+            not tag.isupper() and
+            any(known in tag for known in knowns)]
+
+# keep this around for the tagnoneedle check later; we can't use
+# the 'synthetic' tags in that check as some of them we know don't
+# have needles (e.g. the range(30,100) background tags, most of those
+# don't exist yet)
+realtesttags = set(tag for tag in testtags if "$" not in tag)
 # now let's do some whitelisting, for awkward cases where we know that
 # we concatenate string literals and stuff
 # versioned backgrounds and release IDs
 for rel in range(30, 100):
-    testliterals.append(f"{rel}_background")
-    testliterals.append(f"{rel}_background_dark")
-    testliterals.append(f"version_{rel}_ident")
+    testtags.append(f"{rel}_background")
+    testtags.append(f"{rel}_background_dark")
+    testtags.append(f"version_{rel}_ident")
 # anaconda id needles, using tell_source
 for source in ("workstation", "generic", "server"):
-    testliterals.append(f"leftbar_{source}")
-    testliterals.append(f"topbar_{source}")
+    testtags.append(f"leftbar_{source}")
+    testtags.append(f"topbar_{source}")
 # keyboard layout switching, using desktop_switch_layout
 for environment in ("anaconda", "gnome"):
     for layout in ("native", "ascii"):
-        testliterals.append(f"{environment}_layout_{layout}")
+        testtags.append(f"{environment}_layout_{layout}")
 # package set selection, using get_var('PACKAGE_SET')
 for pkgset in ("kde", "workstation", "minimal"):
-    testliterals.append(f"anaconda_{pkgset}_highlighted")
-    testliterals.append(f"anaconda_{pkgset}_selected")
+    testtags.append(f"anaconda_{pkgset}_highlighted")
+    testtags.append(f"anaconda_{pkgset}_selected")
 # desktop_login stuff
 for user in ("jack", "jim"):
-    testliterals.append(f"login_{user}")
-    testliterals.append(f"user_confirm_{user}")
+    testtags.append(f"login_{user}")
+    testtags.append(f"user_confirm_{user}")
 # partitioning stuff, there's a bunch of this, all in anaconda.pm
 # multiple things use this
 for part in ("swap", "root", "efi", "boot", "bootefi", "home", "vda2"):
-    testliterals.append(f"anaconda_part_select_{part}")
-    testliterals.append(f"anaconda_blivet_part_inactive_{part}")
+    testtags.append(f"anaconda_part_select_{part}")
+    testtags.append(f"anaconda_blivet_part_inactive_{part}")
 # select_disks
 for num in range(1, 10):
-    testliterals.append(f"anaconda_install_destination_select_disk_{num}")
+    testtags.append(f"anaconda_install_destination_select_disk_{num}")
 # custom_scheme_select
 for scheme in ("standard", "lvmthin", "btrfs", "lvm"):
-    testliterals.append(f"anaconda_part_scheme_{scheme}")
+    testtags.append(f"anaconda_part_scheme_{scheme}")
 # custom_blivet_add_partition
 for dtype in ("lvmvg", "lvmlv", "lvmthin", "raid"):
-    testliterals.append(f"anaconda_blivet_part_devicetype_{dtype}")
+    testtags.append(f"anaconda_blivet_part_devicetype_{dtype}")
 for fsys in ("ext4", "xfs", "btrfs", "ppc_prep_boot", "swap", "efi_filesystem", "biosboot"):
-    testliterals.append(f"anaconda_blivet_part_fs_{fsys}")
-    testliterals.append(f"anaconda_blivet_part_fs_{fsys}_selected")
+    testtags.append(f"anaconda_blivet_part_fs_{fsys}")
+    testtags.append(f"anaconda_blivet_part_fs_{fsys}_selected")
+# this is variable-y in custom_blivet_resize_partition but we only
+# call it with 'GiB' (in disk_custom_blivet_resize_lvm.pm)
+testtags.append("anaconda_blivet_size_unit_GiB")
 # this is variable-y in custom_change_type but we only actually have
 # one value
-testliterals.append("anaconda_part_device_type_raid")
+testtags.append("anaconda_part_device_type_raid")
 # custom_change_fs
 for fsys in ("xfs", "ext4"):
-    testliterals.append(f"anaconda_part_fs_{fsys}")
-    testliterals.append(f"anaconda_part_fs_{fsys}_selected")
+    testtags.append(f"anaconda_part_fs_{fsys}")
+    testtags.append(f"anaconda_part_fs_{fsys}_selected")
 # Needles for Help viewer
 for section in ("desktop", "networking", "sound", "files", "user", "hardware",
                 "accessibility", "tipstricks", "morehelp"):
-    testliterals.append(f"help_section_{section}")
-    testliterals.append(f"help_section_content_{section}")
+    testtags.append(f"help_section_{section}")
+    testtags.append(f"help_section_content_{section}")
 # Needles for Calculator
 for button in ("div", "divider", "zero", "one", "two", "three", "four", "five",
                 "six","seven", "eight", "nine", "mod", "percent", "pi", "root",
                 "square", "sub"):
-    testliterals.append(f"calc_button_{button}")
+    testtags.append(f"calc_button_{button}")
 for result in ("BokZw", "Czo4s", "O9qsL", "WIxiR", "b5y2B", "h7MfO", "qxuBK",
                 "tWshx", "uC8Ul", "3LAG3"):
-    testliterals.append(f"calc_result_{result}")
+    testtags.append(f"calc_result_{result}")
 # Needles for Contacts
 for hashname in ("jlJmL", "7XGzO", "ps61y", "OvXj~", "GqYOp", "VEFrP"):
-    testliterals.append(f"contacts_name_{hashname}")
-    testliterals.append(f"contacts_contact_listed_{hashname}")
-    testliterals.append(f"contacts_contact_existing_{hashname}")
-    testliterals.append(f"contacts_contact_doubled_{hashname}")
-    testliterals.append(f"contacts_contact_altered_{hashname}")
-    testliterals.append(f"contacts_contact_added_{hashname}")
+    testtags.append(f"contacts_name_{hashname}")
+    testtags.append(f"contacts_contact_listed_{hashname}")
+    testtags.append(f"contacts_contact_existing_{hashname}")
+    testtags.append(f"contacts_contact_doubled_{hashname}")
+    testtags.append(f"contacts_contact_altered_{hashname}")
+    testtags.append(f"contacts_contact_added_{hashname}")
 for info in ("home", "personal", "work"):
-    testliterals.append(f"contacts_label_{info}")
+    testtags.append(f"contacts_label_{info}")
 # Needles for Maps
 for location in ("vilnius", "denali", "wellington", "poysdorf", "pune"):
-    testliterals.append(f"maps_select_{location}")
-    testliterals.append(f"maps_found_{location}")
-    testliterals.append(f"maps_info_{location}")
+    testtags.append(f"maps_select_{location}")
+    testtags.append(f"maps_found_{location}")
+    testtags.append(f"maps_info_{location}")
 # Needles for Gnome Panel
 for percentage in ("zero", "fifty", "hundred"):
-    testliterals.append(f"panel_volume_bar_{percentage}")
-    testliterals.append(f"panel_volume_indicator_{percentage}")
+    testtags.append(f"panel_volume_bar_{percentage}")
+    testtags.append(f"panel_volume_indicator_{percentage}")
 # variable-y in custom_change_device but we only have one value
-testliterals.append("anaconda_part_device_sda")
+testtags.append("anaconda_part_device_sda")
 # for Anaconda help related needles.
-testliterals.extend(f"anaconda_help_{fsys}" for fsys in ('install_destination',
+testtags.extend(f"anaconda_help_{fsys}" for fsys in ('install_destination',
 'installation_progress', 'keyboard_layout', 'language_support', 'network_host_name',
 'root_password', 'select_packages', 'installation_source', 'time_date', 'user_creation',
 'language_selection', 'language', 'summary_link'))
 
-testliterals.extend(f"anaconda_main_hub_{fsys}" for fsys in ('language_support', 'selec_packages',
+testtags.extend(f"anaconda_main_hub_{fsys}" for fsys in ('language_support', 'selec_packages',
 'time_date', 'create_user','keyboard_layout'))
 
 # retcode tracker
@@ -151,6 +203,7 @@ ret = 0
 unused = []
 noimg = []
 noneedle = []
+needletags = set()
 
 needlepaths = glob.glob(f"{NEEDLEPATH}/**/*.json", recursive=True)
 for needlepath in needlepaths:
@@ -160,9 +213,20 @@ for needlepath in needlepaths:
         noimg.append(needlepath)
     with open(needlepath, "r") as needlefh:
         needlejson = json.load(needlefh)
-    if any(tag in testliterals for tag in needlejson["tags"]):
+    needletags.update(needlejson["tags"])
+    if any(tag in testtags for tag in needlejson["tags"]):
         continue
     unused.append(needlepath)
+
+# check for tags with no needle
+tagnoneedle = realtesttags - needletags
+# allowlist
+# this is a weird one: we theoretically know this needle exists but we
+# don't know what it looks like because the function has been broken
+# as long as the test has existed. once
+# https://gitlab.gnome.org/GNOME/gnome-font-viewer/-/issues/64 is
+# fixed we can create this needle and drop this entry
+tagnoneedle.discard("fonts_c059_installed")
 
 # reverse check, for images without a needle file
 imgpaths = glob.glob(f"{NEEDLEPATH}/**/*.png", recursive=True)
@@ -188,5 +252,11 @@ if noneedle:
     print("Image(s) without needle(s) found!")
     for img in noneedle:
         print(img)
+
+if tagnoneedle:
+    ret += 8
+    print("Tag(s) without needle(s) found!")
+    for tag in tagnoneedle:
+        print(tag)
 
 sys.exit(ret)
