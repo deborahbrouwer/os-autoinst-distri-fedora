@@ -1088,28 +1088,8 @@ sub start_with_launcher {
         assert_and_click $launcher;
         wait_still_screen 5;
     }
-    elsif ($desktop eq 'kde') {
-        # Click on the KDE launcher icon
-        assert_and_click 'kde_menu_launcher';
-        wait_still_screen 2;
-
-        # Select the appropriate submenu
-        assert_and_click $submenu;
-        wait_still_screen 2;
-
-        # Select the appropriate menu subgroup where real launchers
-        # are placed, but only if requested
-        if ($group) {
-            send_key_until_needlematch($group, 'down', 20, 3);
-            send_key 'ret';
-            #assert_and_click $group;
-            wait_still_screen 2;
-        }
-
-        # Find and click on the menu item to start the application
-        send_key_until_needlematch($launcher, 'down', 40, 3);
-        send_key 'ret';
-        wait_still_screen 5;
+    else {
+        die "start_with_launcher is currently only implemented on GNOME!";
     }
 }
 
