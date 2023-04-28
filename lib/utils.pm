@@ -851,14 +851,6 @@ sub gnome_initial_setup {
         else {
             wait_screen_change { assert_and_click "next_button"; };
         }
-        # for Japanese, we need to workaround a bug on the keyboard
-        # selection screen
-        if ($n == 1 && get_var("LANGUAGE") eq 'japanese') {
-            if (!check_screen 'initial_setup_kana_kanji_selected', 5) {
-                record_soft_failure 'kana kanji not selected: bgo#776189';
-                assert_and_click 'initial_setup_kana_kanji';
-            }
-        }
     }
     unless (get_var("VNC_CLIENT")) {
         # We should be at the GOA screen, except on VNC_CLIENT case
