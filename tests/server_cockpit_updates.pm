@@ -21,20 +21,6 @@ sub run {
     select_cockpit_update();
 
 
-    # If security updates are available, install them first,
-    # so that we test the most buttons in one go.
-    # After updates, ignore restart because we do not need
-    # restarting the machine to continue. Also, we would have
-    # to deal with much more complicated workflow.
-    #
-    if (check_screen('cockpit_updates_security_install', 1)) {
-        assert_and_click 'cockpit_updates_security_install';
-        sleep 60;    # wait until things are installed
-        assert_and_click 'cockpit_updates_restart_ignore';
-        wait_still_screen 2;
-    }
-
-
     # Install the rest of the updates, or any updates
     # that have not been previously installed.
     assert_and_click 'cockpit_updates_all_install';
