@@ -47,11 +47,8 @@ sub run {
     assert_and_click "anaconda_blivet_part_edit";
     # Select the Format option
     assert_and_click "anaconda_blivet_part_format";
-    # Open the filesystem types and select ext4, if not selected
-    if (not(check_screen "anaconda_blivet_part_fs_ext4_selected", 30)) {
-        assert_and_click "anaconda_blivet_part_fs_select";
-        assert_and_click "anaconda_blivet_part_fs_ext4";
-    }
+    assert_and_click "anaconda_blivet_part_fs_select";
+    assert_and_click "anaconda_blivet_part_fs_ext4";
     # Select the mountpoint field
     send_key_until_needlematch("anaconda_blivet_mountpoint_selected", "tab", 3, 5);
     # Fill in the mountpoint
