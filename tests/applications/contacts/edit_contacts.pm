@@ -49,10 +49,6 @@ sub edit_contact {
             }
         }
     }
-    elsif (check_screen("contacts_unnamed_person")) {
-        record_soft_failure("Unnamed Person shown after contact edit: https://gitlab.gnome.org/GNOME/gnome-contacts/-/issues/271");
-        assert_and_click("contacts_contact_listed_$identity");
-    }
     # Check that the original values are no longer present and die if they are.
     if (check_screen("contacts_contact_existing_$identity")) {
         die("The contact information seem not to have been updated.");
