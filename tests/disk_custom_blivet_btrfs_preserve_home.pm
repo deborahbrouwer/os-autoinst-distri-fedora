@@ -23,10 +23,8 @@ sub run {
         assert_and_click "anaconda_blivet_part_edit";
         # Select the Format option
         assert_and_click "anaconda_blivet_part_format";
-        if (not(check_screen "anaconda_blivet_part_fs_efi_filesystem_selected", 30)) {
-            assert_and_click "anaconda_blivet_part_fs_select";
-            assert_and_click "anaconda_blivet_part_fs_efi_filesystem";
-        }
+        assert_and_click "anaconda_blivet_part_fs_select";
+        assert_and_click "anaconda_blivet_part_fs_efi_filesystem";
         # Select the mountpoint field
 
         send_key_until_needlematch("anaconda_blivet_mountpoint_selected", "tab", 3, 5);
