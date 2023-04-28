@@ -12,8 +12,8 @@ sub run {
     start_with_launcher('apps_menu_calendar');
 
     # give access to location if the vm asks for it
-    if (check_screen('apps_run_access', 1)) {
-        assert_and_click 'apps_run_access';
+    if (check_screen('grant_access', 1)) {
+        assert_and_click 'grant_access';
     }
     wait_still_screen 2;
     assert_screen 'apps_run_calendar';
