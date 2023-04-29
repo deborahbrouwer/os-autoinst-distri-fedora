@@ -144,22 +144,14 @@ sub switch_user {
 }
 
 sub reboot_system {
-    # Reboots the system and handles everything until the next GDM screen.
-    if (check_screen "system_menu_button") {
-        # In a logged in desktop, we access power options through system menu
-        assert_and_click "system_menu_button";
-        # In KDE the reboot entry is right here, on GNOME we need to
-        # enter some kind of power option submenu.
-        assert_screen ["power_entry", "reboot_entry"];
-        click_lastmatch;
-        assert_and_click "reboot_entry" if (match_has_tag("power_entry"));
-        assert_and_click "restart_confirm";
-    }
-    # When we are outside KDE (not logged in), the only way to reboot is to click
-    # the reboot icon.
-    else {
-        assert_and_click "reboot_icon";
-    }
+    # Reboots the system and handles everything until the next login screen.
+    assert_and_click "system_menu_button";
+    # In KDE the reboot entry is right here, on GNOME we need to
+    # enter some kind of power option submenu.
+    assert_screen ["power_entry", "reboot_entry"];
+    click_lastmatch;
+    assert_and_click "reboot_entry" if (match_has_tag("power_entry"));
+    assert_and_click "restart_confirm";
     boot_to_login_screen();
 }
 
