@@ -13,11 +13,10 @@ sub run {
 
     if (get_var("UEFI")) {
         # if we're running on UEFI, let us reformat the UEFI first
-        # Select the UEFI partition if it is not selected by default
-        if (not(check_screen "anaconda_blivet_part_efi_selected", 30)) {
-            assert_and_click "anaconda_blivet_part_inactive_efi";
-            wait_still_screen 5;
-        }
+        # Select the UEFI partition if it is not selected by default;
+        # if it is, clicking it is harmless
+        assert_and_click "anaconda_blivet_part_efi";
+        wait_still_screen 5;
 
         # Go to the partition settings
         assert_and_click "anaconda_blivet_part_edit";
@@ -35,13 +34,8 @@ sub run {
     }
 
     # Reformat the /boot partition
-    if (check_screen "anaconda_blivet_part_boot_selected", 30) {
-        assert_and_click "anaconda_blivet_part_boot_selected";
-    }
-    else {
-        assert_and_click "anaconda_blivet_part_inactive_boot";
-        wait_still_screen 5;
-    }
+    assert_and_click "anaconda_blivet_part_boot";
+    wait_still_screen 5;
 
     # Go to the partition settings
     assert_and_click "anaconda_blivet_part_edit";
@@ -60,9 +54,7 @@ sub run {
     assert_and_click "anaconda_blivet_volumes_icon";
 
     # Select the home partition
-    if (not(check_screen "anaconda_blivet_part_home_selected")) {
-        assert_and_click "anaconda_blivet_part_inactive_home";
-    }
+    assert_and_click "anaconda_blivet_part_home";
     # Go to the partition settings
     assert_and_click "anaconda_blivet_part_edit";
     # Select the Set mountpoint option
