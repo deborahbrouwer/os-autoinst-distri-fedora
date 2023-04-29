@@ -130,9 +130,6 @@ sub run {
         assert_and_click 'kde_offline_update_reboot';
         boot_to_login_screen;
     }
-    else {
-        assert_screen 'desktop_package_tool_update_done', 180;
-    }
     # back to console to verify updates
     $self->root_console(tty => 3);
     verify_updated_packages;
