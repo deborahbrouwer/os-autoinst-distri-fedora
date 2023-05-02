@@ -10,7 +10,12 @@ use utils;
 sub visit_section {
     my $section = shift;
     send_key_until_needlematch("help_section_$section", "down", 40, 1);
-    click_lastmatch();
+    # we have to wait then re-assert, because the down movement is
+    # animated, so we may match while it's still animating and then
+    # when the animation is complete the section title may be in a
+    # different place to where we first saw it
+    wait_still_screen 2;
+    assert_and_click("help_section_$section");
     assert_screen("help_section_content_$section");
     assert_and_click("help_breadcrumbs_home");
     assert_screen("help_main_screen");
