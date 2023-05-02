@@ -26,7 +26,7 @@ sub run {
     # First, preset the environment according to the chosen console. This test
     # can run both on a VNC based console, or a serial console.
     if (get_var("SERIAL_CONSOLE")) {
-        select_console('virtio-console1');
+        select_console('user-virtio-console');
         unless (testapi::is_serial_terminal) {
             die "The test does not run on a serial console when it should.";
         }
@@ -144,7 +144,7 @@ sub run {
             assert_script_run 'chroot /mnt/sysimage systemctl enable serial-getty@hvc2';
             $testapi::distri->{serial_term_prompt} = $origprompt;
             # back to anaconda ui
-            select_console("virtio-console1");
+            select_console("user-virtio-console");
         }
     }
     else {
