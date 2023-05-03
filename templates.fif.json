@@ -16,22 +16,6 @@
                 "WORKER_CLASS": "qemu_x86_64"
             }
         },
-        "ARM": {
-            "backend": "qemu",
-            "settings": {
-                "ARCH_BASE_MACHINE": "ARM",
-                "QEMU": "arm",
-                "QEMUCPUS": "2",
-                "QEMUMACHINE": "virt",
-                "QEMURAM": "1024",
-                "QEMU_MAX_MIGRATION_TIME": "480",
-                "QEMU_NO_KVM": "1",
-                "QEMU_VIRTIO_RNG": "1",
-                "SERIALDEV": "ttyAMA0",
-                "TIMEOUT_SCALE": "1.5",
-                "WORKER_CLASS": "qemu_aarch64"
-            }
-        },
         "aarch64": {
             "backend": "qemu",
             "settings": {
@@ -204,17 +188,6 @@
             "distri": "fedora",
             "flavor": "Minimal-raw_xz-raw.xz",
             "settings": {
-                "DEPLOY_UPLOAD_TEST": "install_arm_image_deployment_upload",
-                "TEST_TARGET": "HDD_2"
-            },
-            "version": "*"
-        },
-        "fedora-Minimal-raw_xz-raw.xz-arm-*": {
-            "arch": "arm",
-            "distri": "fedora",
-            "flavor": "Minimal-raw_xz-raw.xz",
-            "settings": {
-                "APPEND": "rw root=LABEL=_/ rootwait console=ttyAMA0 console=tty0 consoleblank=0",
                 "DEPLOY_UPLOAD_TEST": "install_arm_image_deployment_upload",
                 "TEST_TARGET": "HDD_2"
             },
@@ -485,10 +458,6 @@
             "machine": "aarch64",
             "product": "fedora-Minimal-raw_xz-raw.xz-aarch64-*"
         },
-        "fedora-Minimal-raw_xz-raw.xz-arm-*-ARM": {
-            "machine": "ARM",
-            "product": "fedora-Minimal-raw_xz-raw.xz-arm-*"
-        },
         "fedora-Server-boot-iso-aarch64-*-aarch64": {
             "machine": "aarch64",
             "product": "fedora-Server-boot-iso-aarch64-*"
@@ -635,7 +604,6 @@
                 "fedora-IoT-dvd_ostree-iso-aarch64-*-aarch64": 20,
                 "fedora-IoT-dvd_ostree-iso-x86_64-*-uefi": 20,
                 "fedora-KDE-live-iso-x86_64-*-64bit": 22,
-                "fedora-Minimal-raw_xz-raw.xz-arm-*-ARM": 22,
                 "fedora-Minimal-raw_xz-raw.xz-aarch64-*-aarch64": 22,
                 "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
                 "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
@@ -667,7 +635,6 @@
                 "fedora-IoT-dvd_ostree-iso-aarch64-*-aarch64": 20,
                 "fedora-IoT-dvd_ostree-iso-x86_64-*-uefi": 20,
                 "fedora-KDE-live-iso-x86_64-*-64bit": 22,
-                "fedora-Minimal-raw_xz-raw.xz-arm-*-ARM": 22,
                 "fedora-Minimal-raw_xz-raw.xz-aarch64-*-aarch64": 22,
                 "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
                 "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
@@ -696,7 +663,6 @@
                 "fedora-Cloud_Base-qcow2-qcow2-ppc64le-*-ppc64le": 20,
                 "fedora-Cloud_Base-qcow2-qcow2-x86_64-*-uefi": 20,
                 "fedora-KDE-live-iso-x86_64-*-64bit": 22,
-                "fedora-Minimal-raw_xz-raw.xz-arm-*-ARM": 22,
                 "fedora-Minimal-raw_xz-raw.xz-aarch64-*-aarch64": 22,
                 "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
                 "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
@@ -723,7 +689,6 @@
                 "fedora-Cloud_Base-qcow2-qcow2-ppc64le-*-ppc64le": 40,
                 "fedora-Cloud_Base-qcow2-qcow2-x86_64-*-uefi": 40,
                 "fedora-KDE-live-iso-x86_64-*-64bit": 42,
-                "fedora-Minimal-raw_xz-raw.xz-arm-*-ARM": 42,
                 "fedora-Minimal-raw_xz-raw.xz-aarch64-*-aarch64": 42,
                 "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
                 "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
@@ -754,7 +719,6 @@
                 "fedora-IoT-dvd_ostree-iso-aarch64-*-aarch64": 40,
                 "fedora-IoT-dvd_ostree-iso-x86_64-*-uefi": 40,
                 "fedora-KDE-live-iso-x86_64-*-64bit": 42,
-                "fedora-Minimal-raw_xz-raw.xz-arm-*-ARM": 42,
                 "fedora-Minimal-raw_xz-raw.xz-aarch64-*-aarch64": 42,
                 "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
                 "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
@@ -786,7 +750,6 @@
                 "fedora-IoT-dvd_ostree-iso-aarch64-*-aarch64": 40,
                 "fedora-IoT-dvd_ostree-iso-x86_64-*-uefi": 40,
                 "fedora-KDE-live-iso-x86_64-*-64bit": 42,
-                "fedora-Minimal-raw_xz-raw.xz-arm-*-ARM": 42,
                 "fedora-Minimal-raw_xz-raw.xz-aarch64-*-aarch64": 42,
                 "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
                 "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
@@ -818,7 +781,6 @@
                 "fedora-IoT-dvd_ostree-iso-aarch64-*-aarch64": 40,
                 "fedora-IoT-dvd_ostree-iso-x86_64-*-uefi": 40,
                 "fedora-KDE-live-iso-x86_64-*-64bit": 42,
-                "fedora-Minimal-raw_xz-raw.xz-arm-*-ARM": 42,
                 "fedora-Minimal-raw_xz-raw.xz-aarch64-*-aarch64": 42,
                 "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
                 "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
@@ -1334,7 +1296,6 @@
         },
         "install_arm_image_deployment_upload": {
             "profiles": {
-                "fedora-Minimal-raw_xz-raw.xz-arm-*-ARM": 12,
                 "fedora-Minimal-raw_xz-raw.xz-aarch64-*-aarch64": 12,
                 "fedora-Server-raw_xz-raw.xz-aarch64-*-aarch64": 12,
                 "fedora-Workstation-raw_xz-raw.xz-aarch64-*-aarch64": 12
@@ -2346,7 +2307,6 @@
                 "fedora-IoT-dvd_ostree-iso-aarch64-*-aarch64": 40,
                 "fedora-IoT-dvd_ostree-iso-x86_64-*-uefi": 40,
                 "fedora-KDE-live-iso-x86_64-*-64bit": 42,
-                "fedora-Minimal-raw_xz-raw.xz-arm-*-ARM": 42,
                 "fedora-Minimal-raw_xz-raw.xz-aarch64-*-aarch64": 42,
                 "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
                 "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
