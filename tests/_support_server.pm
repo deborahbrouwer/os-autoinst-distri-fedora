@@ -78,11 +78,14 @@ sub _pxe_setup {
     $kernpath = "ppc/ppc64" if ($arch eq 'ppc64le');
     assert_script_run "curl -o /var/lib/tftpboot/fedora/vmlinuz $location/Everything/${arch}/os/${kernpath}/vmlinuz";
     assert_script_run "curl -o /var/lib/tftpboot/fedora/initrd.img $location/Everything/${arch}/os/${kernpath}/initrd.img";
+    # extract our IP from POST_STATIC
+    my $poststatic = get_var("POST_STATIC");
+    my $ip = substr($poststatic, 0, index($poststatic, " "));
     # get a kickstart to embed in the initramfs, for testing:
     # https://fedoraproject.org/wiki/QA:Testcase_Kickstart_File_Path_Ks_Cfg
     assert_script_run "curl -o ks.cfg https://fedorapeople.org/groups/qa/kickstarts/root-user-crypted-net.ks";
     # tweak the repo config in it
-    assert_script_run "sed -i -e 's,^url.*,nfs --server 172.16.2.110 --dir /repo --opts nfsvers=4,g' ks.cfg";
+    assert_script_run "sed -i -e 's,^url.*,nfs --server $ip --dir /repo --opts nfsvers=4,g' ks.cfg";
     # embed it
     assert_script_run "echo ks.cfg | cpio -c -o >> /var/lib/tftpboot/fedora/initrd.img";
     # chown root
@@ -105,7 +108,7 @@ sub run {
     # create config
     assert_script_run "printf 'domain=test.openqa.fedoraproject.org\ndhcp-range=172.16.2.150,172.16.2.199\ndhcp-option=option:router,172.16.2.2\n' > /etc/dnsmasq.conf";
     # do PXE setup if this is not an update test
-    _pxe_setup() unless (get_var("ADVISORY_OR_TASK"));
+    _pxe_setup() if (get_var("SUPPORT_PXE"));
     # open firewall ports
     assert_script_run "firewall-cmd --add-service=dhcp";
     assert_script_run "firewall-cmd --add-service=dns";
@@ -115,12 +118,14 @@ sub run {
 
     ## ISCSI
 
-    # start up iscsi target
-    assert_script_run "printf '<target iqn.2016-06.local.domain:support.target1>\n    backing-store /dev/vdb\n    incominguser test weakpassword\n</target>' > /etc/tgt/conf.d/openqa.conf";
-    # open firewall port
-    assert_script_run "firewall-cmd --add-service=iscsi-target";
-    assert_script_run "systemctl restart tgtd.service";
-    assert_script_run "systemctl is-active tgtd.service";
+    if (get_var("SUPPORT_ISCSI")) {
+        # start up iscsi target
+        assert_script_run "printf '<target iqn.2016-06.local.domain:support.target1>\n    backing-store /dev/vdb\n    incominguser test weakpassword\n</target>' > /etc/tgt/conf.d/openqa.conf";
+        # open firewall port
+        assert_script_run "firewall-cmd --add-service=iscsi-target";
+        assert_script_run "systemctl restart tgtd.service";
+        assert_script_run "systemctl is-active tgtd.service";
+    }
 
     ## NFS
 

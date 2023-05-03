@@ -1244,9 +1244,9 @@
         },
         "install_addrepo_metalink_graphical": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 50,
-                "fedora-universal-ppc64le-*-ppc64le": 50,
-                "fedora-universal-x86_64-*-64bit": 50
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 50,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 50,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 50
             },
             "settings": {
                 "ADD_REPOSITORY_GRAPHICAL": "ml:https://fedorapeople.org/groups/qa/openqa-repos/openqa-testrepo-2.xml",
@@ -1255,9 +1255,9 @@
         },
         "install_anaconda_text": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 20,
-                "fedora-universal-ppc64le-*-ppc64le": 20,
-                "fedora-universal-x86_64-*-64bit": 20
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20
             },
             "settings": {
                 "ANACONDA_TEXT": "1"
@@ -1276,9 +1276,9 @@
         },
         "install_arabic_language": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40
             },
             "settings": {
                 "DESKTOP": "gnome",
@@ -1309,9 +1309,9 @@
         },
         "install_asian_language": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40
             },
             "settings": {
                 "DESKTOP": "gnome",
@@ -1329,10 +1329,10 @@
         },
         "install_blivet_btrfs": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40,
-                "fedora-universal-x86_64-*-uefi": 41
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 41
             },
             "settings": {
                 "PARTITIONING": "custom_blivet_btrfs",
@@ -1342,10 +1342,10 @@
         },
         "install_blivet_lvmthin": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40,
-                "fedora-universal-x86_64-*-uefi": 41
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 41
             },
             "settings": {
                 "PARTITIONING": "custom_blivet_lvmthin",
@@ -1404,10 +1404,10 @@
         },
         "install_blivet_with_swap": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 50,
-                "fedora-universal-ppc64le-*-ppc64le": 50,
-                "fedora-universal-x86_64-*-64bit": 50,
-                "fedora-universal-x86_64-*-uefi": 51
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 50,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 50,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 50,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 51
             },
             "settings": {
                 "PARTITIONING": "custom_blivet_with_swap",
@@ -1417,10 +1417,10 @@
         },
         "install_blivet_software_raid": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40,
-                "fedora-universal-x86_64-*-uefi": 41
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 41
             },
             "settings": {
                 "NUMDISKS": "2",
@@ -1431,10 +1431,10 @@
         },
         "install_blivet_xfs": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40,
-                "fedora-universal-x86_64-*-uefi": 41
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 41
             },
             "settings": {
                 "PARTITIONING": "custom_blivet_xfs",
@@ -1444,10 +1444,10 @@
         },
         "install_btrfs": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40,
-                "fedora-universal-x86_64-*-uefi": 41
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 41
             },
             "settings": {
                 "PARTITIONING": "custom_btrfs",
@@ -1481,9 +1481,9 @@
         },
         "install_cyrillic_language": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40
             },
             "settings": {
                 "DESKTOP": "gnome",
@@ -1540,10 +1540,10 @@
         },
         "install_delete_partial": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 30,
-                "fedora-universal-ppc64le-*-ppc64le": 30,
-                "fedora-universal-x86_64-*-64bit": 30,
-                "fedora-universal-x86_64-*-uefi": 31
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 30,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 30,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 31
             },
             "settings": {
                 "HDD_1": "disk_full_%PART_TABLE_TYPE%.img",
@@ -1553,8 +1553,8 @@
         },
         "install_delete_pata": {
             "profiles": {
-                "fedora-universal-x86_64-*-64bit": 20,
-                "fedora-universal-x86_64-*-uefi": 21
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 21
             },
             "settings": {
                 "HDDMODEL": "ide-hd",
@@ -1564,9 +1564,9 @@
         },
         "install_european_language": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40
             },
             "settings": {
                 "DESKTOP": "gnome",
@@ -1584,15 +1584,15 @@
         },
         "install_iscsi": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40
             },
             "settings": {
                 "ANACONDA_STATIC": "172.16.2.111",
                 "INSTALL_UNLOCK": "support_ready",
                 "NICTYPE": "tap",
-                "PARALLEL_WITH": "support_server",
+                "PARALLEL_WITH": "support_server_2",
                 "PARTITIONING": "custom_iscsi",
                 "ROOT_PASSWORD": "weakpassword",
                 "WORKER_CLASS": "tap"
@@ -1600,9 +1600,9 @@
         },
         "install_kickstart_firewall_configured": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 20,
-                "fedora-universal-ppc64le-*-ppc64le": 20,
-                "fedora-universal-x86_64-*-64bit": 20
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20
             },
             "settings": {
                 "GRUB": "inst.ks=http://fedorapeople.org/groups/qa/kickstarts/firewall-configured-net.ks",
@@ -1614,9 +1614,9 @@
         },
         "install_kickstart_firewall_disabled": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 20,
-                "fedora-universal-ppc64le-*-ppc64le": 20,
-                "fedora-universal-x86_64-*-64bit": 20
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20
             },
             "settings": {
                 "GRUB": "inst.ks=http://fedorapeople.org/groups/qa/kickstarts/firewall-disabled-net.ks",
@@ -1628,9 +1628,9 @@
         },
         "install_kickstart_hdd": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 30,
-                "fedora-universal-ppc64le-*-ppc64le": 30,
-                "fedora-universal-x86_64-*-64bit": 30
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 30,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 30
             },
             "settings": {
                 "GRUB": "inst.ks=hd:vdb1:/root-user-crypted-net.ks",
@@ -1644,16 +1644,16 @@
         },
         "install_kickstart_nfs": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 30,
-                "fedora-universal-ppc64le-*-ppc64le": 30,
-                "fedora-universal-x86_64-*-64bit": 30
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 30,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 30
             },
             "settings": {
-                "GRUB": "inst.ks=nfs:172.16.2.110:/export/root-user-crypted-net.ks",
+                "GRUB": "inst.ks=nfs:172.16.2.120:/export/root-user-crypted-net.ks",
                 "INSTALL_UNLOCK": "support_ready",
                 "KICKSTART": "1",
                 "NICTYPE": "tap",
-                "PARALLEL_WITH": "support_server",
+                "PARALLEL_WITH": "support_server_2",
                 "ROOT_PASSWORD": "111111",
                 "USER_LOGIN": "false",
                 "WORKER_CLASS": "tap"
@@ -1661,9 +1661,9 @@
         },
         "install_kickstart_user_creation": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 20,
-                "fedora-universal-ppc64le-*-ppc64le": 20,
-                "fedora-universal-x86_64-*-64bit": 20
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20
             },
             "settings": {
                 "GRUB": "inst.ks=https://fedorapeople.org/groups/qa/kickstarts/root-user-crypted-net.ks",
@@ -1675,10 +1675,10 @@
         },
         "install_lvmthin": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40,
-                "fedora-universal-x86_64-*-uefi": 41
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 41
             },
             "settings": {
                 "PARTITIONING": "custom_lvmthin",
@@ -1713,9 +1713,9 @@
         },
         "install_mirrorlist_graphical": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 20,
-                "fedora-universal-ppc64le-*-ppc64le": 20,
-                "fedora-universal-x86_64-*-64bit": 20
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20
             },
             "settings": {
                 "MIRRORLIST_GRAPHICAL": "1"
@@ -1723,10 +1723,10 @@
         },
         "install_multi": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 20,
-                "fedora-universal-ppc64le-*-ppc64le": 20,
-                "fedora-universal-x86_64-*-64bit": 20,
-                "fedora-universal-x86_64-*-uefi": 21
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 21
             },
             "settings": {
                 "HDD_2": "disk_full_mbr.img",
@@ -1737,10 +1737,10 @@
         },
         "install_multi_empty": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 30,
-                "fedora-universal-ppc64le-*-ppc64le": 30,
-                "fedora-universal-x86_64-*-64bit": 30,
-                "fedora-universal-x86_64-*-uefi": 31
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 30,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 30,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 31
             },
             "settings": {
                 "NUMDISKS": "2",
@@ -1750,10 +1750,10 @@
         },
         "install_with_swap": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 50,
-                "fedora-universal-ppc64le-*-ppc64le": 50,
-                "fedora-universal-x86_64-*-64bit": 50,
-                "fedora-universal-x86_64-*-uefi": 51
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 50,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 50,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 50,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 51
             },
             "settings": {
                 "PARTITIONING": "custom_with_swap",
@@ -1770,8 +1770,8 @@
         },
         "install_package_set_kde": {
             "profiles": {
-                "fedora-universal-ppc64le-*-ppc64le": 30,
-                "fedora-universal-x86_64-*-64bit": 50
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 50
             },
             "settings": {
                 "DESKTOP": "kde",
@@ -1783,9 +1783,9 @@
         },
         "install_package_set_minimal": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 30,
-                "fedora-universal-ppc64le-*-ppc64le": 30,
-                "fedora-universal-x86_64-*-64bit": 30
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 30,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 30
             },
             "settings": {
                 "PACKAGE_SET": "minimal",
@@ -1794,17 +1794,17 @@
         },
         "install_pxeboot": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 30,
-                "fedora-universal-ppc64le-*-ppc64le": 30,
-                "fedora-universal-x86_64-*-64bit": 30,
-                "fedora-universal-x86_64-*-uefi": 31
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 30,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 30,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 31
             },
             "settings": {
                 "+ISO": "",
                 "DELAYED_START": "1",
                 "KICKSTART": "1",
                 "NICTYPE": "tap",
-                "PARALLEL_WITH": "support_server@%ARCH_BASE_MACHINE%",
+                "PARALLEL_WITH": "support_server_2@%ARCH_BASE_MACHINE%",
                 "PXEBOOT": "once",
                 "ROOT_PASSWORD": "111111",
                 "TEST_TARGET": "COMPOSE",
@@ -1827,9 +1827,9 @@
         },
         "install_repository_http_graphical": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 20,
-                "fedora-universal-ppc64le-*-ppc64le": 20,
-                "fedora-universal-x86_64-*-64bit": 20
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20
             },
             "settings": {
                 "REPOSITORY_GRAPHICAL": "%LOCATION%"
@@ -1837,9 +1837,9 @@
         },
         "install_repository_http_variation": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 20,
-                "fedora-universal-ppc64le-*-ppc64le": 20,
-                "fedora-universal-x86_64-*-64bit": 20
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20
             },
             "settings": {
                 "REPOSITORY_VARIATION": "%LOCATION%"
@@ -1889,10 +1889,10 @@
         },
         "install_rescue_encrypted": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 31,
-                "fedora-universal-ppc64le-*-ppc64le": 31,
-                "fedora-universal-x86_64-*-64bit": 31,
-                "fedora-universal-x86_64-*-uefi": 32
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 31,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 31,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 31,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 32
             },
             "settings": {
                 "BOOTFROM": "d",
@@ -1903,8 +1903,8 @@
         },
         "install_sata": {
             "profiles": {
-                "fedora-universal-x86_64-*-64bit": 20,
-                "fedora-universal-x86_64-*-uefi": 21
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 21
             },
             "settings": {
                 "ATACONTROLLER": "ich9-ahci",
@@ -1913,9 +1913,9 @@
         },
         "install_scsi_updates_img": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 20,
-                "fedora-universal-ppc64le-*-ppc64le": 20,
-                "fedora-universal-x86_64-*-64bit": 20
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20
             },
             "settings": {
                 "CDMODEL": "scsi-cd",
@@ -1927,9 +1927,9 @@
         },
         "install_serial_console": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 30,
-                "fedora-universal-ppc64le-*-ppc64le": 30,
-                "fedora-universal-x86_64-*-64bit": 30
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 30,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 30
             },
             "settings": {
                 "ANACONDA_TEXT": "1",
@@ -1940,9 +1940,9 @@
         },
         "install_shrink_ext4": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40
             },
             "settings": {
                 "HDD_1": "disk_shrink_ext4.img",
@@ -1952,9 +1952,9 @@
         },
         "install_shrink_ntfs": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40
             },
             "settings": {
                 "HDD_1": "disk_shrink_ntfs.img",
@@ -1964,10 +1964,10 @@
         },
         "install_simple_encrypted": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 30,
-                "fedora-universal-ppc64le-*-ppc64le": 30,
-                "fedora-universal-x86_64-*-64bit": 30,
-                "fedora-universal-x86_64-*-uefi": 31
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 30,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 30,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 31
             },
             "settings": {
                 "ENCRYPT_PASSWORD": "weakpassword",
@@ -1976,10 +1976,10 @@
         },
         "install_simple_free_space": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 30,
-                "fedora-universal-ppc64le-*-ppc64le": 30,
-                "fedora-universal-x86_64-*-64bit": 30,
-                "fedora-universal-x86_64-*-uefi": 31
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 30,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 30,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 31
             },
             "settings": {
                 "HDD_1": "disk_freespace_%PART_TABLE_TYPE%.img",
@@ -1989,10 +1989,10 @@
         },
         "install_software_raid": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 30,
-                "fedora-universal-ppc64le-*-ppc64le": 30,
-                "fedora-universal-x86_64-*-64bit": 30,
-                "fedora-universal-x86_64-*-uefi": 31
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 30,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 30,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 31
             },
             "settings": {
                 "NUMDISKS": "2",
@@ -2002,8 +2002,8 @@
         },
         "install_updates_img_local": {
             "profiles": {
-                "fedora-universal-ppc64le-*-ppc64le": 30,
-                "fedora-universal-x86_64-*-64bit": 40
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40
             },
             "settings": {
                 "GRUB": "inst.updates=hd:LABEL=UPDATES_IMG:/updates.img",
@@ -2093,10 +2093,10 @@
         },
         "install_xfs": {
             "profiles": {
-                "fedora-universal-aarch64-*-aarch64": 40,
-                "fedora-universal-ppc64le-*-ppc64le": 40,
-                "fedora-universal-x86_64-*-64bit": 40,
-                "fedora-universal-x86_64-*-uefi": 41
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40,
+                "fedora-Server-dvd-iso-x86_64-*-uefi": 41
             },
             "settings": {
                 "PARTITIONING": "custom_xfs",
@@ -2615,10 +2615,7 @@
             "profiles": {
                 "fedora-Server-dvd-iso-aarch64-*-aarch64": 10,
                 "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 10,
-                "fedora-Server-dvd-iso-x86_64-*-64bit": 10,
-                "fedora-universal-aarch64-*-aarch64": 10,
-                "fedora-universal-ppc64le-*-ppc64le": 10,
-                "fedora-universal-x86_64-*-64bit": 10
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 10
             },
             "settings": {
                 "BOOTFROM": "c",
@@ -2629,6 +2626,28 @@
                 "POSTINSTALL": "_support_server",
                 "POST_STATIC": "172.16.2.110 support.test.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
+                "TEST_TARGET": "NONE",
+                "USER_LOGIN": "false",
+                "WORKER_CLASS": "tap"
+            }
+        },
+        "support_server_2": {
+            "profiles": {
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 10,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 10,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 10
+            },
+            "settings": {
+                "BOOTFROM": "c",
+                "HDD_1": "disk_f%CURRREL%_support_5_%ARCH%.qcow2",
+                "NICTYPE": "tap",
+                "NUMDISKS": "2",
+                "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
+                "POSTINSTALL": "_support_server",
+                "POST_STATIC": "172.16.2.120 support2.test.openqa.fedoraproject.org",
+                "ROOT_PASSWORD": "weakpassword",
+                "SUPPORT_PXE": "1",
+                "SUPPORT_ISCSI": "1",
                 "TEST_TARGET": "NONE",
                 "USER_LOGIN": "false",
                 "WORKER_CLASS": "tap"
