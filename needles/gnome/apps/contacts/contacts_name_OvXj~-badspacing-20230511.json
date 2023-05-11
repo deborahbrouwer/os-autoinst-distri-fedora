@@ -1,0 +1,20 @@
+{
+  "area": [
+    {
+      "width": 83,
+      "ypos": 273,
+      "height": 24,
+      "xpos": 430,
+      "type": "match"
+    }
+  ],
+  "properties": [
+    {
+      "name": "workaround",
+      "value": "bad spacing between the text field name and value - https://gitlab.gnome.org/GNOME/gtk/-/issues/5830"
+    }
+  ],
+  "tags": [
+    "contacts_name_OvXj~"
+  ]
+}
