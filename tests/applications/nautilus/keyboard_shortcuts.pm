@@ -16,14 +16,12 @@ sub run {
 
     assert_screen("nautilus_shortcuts_first");
 
-    send_key("right");
-    send_key("ret");
+    send_key("alt-2");
     wait_still_screen(2);
 
     assert_screen("nautilus_shortcuts_second");
 
-    send_key("right");
-    send_key("ret");
+    send_key("alt-3");
     wait_still_screen(2);
 
     assert_screen("nautilus_shortcuts_third");
