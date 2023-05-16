@@ -90,6 +90,7 @@ sub run {
     # the screensaver during install...
     my $interval = 60;
     while ($timeout > 0) {
+        die "Error encountered!" if (check_screen "anaconda_error_report");
         # move the mouse a bit
         mouse_set 100, 100;
         # also click, if we're a VNC client, seems just moving mouse
