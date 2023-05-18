@@ -67,14 +67,6 @@ sub run {
     if ($version eq $rawrel) {
         assert_script_run 'echo "repo --name=koji-rawhide --baseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/\$basearch/" >> ' . $repoks;
     }
-    # FIXME: this is a workaround for #2119518, disabling oomd so it
-    # doesn't go crazy killing things
-    my $relnum = get_release_number;
-    if ($relnum > 37) {
-        assert_script_run 'sed -i -e "s,%end,-systemd-oomd-defaults\n%end,g" fedora-workstation-common.ks';
-    }
-    # FIXME this is only needed from 2023-03-30 till the next Rawhide compose
-    assert_script_run 'sed -i -e "/kde-pim/d" fedora-kde-common.ks';
     # now flatten the kickstart
     assert_script_run "ksflatten -c fedora-live-${lcsubv}.ks -o openqa.ks";
     # upload the kickstart so we can check it
