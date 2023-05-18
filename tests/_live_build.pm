@@ -67,6 +67,9 @@ sub run {
     if ($version eq $rawrel) {
         assert_script_run 'echo "repo --name=koji-rawhide --baseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/\$basearch/" >> ' . $repoks;
     }
+    # FIXME: this is needed until the next Rawhide compose, with
+    # https://pagure.io/fedora-comps/pull-request/841 merged
+    assert_script_run 'sed -e "s,%packages,%packages\n-util-linux-user,g" fedora-kde-common.ks';
     # now flatten the kickstart
     assert_script_run "ksflatten -c fedora-live-${lcsubv}.ks -o openqa.ks";
     # upload the kickstart so we can check it
