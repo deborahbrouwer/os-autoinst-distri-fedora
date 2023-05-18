@@ -1,0 +1,27 @@
+{
+  "area": [
+    {
+      "xpos": 616,
+      "ypos": 400,
+      "width": 83,
+      "height": 16,
+      "type": "match"
+    },
+    {
+      "xpos": 229,
+      "ypos": 345,
+      "width": 16,
+      "height": 19,
+      "type": "match"
+    }
+  ],
+  "properties": [
+    {
+      "name": "workaround",
+      "value": "https://github.com/storaged-project/udisks/issues/1102"
+    }
+  ],
+  "tags": [
+    "disks_temp_mounted"
+  ]
+}
