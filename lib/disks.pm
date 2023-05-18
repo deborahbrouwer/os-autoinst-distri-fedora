@@ -196,7 +196,10 @@ sub mount_partition {
     # FIXME: handle partition being mounted at /run/udisk2/temp-mount-XXXXX:
     # https://github.com/storaged-project/udisks/issues/1102
     # drop this when that bug is fixed
-    click_lastmatch if (check_screen("disks_temp_mounted", 5));
+    if (check_screen("disks_temp_mounted", 5)) {
+        click_lastmatch;
+        authenticate;
+    }
     # Click on the Play symbout to mount the partition.
     assert_and_click("disks_button_mount");
     # Authenticate if necessary.
