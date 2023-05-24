@@ -1467,8 +1467,6 @@ sub solidify_wallpaper {
         # FIXME workaround a weird bug where alt-d-s does something
         # different until you right click on the desktop:
         # https://bugzilla.redhat.com/show_bug.cgi?id=1933118
-        # Fixed as of 2022-04-29 Rawhide (F37), can be removed at
-        # least when F36 goes EOL (didn't test F35 or F36)
         mouse_set 512, 384;
         mouse_click 'right';
         mouse_set 480, 384;
