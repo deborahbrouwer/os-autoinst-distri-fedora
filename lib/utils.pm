@@ -319,7 +319,7 @@ sub console_loadkeys_us {
 }
 
 sub do_bootloader {
-    # Handle bootloader screen. 'bootloader' is syslinux or grub.
+    # Handle bootloader screen.
     # 'uefi' is whether this is a UEFI install, will get_var UEFI if
     # not explicitly set. 'postinstall' is whether we're on an
     # installed system or at the installer (this matters for how many
@@ -339,9 +339,7 @@ sub do_bootloader {
         ofw => get_var("OFW"),
         @_
     );
-    # if not postinstall, not UEFI, not ofw, and not F37+, syslinux
     my $relnum = get_release_number;
-    $args{bootloader} //= ($args{uefi} || $args{postinstall} || $args{ofw}) || $relnum > 36 ? "grub" : "syslinux";
     # we use the firmware-type specific tags because we want to be
     # sure we actually did a UEFI boot
     my $boottag = "bootloader_bios";
@@ -359,28 +357,23 @@ sub do_bootloader {
         send_key "up";
     }
     if ($args{params}) {
-        if ($args{bootloader} eq "syslinux") {
-            send_key "tab";
+        send_key "e";
+        # we need to get to the 'linux' line here, and grub does
+        # not have any easy way to do that. Depending on the arch
+        # and the Fedora release, we may have to press 'down' 2
+        # times, or 13, or 12, or some other goddamn number. That
+        # got painful to keep track of, so let's go bottom-up:
+        # press 'down' 50 times to make sure we're at the bottom,
+        # then 'up' twice to reach the 'linux' line. This seems to
+        # work in every permutation I can think of to test.
+        for (1 .. 50) {
+            send_key 'down';
         }
-        else {
-            send_key "e";
-            # we need to get to the 'linux' line here, and grub does
-            # not have any easy way to do that. Depending on the arch
-            # and the Fedora release, we may have to press 'down' 2
-            # times, or 13, or 12, or some other goddamn number. That
-            # got painful to keep track of, so let's go bottom-up:
-            # press 'down' 50 times to make sure we're at the bottom,
-            # then 'up' twice to reach the 'linux' line. This seems to
-            # work in every permutation I can think of to test.
-            for (1 .. 50) {
-                send_key 'down';
-            }
-            sleep 1;
-            send_key 'up';
-            sleep 1;
-            send_key 'up';
-            send_key "end";
-        }
+        sleep 1;
+        send_key 'up';
+        sleep 1;
+        send_key 'up';
+        send_key "end";
         # Change type_string by type_safely because keyboard polling
         # in SLOF usb-xhci driver failed sometimes in powerpc
         type_safely " $args{params}";
