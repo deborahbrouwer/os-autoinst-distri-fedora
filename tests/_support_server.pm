@@ -23,11 +23,11 @@ sub _pxe_setup {
     # install and configure bootloaders
     my $ourversion = get_var("CURRREL");
     my $testversion = get_var("RELEASE");
-    assert_script_run "mkdir -p /var/tmp/fedora";
     my $arch = get_var("ARCH");
 
     if ($arch eq 'x86_64') {
         # x86_64: use syslinux for BIOS, grub2 with 'linuxefi' for UEFI
+        assert_script_run "mkdir -p /var/tmp/fedora";
         assert_script_run "mkdir -p /var/lib/tftpboot/pxelinux.cfg";
         # install bootloader packages
         assert_script_run "dnf -y install syslinux", 120;
