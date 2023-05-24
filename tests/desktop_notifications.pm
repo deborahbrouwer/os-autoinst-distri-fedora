@@ -127,12 +127,6 @@ sub run {
         # In F32+ we may get an 'akonadi did something' message
         if (check_screen 'akonadi_migration_notification', 5) {
             click_lastmatch;
-            # in F35+, closing that closes the entire panel, so
-            # re-open it
-            if (check_screen 'desktop_expand_systray', 10) {
-                click_lastmatch;
-                assert_and_click 'desktop_systray_notifications';
-            }
         }
     }
     if (get_var("BOOTFROM")) {
