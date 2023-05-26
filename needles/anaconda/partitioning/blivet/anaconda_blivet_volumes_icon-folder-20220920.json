@@ -11,7 +11,7 @@
   "properties": [
     {
       "name": "workaround",
-      "value": "this icon should not be a folder"
+      "value": "this icon should not be a folder - https://github.com/storaged-project/blivet-gui/issues/398"
     }
   ],
   "tags": [
