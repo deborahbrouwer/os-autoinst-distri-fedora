@@ -639,18 +639,25 @@ sub _repo_setup_updates {
         die "Neither ADVISORY_NVRS nor KOJITASK set! Don't know what to do";
     }
 
-    # log the exact packages in the update at test time, with their
-    # source packages and epochs. we use /mnt as the path for this
-    # and similar files because, on ostree-based installs where we
-    # have to use a toolbox container for part of this, it's common
-    # to the host system and container
-    assert_script_run 'rpm -qp *.rpm --qf "%{SOURCERPM} %{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE}\n" | sort -u > /mnt/updatepkgs.txt';
-    upload_logs "/mnt/updatepkgs.txt";
-    # also log just the binary package names: this is so we can check
-    # later whether any package from the update *should* have been
-    # installed, but was not
-    assert_script_run 'rpm -qp *.rpm --qf "%{NAME} " > /mnt/updatepkgnames.txt';
+    if (script_run 'ls *.rpm') {
+        # we didn't actually download any packages (as they are all
+        # for an arch we don't test), so write dummy files
+        assert_script_run 'touch /mnt/updatepkgnames.txt /mnt/updatepkgs.txt';
+    }
+    else {
+        # log the exact packages in the update at test time, with their
+        # source packages and epochs. we use /mnt as the path for this
+        # and similar files because, on ostree-based installs where we
+        # have to use a toolbox container for part of this, it's common
+        # to the host system and container
+        assert_script_run 'rpm -qp *.rpm --qf "%{SOURCERPM} %{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE}\n" | sort -u > /mnt/updatepkgs.txt';
+        # also log just the binary package names: this is so we can check
+        # later whether any package from the update *should* have been
+        # installed, but was not
+        assert_script_run 'rpm -qp *.rpm --qf "%{NAME} " > /mnt/updatepkgnames.txt';
+    }
     upload_logs "/mnt/updatepkgnames.txt";
+    upload_logs "/mnt/updatepkgs.txt";
 
     # create the repo metadata
     assert_script_run "createrepo .", timeout => 180;
