@@ -46,6 +46,9 @@ sub run {
     my $repl = 'repos:\n  - advisory\n  - workarounds';
     $repl .= '\n  - koji-rawhide' if ($version eq $rawrel);
     assert_script_run 'sed -i -e "s,repos:,' . $repl . ',g" fedora-' . $lcsubv . '.yaml';
+    # change the ref name to a custom one (so we can test rebasing to
+    # the 'normal' ref later)
+    assert_script_run 'sed -i -e "s,ref: fedora/,ref: fedora-openqa/,g" fedora-' . $lcsubv . '.yaml';
     # upload the config so we can check it
     upload_logs "fedora-$lcsubv.yaml";
     assert_script_run 'popd';
@@ -74,7 +77,7 @@ sub run {
     assert_script_run 'git clone https://pagure.io/pungi-fedora.git';
     assert_script_run 'cd pungi-fedora/';
     assert_script_run "git checkout ${branch}";
-    assert_script_run 'wget https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/ostree-parse-pungi.py', timeout => 120;
+    assert_script_run 'wget https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/ostree-custom-ref/f/ostree-parse-pungi.py', timeout => 120;
     my $loraxargs = script_output "python3 ostree-parse-pungi.py $lcsubv $arch";
 
     # this 'temporary file cleanup' thing can actually wipe bits of

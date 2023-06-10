@@ -36,9 +36,11 @@ sub run {
     elsif ($current =~ "silverblue") {
         my $relnum = get_release_number;
         $rebase = $relnum - 1;
-        # avoid rebasing from 37 to <37, bad stuff happens
-        # FIXME when 38 branches, we should change this to RELNUM+1
-        $rebase = "rawhide" if ($relnum eq "37");
+        # on update tests, just rebase to the 'official' ref for the
+        # release, as opposed to the custom ref we used when building;
+        # this should be more reliable than a different release
+        $rebase = $relnum if (get_var("ADVISORY_OR_TASK"));
+        $rebase = "rawhide" if ($rebase eq get_var("RAWREL"));
         $target = "fedora/${rebase}/${arch}/silverblue";
     }
     elsif ($current =~ "coreos") {
