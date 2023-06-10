@@ -2226,7 +2226,7 @@
                 "fedora-Everything-boot-iso-x86_64-*-uefi": 31
             },
             "settings": {
-                "HDDSIZEGB": "13",
+                "HDDSIZEGB": "14",
                 "MEMCHECK": "1",
                 "PACKAGE_SET": "workstation",
                 "REPOSITORY_VARIATION": "%LOCATION%",
