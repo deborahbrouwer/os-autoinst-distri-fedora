@@ -23,6 +23,9 @@ sub run {
 
     # get current branch
     my $current = script_output "rpm-ostree status -b | grep fedora";
+    if (get_var("ADVISORY_OR_TASK")) {
+        die "Expected 'fedora-openqa' ref not deployed!" unless ($current =~ m/fedora-openqa/);
+    }
 
     my $arch = lc(get_var("ARCH"));
 
