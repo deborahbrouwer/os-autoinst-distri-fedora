@@ -11,6 +11,8 @@ sub run {
     my $repo = $version eq $rawrel ? "fedora-rawhide.repo" : "fedora.repo";
     my $advortask = get_var("ADVISORY_OR_TASK");
     my $arch = get_var("ARCH");
+    # we need the update repo mounted to use it in image creation
+    mount_update_image;
     assert_script_run "dnf -y install lorax", 90;
     # this 'temporary file cleanup' thing can actually wipe bits of
     # the lorax install root while lorax is still running...
@@ -23,7 +25,8 @@ sub run {
     unless ($version > $currrel) {
         $cmd .= " --isfinal --repo=/etc/yum.repos.d/fedora-updates.repo";
     }
-    $cmd .= " --repo=/etc/yum.repos.d/advisory.repo --repo=/etc/yum.repos.d/workarounds.repo";
+    $cmd .= " --repo=/etc/yum.repos.d/advisory.repo";
+    $cmd .= " --repo=/etc/yum.repos.d/workarounds.repo" if (get_var("ISO_3"));
     $cmd .= " --repo=/etc/yum.repos.d/koji-rawhide.repo" if ($version eq $rawrel);
     $cmd .= " ./results";
     assert_script_run $cmd, 2400;
