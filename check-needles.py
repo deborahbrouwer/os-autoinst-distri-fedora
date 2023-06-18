@@ -128,7 +128,7 @@ for user in ("jack", "jim"):
     testtags.append(f"user_confirm_{user}")
 # partitioning stuff, there's a bunch of this, all in anaconda.pm
 # multiple things use this
-for part in ("swap", "root", "efi", "boot", "bootefi", "home", "vda2"):
+for part in ("swap", "root", "efi", "boot", "bootefi", "home"):
     testtags.append(f"anaconda_part_select_{part}")
     testtags.append(f"anaconda_blivet_part_inactive_{part}")
 # select_disks
