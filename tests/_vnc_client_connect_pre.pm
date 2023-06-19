@@ -13,7 +13,7 @@ sub run {
     assert_script_run "ping -c 2 172.16.2.114";
     # FIXME Connections is now in the default install, we should
     # switch this test to using that
-    assert_script_run "dnf -y install vinagre";
+    assert_script_run "dnf -y install vinagre", 180;
     desktop_vt;
 }
 
