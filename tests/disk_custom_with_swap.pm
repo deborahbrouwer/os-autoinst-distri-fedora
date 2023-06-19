@@ -17,7 +17,7 @@ sub run {
     send_key_until_needlematch("anaconda_part_mountpoint_selected", "tab", 20);
     # One tab on from 'mount point selected' is 'size'
     send_key "tab";
-    type_very_safely "8 GiB";
+    type_very_safely "6 GiB";
     assert_and_click "anaconda_part_update_settings";
     wait_still_screen 5;
     # Add swap
