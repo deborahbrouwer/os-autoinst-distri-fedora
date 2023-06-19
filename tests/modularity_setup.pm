@@ -5,6 +5,7 @@ use testapi;
 use utils;
 
 sub run {
+    my $self = shift;
     # switch to tty and login as root
     $self->root_console(tty => 3);
     # modular repos are not installed by default since F39
