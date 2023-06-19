@@ -347,7 +347,7 @@
                 "DEPLOY_UPLOAD_TEST": "upgrade_desktop_64bit" ,
                 "HDDSIZEGB": "20",
                 "PACKAGE_SET": "default",
-                "TEST_TARGET": "ISO"
+                "TEST_TARGET": "COMPOSE"
             },
             "version": "*"
         },
@@ -369,7 +369,7 @@
             "settings": {
                 "DEPLOY_UPLOAD_TEST": "upgrade_desktop_64bit",
                 "DESKTOP": "gnome",
-                "TEST_TARGET": "HDD_2"
+                "TEST_TARGET": "COMPOSE"
             },
             "version": "*"
         },
@@ -378,7 +378,7 @@
             "distri": "fedora",
             "flavor": "universal",
             "settings": {
-                "TEST_TARGET": "ISO"
+                "TEST_TARGET": "COMPOSE"
             },
             "version": "*"
         },
@@ -387,7 +387,7 @@
             "distri": "fedora",
             "flavor": "universal",
             "settings": {
-                "TEST_TARGET": "ISO"
+                "TEST_TARGET": "COMPOSE"
             },
             "version": "*"
         },
@@ -396,7 +396,7 @@
             "distri": "fedora",
             "flavor": "universal",
             "settings": {
-                "TEST_TARGET": "ISO"
+                "TEST_TARGET": "COMPOSE"
             },
             "version": "*"
         },
