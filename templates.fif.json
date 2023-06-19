@@ -73,6 +73,28 @@
         }
     },
     "Products": {
+        "fedora-BaseOS-boot-iso-x86_64-*": {
+            "arch": "x86_64",
+            "distri": "fedora",
+            "flavor": "BaseOS-boot-iso",
+            "settings": {
+                "DEPLOY_UPLOAD_TEST": "install_default_upload",
+                "+QEMUCPU": "Haswell",
+                "TEST_TARGET": "ISO"
+            },
+            "version": "*"
+        },
+        "fedora-BaseOS-dvd-iso-x86_64-*": {
+            "arch": "x86_64",
+            "distri": "fedora",
+            "flavor": "BaseOS-dvd-iso",
+            "settings": {
+                "DEPLOY_UPLOAD_TEST": "install_default_upload",
+                "+QEMUCPU": "Haswell",
+                "TEST_TARGET": "ISO"
+            },
+            "version": "*"
+        },
         "fedora-Cloud_Base-qcow2-qcow2-aarch64-*": {
             "arch": "aarch64",
             "distri": "fedora",
@@ -407,6 +429,14 @@
         }
     },
     "Profiles": {
+        "fedora-BaseOS-boot-iso-x86_64-*-uefi": {
+            "machine": "uefi",
+            "product": "fedora-BaseOS-boot-iso-x86_64-*"
+        },
+        "fedora-BaseOS-dvd-iso-x86_64-*-uefi": {
+            "machine": "uefi",
+            "product": "fedora-BaseOS-dvd-iso-x86_64-*"
+        },
         "fedora-Cloud_Base-qcow2-qcow2-aarch64-*-aarch64": {
             "machine": "aarch64",
             "product": "fedora-Cloud_Base-qcow2-qcow2-aarch64-*"
@@ -1524,6 +1554,7 @@
         },
         "install_default": {
             "profiles": {
+                "fedora-BaseOS-boot-iso-x86_64-*-uefi": 50,
                 "fedora-Everything-boot-iso-ppc64le-*-ppc64le": 62,
                 "fedora-Everything-boot-iso-x86_64-*-64bit": 10,
                 "fedora-Everything-boot-iso-x86_64-*-uefi": 11,
@@ -1543,6 +1574,7 @@
         },
         "install_default_upload": {
             "profiles": {
+                "fedora-BaseOS-dvd-iso-x86_64-*-uefi": 50,
                 "fedora-CoreOS-colive-iso-x86_64-*-64bit": 20,
                 "fedora-IoT-dvd_ostree-iso-aarch64-*-aarch64": 20,
                 "fedora-IoT-dvd_ostree-iso-x86_64-*-uefi": 20,

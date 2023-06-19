@@ -73,7 +73,7 @@ sub run {
     # etc.
     my $identification = get_var('IDENTIFICATION');
     my $branched = get_var('VERSION');
-    if ($identification eq 'true' or $branched ne "Rawhide") {
+    if ($identification eq 'true' or ($branched ne "Rawhide" && $branched ne "ELN")) {
         check_left_bar();
         check_prerelease();
         check_version();

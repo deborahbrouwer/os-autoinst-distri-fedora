@@ -20,7 +20,7 @@ sub run {
     }
     # Here the self identification test code is placed.
     my $branched = get_var('VERSION');
-    if ($identification eq 'true' or $branched ne "Rawhide") {
+    if ($identification eq 'true' or ($branched ne "Rawhide" && $branched ne "ELN")) {
         # See utils.pm
         check_top_bar();
         # we don't check version or pre-release because here those
