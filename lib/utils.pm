@@ -540,11 +540,11 @@ sub _repo_setup_compose {
 
 sub _repo_setup_updates {
     # Appropriate repo setup steps for testing a Bodhi update
-    # Check if we already ran, bail if so
-    return unless script_run "test -f /root/.oqarsurun";
     # sanity check
     die "_repo_setup_updates called, but ISO_2 is not attached!" unless (get_var("ISO_2"));
     mount_update_image;
+    # Check if we already ran, bail if so
+    return unless script_run "test -f /root/.oqarsurun";
     my $version = get_var("VERSION");
     my $currrel = get_var("CURRREL", "0");
     my $arch = get_var("ARCH");

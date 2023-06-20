@@ -7,6 +7,9 @@ use cockpit;
 
 sub run {
     my $self = shift;
+    # on update flow, we need to ensure the ISO is mounted. this would
+    # be harmless but waste time on compose flow
+    repo_setup if (get_var("ADVISORY_OR_TASK"));
 
     # Start Cockpit
     start_cockpit(login => 1);
