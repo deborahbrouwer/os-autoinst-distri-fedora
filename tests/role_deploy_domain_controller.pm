@@ -26,7 +26,7 @@ sub run {
     assert_script_run 'mkdir -p /etc/systemd/system/named-pkcs11.service.d';
     assert_script_run 'printf "[Service]\nEnvironment=OPTIONS=-d5\n" > /etc/systemd/system/named-pkcs11.service.d/debug.conf';
     # First install the necessary packages
-    assert_script_run "dnf -y groupinstall freeipa-server", 600;
+    assert_script_run "dnf -y group install freeipa-server", 600;
     # configure the firewall
     for my $service (qw(freeipa-ldap freeipa-ldaps dns)) {
         assert_script_run "firewall-cmd --permanent --add-service $service";

@@ -8,7 +8,7 @@ sub run {
     # set up appropriate repositories
     repo_setup();
     # install X environment
-    assert_script_run "dnf -y groupinstall 'base-x'", 300;
+    assert_script_run "dnf -y group install 'base-x'", 300;
     # install firefox, plus our basic default fonts to try and avoid
     # random weird font selection happening
     assert_script_run "dnf -y install firefox google-noto-sans-vf-fonts google-noto-sans-mono-vf-fonts google-noto-serif-vf-fonts", 180;

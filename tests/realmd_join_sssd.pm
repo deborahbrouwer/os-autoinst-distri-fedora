@@ -40,7 +40,7 @@ sub run {
     if (get_var("FREEIPA_REPLICA")) {
         # here we're enrolling not just as a client, but as a replica
         # install server packages
-        assert_script_run "dnf -y groupinstall freeipa-server", 600;
+        assert_script_run "dnf -y group install freeipa-server", 600;
 
         # we need a lot of entropy for this, and we don't care how good
         # it is, so let's use haveged
