@@ -504,13 +504,12 @@ sub disable_updates_repos {
         both => 0,
         @_
     );
-    my $nonmod = "updates-testing";
-    $nonmod .= " updates" if ($args{both});
-    assert_script_run "dnf config-manager --set-disabled $nonmod";
+    # FIXME as of 2023-06-20 dnf5 doesn't have config-manager plugin yet :(
+    assert_script_run 'sed -i -e "s,enabled=1,enabled=0,g" /etc/yum.repos.d/fedora-updates-testing.repo';
+    assert_script_run 'sed -i -e "s,enabled=1,enabled=0,g" /etc/yum.repos.d/fedora-updates.repo' if ($args{both});
     unless (script_run 'test -f /etc/yum.repos.d/fedora-updates-testing-modular.repo') {
-        my $mod = "updates-testing-modular";
-        $mod .= " updates-modular" if ($args{both});
-        assert_script_run "dnf config-manager --set-disabled $mod";
+        assert_script_run 'sed -i -e "s,enabled=1,enabled=0,g" /etc/yum.repos.d/fedora-updates-testing-modular.repo';
+        assert_script_run 'sed -i -e "s,enabled=1,enabled=0,g" /etc/yum.repos.d/fedora-updates-modular.repo' if ($args{both});
     }
 }
 
