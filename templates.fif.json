@@ -627,6 +627,7 @@
         },
         "base_reboot_unmount": {
             "profiles": {
+                "fedora-BaseOS-dvd-iso-x86_64-*-uefi": 50,
                 "fedora-Cloud_Base-qcow2-qcow2-aarch64-*-aarch64": 20,
                 "fedora-Cloud_Base-qcow2-qcow2-ppc64le-*-ppc64le": 20,
                 "fedora-Cloud_Base-qcow2-qcow2-x86_64-*-64bit": 20,
@@ -659,6 +660,7 @@
         },
         "base_system_logging": {
             "profiles": {
+                "fedora-BaseOS-dvd-iso-x86_64-*-uefi": 50,
                 "fedora-Cloud_Base-qcow2-qcow2-aarch64-*-aarch64": 20,
                 "fedora-Cloud_Base-qcow2-qcow2-ppc64le-*-ppc64le": 20,
                 "fedora-Cloud_Base-qcow2-qcow2-x86_64-*-uefi": 20,
@@ -690,6 +692,7 @@
         },
         "base_update_cli": {
             "profiles": {
+                "fedora-BaseOS-dvd-iso-x86_64-*-uefi": 50,
                 "fedora-Cloud_Base-qcow2-qcow2-aarch64-*-aarch64": 20,
                 "fedora-Cloud_Base-qcow2-qcow2-ppc64le-*-ppc64le": 20,
                 "fedora-Cloud_Base-qcow2-qcow2-x86_64-*-uefi": 20,
@@ -716,6 +719,7 @@
         },
         "base_package_install_remove": {
             "profiles": {
+                "fedora-BaseOS-dvd-iso-x86_64-*-uefi": 50,
                 "fedora-Cloud_Base-qcow2-qcow2-aarch64-*-aarch64": 40,
                 "fedora-Cloud_Base-qcow2-qcow2-ppc64le-*-ppc64le": 40,
                 "fedora-Cloud_Base-qcow2-qcow2-x86_64-*-uefi": 40,
@@ -742,6 +746,7 @@
         },
         "base_services_start": {
             "profiles": {
+                "fedora-BaseOS-dvd-iso-x86_64-*-uefi": 50,
                 "fedora-Cloud_Base-qcow2-qcow2-aarch64-*-aarch64": 40,
                 "fedora-Cloud_Base-qcow2-qcow2-ppc64le-*-ppc64le": 40,
                 "fedora-Cloud_Base-qcow2-qcow2-x86_64-*-64bit": 40,
@@ -774,6 +779,7 @@
         },
         "base_selinux": {
             "profiles": {
+                "fedora-BaseOS-dvd-iso-x86_64-*-uefi": 50,
                 "fedora-Cloud_Base-qcow2-qcow2-aarch64-*-aarch64": 40,
                 "fedora-Cloud_Base-qcow2-qcow2-ppc64le-*-ppc64le": 40,
                 "fedora-Cloud_Base-qcow2-qcow2-x86_64-*-uefi": 40,
@@ -805,6 +811,7 @@
         },
         "base_service_manipulation": {
             "profiles": {
+                "fedora-BaseOS-dvd-iso-x86_64-*-uefi": 50,
                 "fedora-Cloud_Base-qcow2-qcow2-aarch64-*-aarch64": 40,
                 "fedora-Cloud_Base-qcow2-qcow2-ppc64le-*-ppc64le": 40,
                 "fedora-Cloud_Base-qcow2-qcow2-x86_64-*-uefi": 40,
