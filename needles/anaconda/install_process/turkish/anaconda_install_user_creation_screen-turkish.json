@@ -1,0 +1,22 @@
+{
+  "area": [
+    {
+      "xpos": 364,
+      "ypos": 220,
+      "width": 257,
+      "height": 16,
+      "type": "match"
+    },
+    {
+      "xpos": 302,
+      "ypos": 256,
+      "width": 41,
+      "height": 15,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "anaconda_install_user_creation_screen"
+  ]
+}

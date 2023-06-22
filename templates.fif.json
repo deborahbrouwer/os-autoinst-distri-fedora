@@ -2079,6 +2079,28 @@
                 "ROOT_PASSWORD": "weakpassword"
             }
         },
+        "install_turkish_language": {
+            "profiles": {
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 40,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 40,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 40
+            },
+            "settings": {
+                "DESKTOP": "gnome",
+                "ENCRYPT_PASSWORD": "weakpassword",
+                "HDDSIZEGB": "15",
+                "LANGUAGE": "turkish",
+                "NO_UEFI_POST": "1",
+                "PACKAGE_SET": "workstation",
+                "POSTINSTALL": "_console_login",
+                "QEMU_DISABLE_SNAPSHOTS": "1",
+                "REPOSITORY_VARIATION": "%LOCATION%",
+                "ROOT_PASSWORD": "weakpassword",
+                "USER_GECOS": "I;'[] <>i[ \"d,. };[,r]",
+	        "USER_LOGIN": "test",		
+		"USER_PASSWORD": "weakpassword"
+            }
+        },
         "install_updates_img_local": {
             "profiles": {
                 "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,

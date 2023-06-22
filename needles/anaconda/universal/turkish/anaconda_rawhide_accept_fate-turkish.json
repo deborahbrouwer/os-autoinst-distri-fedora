@@ -1,0 +1,16 @@
+{
+  "area": [
+    {
+      "xpos": 633,
+      "ypos": 560,
+      "width": 125,
+      "height": 14,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "ENV-DISTRI-fedora",
+    "anaconda_rawhide_accept_fate"
+  ]
+}

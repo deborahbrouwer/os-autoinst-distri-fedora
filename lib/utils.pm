@@ -204,7 +204,16 @@ sub console_login {
 
         if (check_screen $bad, 0) {
             # we don't want to 'wait' for this as it won't return
-            script_run "exit", 0;
+            my $script = "exit";
+            # If Turkish keyboard is installed, the word "exit" is typed
+            # incorrectly because the keyboard layout is different and
+            # openQA sends keys according to the English layout.
+            # Therefore we need to send a string that is
+            # correctly interpreted by the Turkish layout.
+            if (get_var("LANGUAGE") eq "turkish") {
+                $script = "ex't";
+            }
+            script_run $script, 0;
             sleep 2;
         }
 
@@ -312,7 +321,7 @@ sub console_loadkeys_us {
         # might take a few secs
         sleep 3;
     }
-    elsif (get_var('LANGUAGE') eq 'japanese') {
+    elsif (get_var('LANGUAGE') eq 'japanese' || get_var('LANGUAGE') eq 'turkish') {
         script_run "loadkeys us", 0;
         sleep 3;
     }
@@ -834,13 +843,32 @@ sub anaconda_create_user {
         timeout => 90,
         @_
     );
+    # For some languages, i.e. Turkish, we want to use a complicated
+    # geo field to test that turkish letters will be displayed correctly
+    # and that the installer will be able to handle them and change them
+    # into the correct user name without special characters.
+    my $geofield = get_var("USER_GECOS");
     my $user_login = get_var("USER_LOGIN") || "test";
+    unless ($geofield) {
+        # If geofield is not defined, let it be the same as login.
+        $geofield = $user_login;
+    }
     assert_and_click("anaconda_install_user_creation", timeout => $args{timeout});
     assert_screen "anaconda_install_user_creation_screen";
     # wait out animation
     wait_still_screen 2;
-    type_very_safely $user_login;
-    type_very_safely "\t\t\t\t";
+    # We will type the $geofield as the user name.
+    type_very_safely $geofield;
+    # For Turkish, we especially want to check that correct characters
+    # are typed, so we will check it here.
+    if (get_var("LANGUAGE") eq "turkish") {
+        assert_screen("username_typed_correctly_turkish");
+    }
+    send_key("tab");
+    # Now set the login name.
+    type_very_safely($user_login);
+    # And fill the password stuff.
+    type_very_safely "\t\t\t";
     _type_user_password();
     wait_screen_change { send_key "tab"; };
     wait_still_screen 2;
