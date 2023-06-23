@@ -2814,6 +2814,20 @@
                 "WORKER_CLASS": "tap"
             }
         },
+        "toolbox": {
+            "profiles": {
+                "fedora-Workstation-live-iso-x86_64-*-64bit": 40,
+                "fedora-Workstation-raw_xz-raw.xz-aarch64-*-aarch64": 40,
+                "fedora-CoreOS-colive-iso-x86_64-*-64bit": 40,
+                "fedora-Silverblue-dvd_ostree-iso-x86_64-*-64bit": 40
+            },
+            "settings": {
+                "BOOTFROM": "c",
+                "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
+                "POSTINSTALL": "toolbox",
+                "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%"
+            }
+        },
         "unwanted_packages": {
             "profiles": {
                 "fedora-Workstation-live-iso-ppc64le-*-ppc64le": 50,
