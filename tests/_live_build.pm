@@ -43,12 +43,12 @@ sub run {
     # make the side and workarounds repos and the serial device available inside the mock root
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_enable\'] = True" >> /etc/mock/openqa.cfg';
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/mnt/updateiso/update_repo\', \'/mnt/updateiso/update_repo\'))" >> /etc/mock/openqa.cfg';
-    assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/mnt/updateiso/workarounds_repo\', \'/mnt/updateiso/workarounds_repo\'))" >> /etc/mock/openqa.cfg' if (get_var("ISO_3"));
+    assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/mnt/workaroundsiso/workarounds_repo\', \'/mnt/workaroundsiso/workarounds_repo\'))" >> /etc/mock/openqa.cfg' if (get_var("ISO_3"));
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/dev/' . $serialdev . '\', \'/dev/' . $serialdev . '\'))" >> /etc/mock/openqa.cfg';
     # add the side repo to the config
     my $repos = 'config_opts[\'dnf.conf\'] += \"\"\"\n[advisory]\nname=Advisory repo\nbaseurl=file:///mnt/updateiso/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n';
     # and the workaround repo if present
-    $repos .= '\n[workarounds]\nname=Workarounds repo\nbaseurl=file:///mnt/updateiso/workarounds_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n' if (get_var("ISO_3"));
+    $repos .= '\n[workarounds]\nname=Workarounds repo\nbaseurl=file:///mnt/workaroundsiso/workarounds_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n' if (get_var("ISO_3"));
     # also the buildroot repo, for Rawhide
     if ($version eq $rawrel) {
         $repos .= '\n[koji-rawhide]\nname=Buildroot repo\nbaseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/\$basearch/\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n';
@@ -66,7 +66,7 @@ sub run {
     # now add the side repo to the appropriate repo ks
     assert_script_run 'echo "repo --name=advisory --baseurl=file:///mnt/updateiso/update_repo" >> ' . $repoks;
     # and the workarounds repo
-    assert_script_run 'echo "repo --name=workarounds --baseurl=file:///mnt/updateiso/workarounds_repo" >> ' . $repoks if (get_var("ISO_3"));
+    assert_script_run 'echo "repo --name=workarounds --baseurl=file:///mnt/workaroundsiso/workarounds_repo" >> ' . $repoks if (get_var("ISO_3"));
     # and the buildroot repo, for Rawhide
     if ($version eq $rawrel) {
         assert_script_run 'echo "repo --name=koji-rawhide --baseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/\$basearch/" >> ' . $repoks;
