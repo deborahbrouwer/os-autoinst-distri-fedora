@@ -27,9 +27,10 @@ sub run {
     # we need the update repo mounted to use it in image creation
     mount_update_image;
     if (get_var("NUMDISKS") > 2) {
-        # put /var/lib/mock on the third disk, so we don't run out of
-        # space on the main disk. The second disk will have already
-        # been claimed for the update repo.
+        # put /var/lib/mock on the third disk. FIXME: this used to
+        # be because we used the second disk for the updates repo,
+        # but now we use an updates image, we can probably change
+        # this
         assert_script_run "echo 'type=83' | sfdisk /dev/vdc";
         assert_script_run "mkfs.ext4 /dev/vdc1";
         assert_script_run "echo '/dev/vdc1 /var/lib/mock ext4 defaults 1 2' >> /etc/fstab";
