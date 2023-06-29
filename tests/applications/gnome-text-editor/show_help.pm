@@ -7,7 +7,9 @@ use utils;
 
 sub run {
     my $self = shift;
-
+    sleep(5);
+    # Click into the window to get focus
+    assert_and_click("gte_line_title");
     # Open Help.
     send_key("f1");
     assert_screen "gte_help_shown";

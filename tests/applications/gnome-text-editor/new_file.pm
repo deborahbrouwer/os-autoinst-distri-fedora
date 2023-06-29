@@ -12,6 +12,8 @@ sub run {
 
     # First we will use key combo to open the new document window.
     sleep 5;
+    # Click into the text to regain focus.
+    assert_and_click("gte_line_word");
     send_key("ctrl-t");
     assert_screen "gte_new_document_opened";
 

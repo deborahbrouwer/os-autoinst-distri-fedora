@@ -12,9 +12,12 @@ sub run {
     # Search the text for specific string.
     # At first, Wait 1 second for the test to get ready, as the control character was not properly recognized
     # when the test started immediately after the rollback.
-    sleep 1;
+    sleep 5;
+    # Click into the application to get focus.
+    assert_and_click("gte_line_word");
     # Invoke the Find dialogue
     send_key "ctrl-f";
+    wait_still_screen(2);
     # Type string
     type_very_safely "sweetest";
     # Confirm

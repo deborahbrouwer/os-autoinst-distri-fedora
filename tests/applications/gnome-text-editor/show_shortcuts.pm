@@ -9,6 +9,8 @@ sub run {
     my $self = shift;
     # wait for snapshot restore to settle
     sleep 5;
+    # Click into the text to get focus
+    assert_and_click("gte_line_title");
 
     # Open Shortcuts.
     send_key("ctrl-?");

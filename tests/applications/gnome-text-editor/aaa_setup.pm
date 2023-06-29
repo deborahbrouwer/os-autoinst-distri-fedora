@@ -44,6 +44,12 @@ sub run {
 
     # Check that the document has been opened
     assert_screen("gte_text_file_opened");
+
+    # Set the document language to English in order
+    # to have the spelling control correct.
+    assert_and_click("gte_line_word", button => "right");
+    assert_and_click("gte_context_languages");
+    assert_and_click("gte_context_language_english");
 }
 
 sub test_flags {
