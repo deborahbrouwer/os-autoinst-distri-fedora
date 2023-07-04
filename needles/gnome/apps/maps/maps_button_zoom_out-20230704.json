@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "xpos": 95,
+      "type": "match",
+      "height": 22,
+      "width": 19,
+      "ypos": 44
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "maps_button_zoom_out"
+  ]
+}
