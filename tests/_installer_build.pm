@@ -25,9 +25,10 @@ sub run {
     unless ($version > $currrel) {
         $cmd .= " --isfinal --repo=/etc/yum.repos.d/fedora-updates.repo";
     }
-    $cmd .= " --repo=/etc/yum.repos.d/advisory.repo";
+    $cmd .= " --repo=/etc/yum.repos.d/advisory.repo" if (get_var("ISO_2"));
     $cmd .= " --repo=/etc/yum.repos.d/workarounds.repo" if (get_var("ISO_3"));
     $cmd .= " --repo=/etc/yum.repos.d/koji-rawhide.repo" if ($version eq $rawrel);
+    $cmd .= " --repo=/etc/yum.repos.d/openqa-testtag.repo" if (get_var("TAG"));
     $cmd .= " ./results";
     assert_script_run $cmd, 2400;
     # good to have the log around for checks

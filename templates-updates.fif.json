@@ -382,7 +382,7 @@
             },
             "settings": {
                 "+START_AFTER_TEST": "installer_build@%ARCH_BASE_MACHINE%",
-                "ADD_REPOSITORY_VARIATION": "nfs://172.16.2.110:/mnt/updateiso/update_repo",
+                "ADD_REPOSITORY_VARIATION": "%UPDATE_OR_TAG_REPO%",
                 "INSTALL": "1",
                 "INSTALL_UNLOCK": "support_ready",
                 "ISO": "%ADVISORY_OR_TASK%-netinst-%ARCH%.iso",

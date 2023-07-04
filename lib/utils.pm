@@ -467,9 +467,9 @@ sub mount_update_image {
 
 sub umount_update_image {
     # inverse of mount_update_image
-    assert_script_run "sed -i '/updateiso/d' /etc/fstab";
+    assert_script_run "sed -i '/updateiso/d' /etc/fstab" if (get_var("ISO_2"));
     assert_script_run "sed -i '/workaroundsiso/d' /etc/fstab" if (get_var("ISO_3"));
-    assert_script_run "umount /mnt/updateiso" unless (script_run "grep updateiso /proc/mounts");
+    assert_script_run "umount /mnt/updateiso" unless (!get_var("ISO_2") || script_run "grep updateiso /proc/mounts");
     assert_script_run "umount /mnt/workaroundsiso" unless (!get_var("ISO_3") || script_run "grep workaroundsiso /proc/mounts");
 }
 
@@ -541,13 +541,14 @@ sub _repo_setup_compose {
 sub _repo_setup_updates {
     # Appropriate repo setup steps for testing a Bodhi update
     # sanity check
-    die "_repo_setup_updates called, but ISO_2 is not attached!" unless (get_var("ISO_2"));
-    mount_update_image;
+    die "_repo_setup_updates called, but ISO_2 is not attached!" unless (get_var("ISO_2") || get_var("TAG"));
+    mount_update_image if (get_var("ISO_2"));
     # Check if we already ran, bail if so
     return unless script_run "test -f /root/.oqarsurun";
     my $version = get_var("VERSION");
     my $currrel = get_var("CURRREL", "0");
     my $arch = get_var("ARCH");
+    my $tag = get_var("TAG");
     # this can be used for debugging repo config if something is wrong
     # unless (script_run 'pushd /etc/yum.repos.d && tar czvf yumreposd.tar.gz * && popd') {
     #     upload_logs "/etc/yum.repos.d/yumreposd.tar.gz";
@@ -576,14 +577,19 @@ sub _repo_setup_updates {
     }
     # set up the workaround repo
     setup_workaround_repo;
-    upload_logs "/mnt/updateiso/updatepkgnames.txt";
-    upload_logs "/mnt/updateiso/updatepkgs.txt";
+    upload_logs "/mnt/updateiso/updatepkgnames.txt" unless ($tag);
+    upload_logs "/mnt/updateiso/updatepkgs.txt" unless ($tag);
     # write a repo config file, unless this is the support_server test
     # and it is running on a different release than the update is for
     # (in this case we need the repo to exist but do not want to use
     # it on the actual support_server system)
     unless (get_var("TEST") eq "support_server" && $version ne get_var("CURRREL")) {
-        assert_script_run 'printf "[advisory]\nname=Advisory repo\nbaseurl=file:///mnt/updateiso/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0" > /etc/yum.repos.d/advisory.repo';
+        if ($tag) {
+            assert_script_run 'printf "[openqa-testtag]\nname=openqa-testtag\nbaseurl=https://kojipkgs.fedoraproject.org/repos/' . "$tag/latest/$arch" . '/\ncost=2000\nenabled=1\ngpgcheck=0\n" > /etc/yum.repos.d/openqa-testtag.repo';
+        }
+        else {
+            assert_script_run 'printf "[advisory]\nname=Advisory repo\nbaseurl=file:///mnt/updateiso/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0" > /etc/yum.repos.d/advisory.repo';
+        }
         # run an update now, except for upgrade or install tests,
         # where the updated packages should have been installed
         # already and we want to fail if they weren't, or CANNED
@@ -1010,6 +1016,8 @@ sub quit_with_shortcut {
 # are currently installed. This is here so we can do it both in
 # _advisory_post and post_fail_hook.
 sub advisory_get_installed_packages {
+    # can't do anything useful when testing a side tag
+    return if (get_var("TAG"));
     # sanity check
     die "advisory_get_installed_packages, but ISO_2 is not attached!" unless (get_var("ISO_2"));
     mount_update_image;
@@ -1041,6 +1049,8 @@ sub advisory_check_nonmatching_packages {
         fatal => 1,
         @_
     );
+    # can't do anything useful when testing a side tag
+    return if (get_var("TAG"));
     # sanity check
     die "advisory_check_nonmatching_packages called, but ISO_2 is not attached!" unless (get_var("ISO_2"));
     mount_update_image;
