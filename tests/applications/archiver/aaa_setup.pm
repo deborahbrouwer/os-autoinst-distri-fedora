@@ -23,7 +23,8 @@ sub run {
     # Check it has started
     assert_screen 'apps_run_files';
     # Fullsize the window.
-    send_key("super-up");
+    wait_screen_change { send_key("super-up"); };
+    wait_still_screen 3;
 
     # Open the Documents directory
     assert_and_click("gnome_open_location_documents");
