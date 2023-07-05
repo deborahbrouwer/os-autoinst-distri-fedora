@@ -45,14 +45,16 @@ sub run {
     # Check that the document has been opened
     assert_screen("gte_text_file_opened");
 
-    # Set the document language to English in order
-    # to have the spelling control correct.
-    assert_and_click("gte_line_word", button => "right");
-    # the context menu can change while it's loading, so we need to be careful
-    assert_screen("gte_context_languages");
-    wait_still_screen 3;
-    assert_and_click("gte_context_languages");
-    assert_and_click("gte_context_language_english");
+    # Set the document language to English if we're seeing spelling
+    # errors
+    if (check_screen("gte_line_word_spellcheck", 5)) {
+        click_lastmatch(button => "right");
+        # the context menu can change while it's loading, so we need to be careful
+        assert_screen("gte_context_languages");
+        wait_still_screen 3;
+        assert_and_click("gte_context_languages");
+        assert_and_click("gte_context_language_english");
+    }
 }
 
 sub test_flags {
