@@ -27,17 +27,17 @@ sub run {
     menu_launch_type("terminal");
     assert_screen("apps_run_terminal");
     # Set the volume to 0%
-    type_safely('pactl set-sink-volume @DEFAULT_SINK@ 0%');
+    type_safely('amixer -D pipewire sset Master 0%');
     send_key('ret');
     # Check that it worked
     check_volume("zero");
     # Set the volume to 50%
-    type_safely('pactl set-sink-volume @DEFAULT_SINK@ 50%');
+    type_safely('amixer -D pipewire sset Master 50%');
     send_key('ret');
     # Check that it worked
     check_volume("fifty");
     # Set the volume to 100%
-    type_safely('pactl set-sink-volume @DEFAULT_SINK@ 100%');
+    type_safely('amixer -D pipewire sset Master 100%');
     send_key('ret');
     # Check that it worked
     check_volume("hundred");
