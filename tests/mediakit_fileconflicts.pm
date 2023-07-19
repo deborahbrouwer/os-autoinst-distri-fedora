@@ -9,7 +9,7 @@ sub run {
     # mount the ISO there
     assert_script_run "mount /dev/cdrom /mnt/iso";
     # download the check script
-    assert_script_run "curl -o /usr/local/bin/potential_conflict.py https://pagure.io/fedora-qa/qa-misc/raw/master/f/potential_conflict.py";
+    assert_script_run "curl --retry-delay 10 --max-time 30 --retry 5 -o /usr/local/bin/potential_conflict.py https://pagure.io/fedora-qa/qa-misc/raw/master/f/potential_conflict.py", timeout => 180;
     # run the check
     assert_script_run "python3 /usr/local/bin/potential_conflict.py --repofrompath=media,/mnt/iso -r media";
 }

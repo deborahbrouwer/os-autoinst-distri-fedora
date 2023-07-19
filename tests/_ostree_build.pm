@@ -35,7 +35,7 @@ sub run {
     # usually a good idea for this kinda thing
     assert_script_run "setenforce Permissive";
     # install the tools we need
-    assert_script_run "dnf -y install git lorax flatpak ostree rpm-ostree wget dbus-daemon moreutils", 300;
+    assert_script_run "dnf -y install git lorax flatpak ostree rpm-ostree dbus-daemon moreutils", 300;
     # now check out workstation-ostree-config
     assert_script_run 'git clone https://pagure.io/workstation-ostree-config.git';
     assert_script_run 'pushd workstation-ostree-config';
@@ -83,7 +83,7 @@ sub run {
     assert_script_run 'git clone https://pagure.io/pungi-fedora.git';
     assert_script_run 'cd pungi-fedora/';
     assert_script_run "git checkout ${branch}";
-    assert_script_run 'wget https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/ostree-parse-pungi.py', timeout => 120;
+    assert_script_run 'curl --retry-delay 10 --max-time 30 --retry 5 -o ostree-parse-pungi.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/ostree-parse-pungi.py', timeout => 180;
     my $loraxargs = script_output "python3 ostree-parse-pungi.py $lcsubv $arch";
 
     # this 'temporary file cleanup' thing can actually wipe bits of
