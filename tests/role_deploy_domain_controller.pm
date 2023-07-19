@@ -66,7 +66,7 @@ sub run {
     assert_script_run 'printf "correcthorse\nbatterystaple\nbatterystaple" | kinit test1@TEST.OPENQA.FEDORAPROJECT.ORG';
     assert_script_run 'printf "correcthorse\nbatterystaple\nbatterystaple" | kinit test2@TEST.OPENQA.FEDORAPROJECT.ORG';
     # we're ready for children to enrol, now
-    mutex_create("freeipa_ready");
+    mutex_create("domain_server_ready");
     # if upgrade test, wait for children to enrol before upgrade
     if (get_var("UPGRADE")) {
         my $children = get_children();

@@ -40,14 +40,14 @@ sub run {
     # check we can kinit with changed password
     assert_script_run 'printf "loremipsum" | kinit test3';
     # change password via CLI (back to batterystaple, as that's what
-    # freeipa_client test expects)
+    # domain_client test expects)
     assert_script_run 'dnf -y install freeipa-admintools';
     assert_script_run 'printf "batterystaple\nbatterystaple" | ipa user-mod test3 --password';
     # check we can kinit again
     assert_script_run 'printf "batterystaple" | kinit test3';
-    # clear kerberos ticket for freeipa_client test
+    # clear kerberos ticket for domain_client test
     assert_script_run 'kdestroy -A';
-    # we just stay here - freeipa_client will pick right up
+    # we just stay here - domain_client will pick right up
 }
 
 sub test_flags {

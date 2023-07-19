@@ -1713,7 +1713,7 @@
             },
             "settings": {
                 "GRUB": "inst.ks=hd:vdb1:/root-user-crypted-net.ks",
-                "HDD_2": "disk_ks_6.img",
+                "HDD_2": "disk_ks_7.img",
                 "KICKSTART": "1",
                 "NUMDISKS": "2",
                 "ROOT_PASSWORD": "111111",
@@ -2360,8 +2360,32 @@
                 "BOOTFROM": "c",
                 "NICTYPE": "tap",
                 "PARALLEL_WITH": "server_role_deploy_domain_controller",
-                "POSTINSTALL": "realmd_join_cockpit freeipa_webui freeipa_password_change freeipa_client",
+                "POSTINSTALL": "realmd_join_cockpit freeipa_webui freeipa_password_change domain_client",
                 "POST_STATIC": "172.16.2.102 client002.test.openqa.fedoraproject.org",
+                "ROOT_PASSWORD": "weakpassword",
+                "USER_LOGIN": "false",
+                "WORKER_CLASS": "tap"
+            }
+        },
+        "realmd_join_cockpit_ad": {
+            "profiles": {
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 30,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 30
+            },
+            "settings": {
+                "+HDD_1": "disk_%MACHINE%_cockpit.qcow2",
+                "+START_AFTER_TEST": "server_cockpit_default",
+                "BOOTFROM": "c",
+                "NICTYPE": "tap",
+                "PARALLEL_WITH": "server_samba_domain_controller",
+                "POSTINSTALL": "realmd_join_cockpit domain_client",
+                "POST_STATIC": "172.16.2.132 adclient002.samdom.openqa.fedoraproject.org",
+                "REALMD_ADMIN_USER": "administrator",
+                "REALMD_ADMIN_PASSWORD": "129ho3eau47#qm9to9s^",
+                "REALMD_DNS_SERVER_HOST": "ad001.samdom.openqa.fedoraproject.org",
+                "REALMD_DNS_SERVER_IP": "172.16.2.130",
+                "REALMD_DOMAIN": "samdom.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "USER_LOGIN": "false",
                 "WORKER_CLASS": "tap"
@@ -2378,8 +2402,32 @@
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
                 "NICTYPE": "tap",
                 "PARALLEL_WITH": "server_role_deploy_domain_controller",
-                "POSTINSTALL": "realmd_join_sssd freeipa_client",
+                "POSTINSTALL": "realmd_join_sssd domain_client",
                 "POST_STATIC": "172.16.2.103 client003.test.openqa.fedoraproject.org",
+                "ROOT_PASSWORD": "weakpassword",
+                "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
+                "USER_LOGIN": "false",
+                "WORKER_CLASS": "tap"
+            }
+        },
+        "realmd_join_sssd_ad": {
+            "profiles": {
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20
+            },
+            "settings": {
+                "BOOTFROM": "c",
+                "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
+                "NICTYPE": "tap",
+                "PARALLEL_WITH": "server_samba_domain_controller",
+                "POSTINSTALL": "realmd_join_sssd domain_client",
+                "POST_STATIC": "172.16.2.131 adclient001.samdom.openqa.fedoraproject.org",
+                "REALMD_ADMIN_USER": "administrator",
+                "REALMD_ADMIN_PASSWORD": "129ho3eau47#qm9to9s^",
+                "REALMD_DNS_SERVER_HOST": "ad001.samdom.openqa.fedoraproject.org",
+                "REALMD_DNS_SERVER_IP": "172.16.2.130",
+                "REALMD_DOMAIN": "samdom.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
@@ -2547,12 +2595,14 @@
             },
             "settings": {
                 "BOOTFROM": "c",
-                "FREEIPA_REPLICA_CLIENT": "1",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
                 "NICTYPE": "tap",
                 "PARALLEL_WITH": "server_freeipa_replication_replica",
-                "POSTINSTALL": "realmd_join_sssd freeipa_client",
+                "POSTINSTALL": "realmd_join_sssd domain_client",
                 "POST_STATIC": "172.16.2.108 client005.test.openqa.fedoraproject.org",
+                "REALMD_DNS_SERVER_HOST": "ipa003.test.openqa.fedoraproject.org",
+                "REALMD_DNS_SERVER_IP": "172.16.2.107",
+                "REALMD_SERVER_MUTEX": "domain_replica_ready",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
@@ -2594,6 +2644,8 @@
                 "PARALLEL_WITH": "server_freeipa_replication_master",
                 "POSTINSTALL": "realmd_join_sssd",
                 "POST_STATIC": "172.16.2.107 ipa003.test.openqa.fedoraproject.org",
+                "REALMD_DNS_SERVER_HOST": "ipa002.test.openqa.fedoraproject.org",
+                "REALMD_DNS_SERVER_IP": "172.16.2.106",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
@@ -2608,13 +2660,35 @@
             },
             "settings": {
                 "GRUB": "inst.ks=hd:vdb1:/freeipaclient.ks",
-                "HDD_2": "disk_ks_6.img",
-                "INSTALL_UNLOCK": "freeipa_ready",
+                "HDD_2": "disk_ks_7.img",
+                "INSTALL_UNLOCK": "domain_server_ready",
                 "KICKSTART": "1",
                 "NICTYPE": "tap",
                 "NUMDISKS": "2",
                 "PARALLEL_WITH": "server_role_deploy_domain_controller",
-                "POSTINSTALL": "freeipa_client",
+                "POSTINSTALL": "domain_client",
+                "ROOT_PASSWORD": "anaconda",
+                "USER_LOGIN": "false",
+                "WORKER_CLASS": "tap"
+            }
+        },
+        "server_realmd_join_kickstart_ad": {
+            "profiles": {
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20
+            },
+            "settings": {
+                "GRUB": "inst.ks=hd:vdb1:/adclient.ks",
+                "HDD_2": "disk_ks_7.img",
+                "INSTALL_UNLOCK": "domain_server_ready",
+                "KICKSTART": "1",
+                "NICTYPE": "tap",
+                "NUMDISKS": "2",
+                "PARALLEL_WITH": "server_samba_domain_controller",
+                "POSTINSTALL": "domain_client",
+                "REALMD_ADMIN_USER": "administrator",
+                "REALMD_DOMAIN": "samdom.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "anaconda",
                 "USER_LOGIN": "false",
                 "WORKER_CLASS": "tap"
@@ -2690,6 +2764,25 @@
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "POSTINSTALL": "role_deploy_domain_controller role_deploy_domain_controller_check",
                 "POST_STATIC": "172.16.2.100 ipa001.test.openqa.fedoraproject.org",
+                "ROOT_PASSWORD": "weakpassword",
+                "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
+                "USER_LOGIN": "false",
+                "WORKER_CLASS": "tap"
+            }
+        },
+        "server_samba_domain_controller": {
+            "profiles": {
+                "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,
+                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 20,
+                "fedora-Server-dvd-iso-x86_64-*-64bit": 20
+            },
+            "settings": {
+                "BOOTFROM": "c",
+                "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
+                "NICTYPE": "tap",
+                "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
+                "POSTINSTALL": "samba_domain_controller samba_domain_controller_check",
+                "POST_STATIC": "172.16.2.130 ad001.samdom.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
@@ -2839,7 +2932,7 @@
                 "BOOTFROM": "c",
                 "NICTYPE": "tap",
                 "PARALLEL_WITH": "upgrade_2_server_domain_controller",
-                "POSTINSTALL": "_setup_browser freeipa_webui freeipa_password_change freeipa_client",
+                "POSTINSTALL": "_setup_browser freeipa_webui freeipa_password_change domain_client",
                 "POST_STATIC": "172.16.2.103 client003.test.openqa.fedoraproject.org",
                 "PREUPGRADE": "realmd_join_sssd",
                 "ROOT_PASSWORD": "weakpassword",
@@ -2975,7 +3068,7 @@
                 "MAX_JOB_TIME": "10800",
                 "NICTYPE": "tap",
                 "PARALLEL_WITH": "upgrade_server_domain_controller",
-                "POSTINSTALL": "_setup_browser freeipa_webui freeipa_password_change freeipa_client",
+                "POSTINSTALL": "_setup_browser freeipa_webui freeipa_password_change domain_client",
                 "POST_STATIC": "172.16.2.103 client003.test.openqa.fedoraproject.org",
                 "PREUPGRADE": "realmd_join_sssd",
                 "ROOT_PASSWORD": "weakpassword",

@@ -8,19 +8,15 @@ use utils;
 
 sub run {
     my $self = shift;
-    # use FreeIPA server or replica as DNS server
-    my $server = 'ipa001.test.openqa.fedoraproject.org';
-    my $server_ip = '172.16.2.100';
-    my $server_mutex = 'freeipa_ready';
-    if (get_var("FREEIPA_REPLICA")) {
-        $server = 'ipa002.test.openqa.fedoraproject.org';
-        $server_ip = '172.16.2.106';
-    }
-    if (get_var("FREEIPA_REPLICA_CLIENT")) {
-        $server = 'ipa003.test.openqa.fedoraproject.org';
-        $server_ip = '172.16.2.107';
-        $server_mutex = 'replica_ready';
-    }
+    # use appropriate server IP, hostname, mutex and admin password
+    #  Several tests use the 'regular' FreeIPA server, so the values
+    # for that are the defaults; other tests use a replica server, or
+    # the AD server, so they specify this in their vars.
+    my $server = get_var("REALMD_DNS_SERVER_HOST", 'ipa001.test.openqa.fedoraproject.org');
+    my $server_ip = get_var("REALMD_DNS_SERVER_IP", '172.16.2.100');
+    my $server_mutex = get_var("REALMD_SERVER_MUTEX", 'domain_server_ready');
+    my $admin_pw = get_var("REALMD_ADMIN_PASSWORD", 'monkeys123');
+    my $admin_user = get_var("REALMD_ADMIN_USER", 'admin');
     # this gets us the name of the first connection in the list,
     # which should be what we want
     my $connection = script_output "nmcli --fields NAME con show | head -2 | tail -1";
@@ -63,13 +59,13 @@ sub run {
         assert_script_run "systemctl start ipa.service", 300;
 
         # report that we're ready to go
-        mutex_create('replica_ready');
+        mutex_create('domain_replica_ready');
 
         # wait for the client test
         wait_for_children;
     }
     else {
-        assert_script_run "echo 'monkeys123' | realm join --user=admin ${server}", 300;
+        assert_script_run "echo '${admin_pw}' | realm join --user=${admin_user} ${server}", 300;
     }
     # set sssd debugging level higher (useful for debugging failures)
     # optional as it's not really part of the test

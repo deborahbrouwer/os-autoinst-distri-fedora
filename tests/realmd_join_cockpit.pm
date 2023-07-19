@@ -8,18 +8,27 @@ use cockpit;
 
 sub run {
     my $self = shift;
-    # use FreeIPA server as DNS server
-    assert_script_run "printf 'search test.openqa.fedoraproject.org\nnameserver 172.16.2.100' > /etc/resolv.conf";
+    # use appropriate server IP, hostname, mutex and admin password
+    #  Several tests use the 'regular' FreeIPA server, so the values
+    # for that are the defaults; other tests use a replica server, or
+    # the AD server, so they specify this in their vars.
+    my $server = get_var("REALMD_DNS_SERVER_HOST", 'ipa001.test.openqa.fedoraproject.org');
+    my $server_ip = get_var("REALMD_DNS_SERVER_IP", '172.16.2.100');
+    my $server_mutex = get_var("REALMD_SERVER_MUTEX", 'domain_server_ready');
+    my $admin_pw = get_var("REALMD_ADMIN_PASSWORD", 'monkeys123');
+    my $admin_user = get_var("REALMD_ADMIN_USER", 'admin');
+    my $domain = get_var("REALMD_DOMAIN", "test.openqa.fedoraproject.org");
+    assert_script_run "printf '$domain\nnameserver $server_ip' > /etc/resolv.conf";
     # this gets us the name of the first connection in the list,
     # which should be what we want
     my $connection = script_output "nmcli --fields NAME con show | head -2 | tail -1";
-    assert_script_run "nmcli con mod '$connection' ipv4.dns '172.16.2.100'";
+    assert_script_run "nmcli con mod '$connection' ipv4.dns '$server_ip'";
     assert_script_run "nmcli con down '$connection'";
     assert_script_run "nmcli con up '$connection'";
     # wait for the server to be ready (do it now just to make sure name
     # resolution is working before we proceed)
-    mutex_lock "freeipa_ready";
-    mutex_unlock "freeipa_ready";
+    mutex_lock "domain_server_ready";
+    mutex_unlock "domain_server_ready";
     # do repo setup
     repo_setup();
     # set sssd debugging level higher (useful for debugging failures)
@@ -52,12 +61,12 @@ sub run {
     # ...but two tabs in both places on earlier versions
     $tabs = "\t\t" if ($cockpitver < 255);
     type_string($tabs, 4);
-    type_string("ipa001.test.openqa.fedoraproject.org", 4);
+    type_string($server, 4);
     type_string($tabs, 4);
-    type_string("admin", 4);
+    type_string($admin_user, 4);
     send_key "tab";
     sleep 3;
-    type_string("monkeys123", 4);
+    type_string($admin_pw, 4);
     sleep 3;
     assert_and_click "cockpit_join_button";
     # join involves package installs, so it may take some time

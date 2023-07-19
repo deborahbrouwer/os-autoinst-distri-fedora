@@ -474,7 +474,21 @@
                 "fedora-updates-server-x86_64-*-64bit": 5
             }
         },
+        "realmd_join_cockpit_ad": {
+            "profiles": {
+                "fedora-updates-server-aarch64-*-aarch64": 5,
+                "fedora-updates-server-ppc64le-*-ppc64le": 5,
+                "fedora-updates-server-x86_64-*-64bit": 5
+            }
+        },
         "realmd_join_sssd": {
+            "profiles": {
+                "fedora-updates-server-aarch64-*-aarch64": 5,
+                "fedora-updates-server-ppc64le-*-ppc64le": 5,
+                "fedora-updates-server-x86_64-*-64bit": 5
+            }
+        },
+        "realmd_join_sssd_ad": {
             "profiles": {
                 "fedora-updates-server-aarch64-*-aarch64": 5,
                 "fedora-updates-server-ppc64le-*-ppc64le": 5,
@@ -563,6 +577,13 @@
             }
         },
         "server_role_deploy_domain_controller": {
+            "profiles": {
+                "fedora-updates-server-aarch64-*-aarch64": 5,
+                "fedora-updates-server-ppc64le-*-ppc64le": 5,
+                "fedora-updates-server-x86_64-*-64bit": 5
+            }
+        },
+        "server_samba_domain_controller": {
             "profiles": {
                 "fedora-updates-server-aarch64-*-aarch64": 5,
                 "fedora-updates-server-ppc64le-*-ppc64le": 5,
