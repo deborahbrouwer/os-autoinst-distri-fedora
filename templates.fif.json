@@ -2289,21 +2289,6 @@
                 "TEST_TARGET": "NONE"
             }
         },
-        "modularity_tests": {
-            "profiles": {
-                "fedora-Server-dvd-iso-aarch64-*-aarch64": 30,
-                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 30,
-                "fedora-Server-dvd-iso-x86_64-*-64bit": 30
-            },
-            "settings": {
-                "BOOTFROM": "c",
-                "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "POSTINSTALL": "modularity_setup modularity_module_list modularity_enable_disable_module modularity_install_module",
-                "ROOT_PASSWORD": "weakpassword",
-                "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
-                "USER_LOGIN": "false"
-            }
-        },
         "podman": {
             "profiles": {
                 "fedora-CoreOS-colive-iso-x86_64-*-64bit": 20,
