@@ -916,9 +916,9 @@ sub download_modularity_tests {
     my ($whitelist) = @_;
     # we need python3-yaml for the script to run
     assert_script_run 'dnf -y install python3-yaml', 180;
-    assert_script_run 'curl --retry-delay 10 --max-time 30 --retry 5 -o /root/test.py https://pagure.io/fedora-qa/modularity_testing_scripts/raw/master/f/modular_functions.py', timeout => 180;
+    assert_script_run 'curl --verbose --retry-delay 10 --max-time 30 --retry 5 -o /root/test.py https://pagure.io/fedora-qa/modularity_testing_scripts/raw/master/f/modular_functions.py', timeout => 180;
     if ($whitelist eq 'whitelist') {
-        assert_script_run 'curl --retry-delay 10 --max-time 30 --retry 5 -o /root/whitelist https://pagure.io/fedora-qa/modularity_testing_scripts/raw/master/f/whitelist', timeout => 180;
+        assert_script_run 'curl --verbose --retry-delay 10 --max-time 30 --retry 5 -o /root/whitelist https://pagure.io/fedora-qa/modularity_testing_scripts/raw/master/f/whitelist', timeout => 180;
     }
     assert_script_run 'chmod 755 /root/test.py';
 }
@@ -1080,7 +1080,7 @@ sub advisory_check_nonmatching_packages {
     upload_logs "/tmp/installedupdatepkgs.txt", failok => 1;
     upload_logs "/mnt/updateiso/updatepkgs.txt", failok => 1;
     # download the check script and run it
-    assert_script_run 'curl --retry-delay 10 --max-time 30 --retry 5 -o updvercheck.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/updvercheck.py', timeout => 180;
+    assert_script_run 'curl --verbose --retry-delay 10 --max-time 30 --retry 5 -o updvercheck.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/updvercheck.py', timeout => 180;
     my $advisory = get_var("ADVISORY");
     my $cmd = 'python3 ./updvercheck.py /mnt/updateiso/updatepkgs.txt /tmp/installedupdatepkgs.txt';
     $cmd .= " $advisory" if ($advisory);
@@ -1462,7 +1462,7 @@ sub download_testdata {
     assert_script_run("mkdir temp");
     assert_script_run("cd temp");
     # Download the compressed file with the repository content.
-    assert_script_run("curl --retry-delay 10 --max-time 120 --retry 5 -o repository.tar.gz https://pagure.io/fedora-qa/openqa_testdata/blob/thetree/f/repository.tar.gz", timeout => 600);
+    assert_script_run("curl --verbose --retry-delay 10 --max-time 120 --retry 5 -o repository.tar.gz https://pagure.io/fedora-qa/openqa_testdata/blob/thetree/f/repository.tar.gz", timeout => 600);
     # Untar it.
     assert_script_run("tar -zxvf repository.tar.gz");
     # Copy out the files into the VMs directory structure.
