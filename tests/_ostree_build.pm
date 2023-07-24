@@ -36,6 +36,10 @@ sub run {
     assert_script_run "setenforce Permissive";
     # install the tools we need
     assert_script_run "dnf -y install git lorax flatpak ostree rpm-ostree dbus-daemon moreutils", 300;
+    # FIXME using HTTP 1.1 seems to avoid some weird hangs we're
+    # seeing on pagure.io lately as of 2023/07:
+    # https://pagure.io/fedora-infrastructure/issue/11426
+    assert_script_run 'git config --global http.version HTTP/1.1';
     # now check out workstation-ostree-config
     assert_script_run 'git clone https://pagure.io/workstation-ostree-config.git';
     assert_script_run 'pushd workstation-ostree-config';
