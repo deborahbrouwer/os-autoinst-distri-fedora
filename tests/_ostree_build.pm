@@ -70,13 +70,11 @@ sub run {
     assert_script_run "set -o pipefail";
     # PULL SOME LEVERS! PULL SOME LEVERS!
     # This shadows pungi/ostree/tree.py
-    # FIXME: when https://fedoraproject.org/wiki/Changes/FedoraSilverblueUnifiedCore
-    # is implemented we should match it by adding --unified-core to the args
     # Difference from releng: we don't pass --write-commitid-to as it
     # disables updating the ref with the new commit, and we *do* want
     # to do that. pungi updates the ref itself, I don't want to copy
     # all that work in here
-    assert_script_run "rpm-ostree compose tree --repo=/var/tmp/ostree/repo/ --add-metadata-string=version=${advortask} --force-nocache /workstation-ostree-config/fedora-$lcsubv.yaml |& ts '" . '[%Y-%m-%d %H:%M:%S]' . "' | tee /tmp/ostree.log", 4500;
+    assert_script_run "rpm-ostree compose tree --unified-core --repo=/var/tmp/ostree/repo/ --add-metadata-string=version=${advortask} --force-nocache /workstation-ostree-config/fedora-$lcsubv.yaml |& ts '" . '[%Y-%m-%d %H:%M:%S]' . "' | tee /tmp/ostree.log", 4500;
     assert_script_run "set +o pipefail";
     upload_logs "/tmp/ostree.log";
     # check out the ostree installer lorax templates
