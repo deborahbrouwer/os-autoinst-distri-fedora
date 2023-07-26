@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "type": "match",
+      "xpos": 292,
+      "ypos": 228,
+      "height": 385,
+      "width": 111
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "maps_route_walk_shown"
+  ]
+}
