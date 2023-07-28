@@ -55,7 +55,7 @@ sub run {
     $repos .= '\n[workarounds]\nname=Workarounds repo\nbaseurl=file:///mnt/workaroundsiso/workarounds_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n' if (get_var("ISO_3"));
     # also the buildroot repo, for Rawhide
     if ($version eq $rawrel) {
-        $repos .= '\n[koji-rawhide]\nname=Buildroot repo\nbaseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/\$basearch/\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n';
+        $repos .= '\n[koji-rawhide]\nname=Buildroot repo\nbaseurl=https://kojipkgs.fedoraproject.org/repos/f' . $version . '-build/latest/\$basearch/\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n';
     }
     $repos .= '\"\"\"';
     assert_script_run 'printf "' . $repos . '" >> /etc/mock/openqa.cfg';
@@ -78,7 +78,7 @@ sub run {
     assert_script_run 'echo "repo --name=workarounds --baseurl=file:///mnt/workaroundsiso/workarounds_repo" >> ' . $repoks if (get_var("ISO_3"));
     # and the buildroot repo, for Rawhide
     if ($version eq $rawrel) {
-        assert_script_run 'echo "repo --name=koji-rawhide --baseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/\$basearch/" >> ' . $repoks;
+        assert_script_run 'echo "repo --name=koji-rawhide --baseurl=https://kojipkgs.fedoraproject.org/repos/f' . $version . '-build/latest/\$basearch/" >> ' . $repoks;
     }
     # now flatten the kickstart
     assert_script_run "ksflatten -c fedora-live-${lcsubv}.ks -o openqa.ks";
