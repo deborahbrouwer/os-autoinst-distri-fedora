@@ -582,7 +582,7 @@ sub _repo_setup_updates {
     # use the buildroot repo on Rawhide: see e.g.
     # https://pagure.io/fedora-ci/general/issue/376 for why
     if ($version eq get_var("RAWREL") && get_var("TEST") ne "support_server") {
-        assert_script_run 'printf "[koji-rawhide]\nname=koji-rawhide\nbaseurl=https://kojipkgs.fedoraproject.org/repos/f' . $version . '-build/latest/' . $arch . '/\ncost=2000\nenabled=1\nmetadata_expire=30\ngpgcheck=0\n" > /etc/yum.repos.d/koji-rawhide.repo';
+        assert_script_run 'printf "[koji-rawhide]\nname=koji-rawhide\nbaseurl=https://kojipkgs.fedoraproject.org/repos/f' . $version . '-build/latest/' . $arch . '/\ncost=2000\nenabled=1\nmetadata_expire=30\ngpgcheck=0\nskip_if_unavailable=1\n" > /etc/yum.repos.d/koji-rawhide.repo';
     }
     # set up the workaround repo
     setup_workaround_repo;
