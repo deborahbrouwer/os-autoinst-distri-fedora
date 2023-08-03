@@ -860,7 +860,6 @@
             "settings": {
                 "PARTITIONING": "custom_blivet_resize_lvm",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "HDDSIZEGB": "17",
                 "INSTALL": "1",
                 "POSTINSTALL": "disk_custom_resize_lvm_postinstall",
                 "ROOT_PASSWORD": "weakpassword",
@@ -876,7 +875,6 @@
             "settings": {
                 "PARTITIONING": "custom_resize_lvm",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "HDDSIZEGB": "17",
                 "INSTALL": "1",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "install_lvm_ext4"
@@ -1774,7 +1772,7 @@
                 "fedora-Server-dvd-iso-x86_64-*-uefi": 41
             },
             "settings": {
-                "HDDSIZEGB": "15",
+                "HDDSIZEGB": "17",
                 "PARTITIONING": "custom_lvm_ext4",
                 "ROOT_PASSWORD": "weakpassword",
                 "STORE_HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2"
