@@ -1,0 +1,16 @@
+{
+  "area": [
+    {
+      "width": 129,
+      "ypos": 569,
+      "height": 16,
+      "xpos": 631,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "LANGUAGE-french",
+    "anaconda_rawhide_accept_fate"
+  ]
+}
