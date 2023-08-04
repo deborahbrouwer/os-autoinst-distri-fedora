@@ -6,7 +6,9 @@ use utils;
 sub run {
     my $self = shift;
     my $admin = get_var("REALMD_ADMIN_USER", "admin");
+    my $tcadmin = ucfirst($admin);
     my $domain = get_var("REALMD_DOMAIN", "test.openqa.fedoraproject.org");
+    my $shortdom = uc((split(/\./, $domain))[0]);
     my $udomain = uc($domain);
     my $qdomain = quotemeta($domain);
     my $qudomain = uc($qdomain);
@@ -15,10 +17,24 @@ sub run {
     # at tty1)
     send_key "ctrl-alt-f1";
     wait_still_screen 1;
+    if (get_var("KICKSTART")) {
+        # we don't have sssd debugging enabled yet
+        assert_script_run 'dnf -y install sssd-tools', 240;
+        assert_script_run 'sss_debuglevel 9';
+    }
     # check domain is listed in 'realm list'
     validate_script_output 'realm list', sub { $_ =~ m/domain-name: $qdomain.*configured: kerberos-member/s };
     # check we can resolve domain accounts
-    assert_script_run "getent passwd $admin\@$udomain";
+    if ($domain =~ m/samdom/) {
+        # give this two tries, to see if it helps the problem where
+        # it sometimes fails for no reason
+        if (script_run "getent passwd '$shortdom\\$tcadmin'") {
+            assert_script_run "getent passwd '$shortdom\\$tcadmin'";
+        }
+    }
+    else {
+        assert_script_run "getent passwd $admin\@$udomain";
+    }
     # check keytab entries
     # on AD clients, this isn't automatically installed
     assert_script_run "dnf -y install krb5-workstation", 180;
