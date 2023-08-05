@@ -18,7 +18,7 @@ sub run {
     repo_setup();
     my $params = "-y --releasever=${relnum}";
     if ($release eq "rawhide") {
-        $params .= " --nogpgcheck";
+        $params .= " --nogpgcheck --disablerepo=*modular*";
     }
 
     if (script_run "dnf ${params} system-upgrade download", 6000) {
