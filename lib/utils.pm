@@ -604,6 +604,11 @@ sub _repo_setup_updates {
         # already and we want to fail if they weren't, or CANNED
         # tests, there's no point updating the toolbox
         script_run "dnf -y update", 1200 unless (get_var("UPGRADE") || get_var("INSTALL") || get_var("CANNED"));
+        # work around update removing 'dnf' command for the dnf5
+        # revert: https://bodhi.fedoraproject.org/updates/FEDORA-2023-5fd964c1bf#comment-3149533
+        if (get_var("ADVISORY_OR_TASK") eq "FEDORA-2023-5fd964c1bf") {
+            script_run "dnf5 -y --best install 'dnf < 5'", 300 unless (get_var("UPGRADE") || get_var("INSTALL") || get_var("CANNED"));
+        }
         # on liveinst tests, we'll remove the packages we installed
         # above (and their deps, which dnf will include automatically),
         # just in case they're in the update under test; otherwise we
