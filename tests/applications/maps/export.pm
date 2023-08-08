@@ -25,7 +25,7 @@ sub run {
     # it in an image viewer to see that it is correct.
     #
     # Open the Image Viewer
-    menu_launch_type("image viewer");
+    menu_launch_type("eye of gnome");
     assert_screen("apps_run_imageviewer");
     send_key("super-up");
     # Read the file into the application.

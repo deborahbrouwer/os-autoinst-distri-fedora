@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "width": 102,
+      "ypos": 140,
+      "height": 20,
+      "xpos": 459,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "apps_run_imageviewer"
+  ]
+}

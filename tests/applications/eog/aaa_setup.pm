@@ -18,7 +18,7 @@ sub run {
     desktop_vt;
 
     # Start the application
-    menu_launch_type("image viewer");
+    menu_launch_type("eye of gnome");
     # Check that is started
     assert_screen 'apps_run_imageviewer';
 
