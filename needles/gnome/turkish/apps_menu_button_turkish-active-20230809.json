@@ -1,0 +1,16 @@
+{
+  "area": [
+    {
+      "ypos": 10,
+      "width": 73,
+      "type": "match",
+      "height": 14,
+      "xpos": 17
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "apps_menu_button",
+    "LANGUAGE-turkish"
+  ]
+}
