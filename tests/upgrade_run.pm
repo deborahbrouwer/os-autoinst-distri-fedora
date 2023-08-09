@@ -5,11 +5,8 @@ use utils;
 
 sub run {
     my $self = shift;
-    my $release = lc(get_var("VERSION"));
-    my $relnum = $release;
-    if ($release eq "rawhide") {
-        $relnum = get_var("RAWREL", "rawhide");
-    }
+    my $relnum = get_release_number;
+    my $rawrel = get_var("RAWREL");
     # disable screen blanking (download can take a long time)
     script_run "setterm -blank 0";
 
@@ -17,7 +14,8 @@ sub run {
     cleanup_workaround_repo;
     repo_setup();
     my $params = "-y --releasever=${relnum}";
-    if ($release eq "rawhide") {
+    if ($relnum > 38) {
+        # FIXME https://bugzilla.redhat.com/show_bug.cgi?id=2230720
         $params .= " --nogpgcheck --disablerepo=*modular*";
     }
 
