@@ -44,6 +44,11 @@ sub run {
     assert_script_run "dnf -y install mock git pykickstart tar", 120;
     # base mock config on original
     assert_script_run "echo \"include('/etc/mock/fedora-${mockver}-${arch}.cfg')\" > /etc/mock/openqa.cfg";
+    if ($version eq $rawrel) {
+        # FIXME correct releasever for Rawhide:
+        # https://github.com/rpm-software-management/mock/issues/1177
+        assert_script_run "echo \"config_opts['releasever'] = '${version}'\" >> /etc/mock/openqa.cfg";
+    }
     # make the side and workarounds repos and the serial device available inside the mock root
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_enable\'] = True" >> /etc/mock/openqa.cfg';
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/mnt/updateiso/update_repo\', \'/mnt/updateiso/update_repo\'))" >> /etc/mock/openqa.cfg' if (get_var("ISO_2"));
