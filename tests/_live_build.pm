@@ -10,6 +10,7 @@ sub run {
     my $branch;
     my $repoks;
     my $releasever;
+    my $mockver;
     if ($version eq $rawrel) {
         $branch = "main";
         $repoks = "fedora-repo-rawhide.ks";
