@@ -14,11 +14,13 @@ sub run {
         $branch = "main";
         $repoks = "fedora-repo-rawhide.ks";
         $releasever = "Rawhide";
+        $mockver = "rawhide";
     }
     else {
         $branch = "f${version}";
         $repoks = "fedora-repo-not-rawhide.ks";
         $releasever = $version;
+        $mockver = $version;
     }
     my $advortask = get_var("ADVISORY_OR_TASK");
     my $arch = get_var("ARCH");
@@ -40,7 +42,7 @@ sub run {
     # install the tools we need
     assert_script_run "dnf -y install mock git pykickstart tar", 120;
     # base mock config on original
-    assert_script_run "echo \"include('/etc/mock/fedora-${version}-${arch}.cfg')\" > /etc/mock/openqa.cfg";
+    assert_script_run "echo \"include('/etc/mock/fedora-${mockver}-${arch}.cfg')\" > /etc/mock/openqa.cfg";
     # make the side and workarounds repos and the serial device available inside the mock root
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_enable\'] = True" >> /etc/mock/openqa.cfg';
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/mnt/updateiso/update_repo\', \'/mnt/updateiso/update_repo\'))" >> /etc/mock/openqa.cfg' if (get_var("ISO_2"));
