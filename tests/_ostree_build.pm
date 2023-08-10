@@ -36,10 +36,6 @@ sub run {
     assert_script_run "setenforce Permissive";
     # install the tools we need
     assert_script_run "dnf -y install git lorax flatpak ostree rpm-ostree dbus-daemon moreutils", 300;
-    # FIXME using HTTP 1.1 seems to avoid some weird hangs we're
-    # seeing on pagure.io lately as of 2023/07:
-    # https://pagure.io/fedora-infrastructure/issue/11426
-    assert_script_run 'git config --global http.version HTTP/1.1';
     # now check out workstation-ostree-config
     assert_script_run 'git clone https://pagure.io/workstation-ostree-config.git';
     assert_script_run 'pushd workstation-ostree-config';
@@ -89,7 +85,7 @@ sub run {
     assert_script_run 'git clone https://pagure.io/pungi-fedora.git';
     assert_script_run 'cd pungi-fedora/';
     assert_script_run "git checkout ${branch}";
-    assert_script_run 'curl --http1.1 --retry-delay 10 --max-time 30 --retry 5 -o ostree-parse-pungi.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/ostree-parse-pungi.py', timeout => 180;
+    assert_script_run 'curl --retry-delay 10 --max-time 30 --retry 5 -o ostree-parse-pungi.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/ostree-parse-pungi.py', timeout => 180;
     my $loraxargs = script_output "python3 ostree-parse-pungi.py $lcsubv $arch";
 
     # this 'temporary file cleanup' thing can actually wipe bits of

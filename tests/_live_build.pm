@@ -67,10 +67,6 @@ sub run {
     # upload the config so we can check it's OK
     upload_logs "/etc/mock/openqa.cfg";
     # now check out the kickstarts
-    # FIXME using HTTP 1.1 seems to avoid some weird hangs we're
-    # seeing on pagure.io lately as of 2023/07:
-    # https://pagure.io/fedora-infrastructure/issue/11426
-    assert_script_run 'git config --global http.version HTTP/1.1';
     assert_script_run 'git clone https://pagure.io/fedora-kickstarts.git';
     assert_script_run 'cd fedora-kickstarts';
     assert_script_run "git checkout ${branch}";
