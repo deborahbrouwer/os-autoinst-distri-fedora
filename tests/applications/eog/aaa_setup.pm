@@ -18,7 +18,9 @@ sub run {
     desktop_vt;
 
     # Start the application
-    menu_launch_type("eye of gnome");
+    my $launch = "eye of gnome";
+    $launch = "image viewer" if (get_var("CANNED"));
+    menu_launch_type($launch);
     # Check that is started
     assert_screen 'apps_run_imageviewer';
 

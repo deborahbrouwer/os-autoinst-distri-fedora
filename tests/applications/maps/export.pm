@@ -25,7 +25,9 @@ sub run {
     # it in an image viewer to see that it is correct.
     #
     # Open the Image Viewer
-    menu_launch_type("eye of gnome");
+    my $launch = "eye of gnome";
+    $launch = "image viewer" if (get_var("CANNED"));
+    menu_launch_type($launch);
     assert_screen("apps_run_imageviewer");
     send_key("super-up");
     # Read the file into the application.
