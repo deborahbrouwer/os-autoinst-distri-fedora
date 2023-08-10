@@ -571,12 +571,7 @@ sub _repo_setup_updates {
     # will get the packages from the update.
     # on CANNED, we need to enter the toolbox at this point
     if (get_var("CANNED")) {
-        # FIXME: as of 2023-08, there's no toolbox container for
-        # F40 (new Rawhide) so we need to use 39:
-        # https://github.com/containers/toolbox/issues/1233
-        my $extraarg = "";
-        $extraarg = "-r 39 " if ($version eq "40");
-        type_string "toolbox ${extraarg}-y enter\n";
+        type_string "toolbox -y enter\n";
         # look for the little purple dot
         assert_screen "console_in_toolbox", 180;
     }
