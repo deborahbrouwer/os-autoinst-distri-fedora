@@ -1,16 +1,17 @@
 {
   "area": [
     {
-      "xpos": 17,
       "ypos": 10,
       "width": 73,
+      "type": "match",
       "height": 14,
-      "type": "match"
+      "xpos": 17
     }
   ],
   "properties": [],
   "tags": [
     "apps_menu_button",
+    "apps_menu_button_active",
     "LANGUAGE-turkish"
   ]
 }
