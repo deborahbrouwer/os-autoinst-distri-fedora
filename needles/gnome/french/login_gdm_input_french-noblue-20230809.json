@@ -8,7 +8,12 @@
       "width": 84
     }
   ],
-  "properties": [],
+  "properties": [
+    {
+      "name": "workaround",
+      "value": "the text box should be surrounded with a blue line to indicate it's active: https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/6880"
+    }
+  ],
   "tags": [
     "DESKTOP-gnome",
     "LANGUAGE-french",
