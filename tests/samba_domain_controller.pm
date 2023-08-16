@@ -26,7 +26,13 @@ sub run {
     assert_script_run 'systemctl start haveged.service';
     assert_script_run "rm -f /etc/samba/smb.conf";
     # First install the necessary packages
-    assert_script_run "dnf -y install samba-dc samba-tools krb5-workstation adcli", 600;
+    my $advortask = get_var("ADVISORY_OR_TASK");
+    if ($advortask eq "FEDORA-2023-d21ee6d2e9" || $advortask eq "FEDORA-2023-b2095d4ea1") {
+        assert_script_run "dnf -y --best install samba-dc samba-tools krb5-workstation adcli", 600;
+    }
+    else {
+        assert_script_run "dnf -y install samba-dc samba-tools krb5-workstation adcli", 600;
+    }
     # configure the firewall
     assert_script_run "firewall-cmd --permanent --add-service samba-dc";
     assert_script_run "systemctl restart firewalld.service";
