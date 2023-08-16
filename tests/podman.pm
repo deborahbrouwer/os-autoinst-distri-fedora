@@ -13,6 +13,12 @@ sub run {
     assert_script_run "dnf -y install podman", 240 unless (get_var("CANNED"));
     # check podman is installed
     assert_script_run "rpm -q podman";
+    my $relnum = get_release_number;
+    unless (get_var("CANNED")) {
+        # run the upstream integration tests
+        assert_script_run "dnf -y install podman podman-tests bats", 300;
+        assert_script_run "bats --filter-tags distro-integration /usr/share/podman/test/system", 300;
+    }
     # check to see if you can pull an image from the registry
     assert_script_run "podman pull registry.fedoraproject.org/fedora:latest", 300;
     # run hello-world to test
