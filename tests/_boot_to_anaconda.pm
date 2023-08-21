@@ -117,10 +117,17 @@ sub run {
                     send_key "ret";
                 }
                 # on lives, we have to explicitly launch anaconda
+                my $launched = 0;
                 my $count = 5;
                 while ($count > 0) {
                     $count -= 1;
-                    assert_screen ["live_start_anaconda_icon", "apps_menu_button_active"], 300;
+                    assert_screen ["live_start_anaconda_icon", "apps_menu_button_active", "next_button"], 300;
+                    if (match_has_tag "next_button") {
+                        # we're on F39+ Workstation and looking at gnome-initial-setup
+                        # completing g-i-s launches the installer
+                        gnome_initial_setup(live => 1);
+                        $launched = 1;
+                    }
                     if (match_has_tag "apps_menu_button_active") {
                         # give GNOME some time to be sure it's done starting up
                         # and ready for input
@@ -133,20 +140,31 @@ sub run {
                         last;
                     }
                 }
-                # for KDE we need to double-click
-                my $relnum = get_release_number;
-                my $dclick = 0;
-                $dclick = 1 if (get_var("DESKTOP") eq "kde");
-                assert_and_click("live_start_anaconda_icon", dclick => $dclick);
-                unless (check_screen "anaconda_select_install_lang", 180) {
-                    # click it again - on KDE since 2019-10 or so it seems
-                    # like the first attempt sometimes just doesn't work
-                    assert_and_click("live_start_anaconda_icon", dclick => $dclick, timeout => 300);
+                # if we hit the g-i-s flow we already launched
+                unless ($launched) {
+                    # for KDE we need to double-click
+                    my $relnum = get_release_number;
+                    my $dclick = 0;
+                    $dclick = 1 if (get_var("DESKTOP") eq "kde");
+                    assert_and_click("live_start_anaconda_icon", dclick => $dclick);
+                    unless (check_screen "anaconda_select_install_lang", 180) {
+                        # click it again - on KDE since 2019-10 or so it seems
+                        # like the first attempt sometimes just doesn't work
+                        assert_and_click("live_start_anaconda_icon", dclick => $dclick, timeout => 300);
+                    }
                 }
             }
+            # wait for anaconda to appear
+            assert_screen ["anaconda_select_install_lang", "anaconda_webui_welcome"], 300;
+            # on webUI path we are done now, also set a var so later
+            # tests know if we're on the webUI path
+            if (match_has_tag "anaconda_webui_welcome") {
+                set_var("_ANACONDA_WEBUI", 1);
+                return;
+            }
+            # we click to work around RHBZ #1566066 if it happens
+            click_lastmatch;
             my $language = get_var('LANGUAGE') || 'english';
-            # wait for anaconda to appear; we click to work around
-            # RHBZ #1566066 if it happens
             assert_and_click("anaconda_select_install_lang", timeout => 300);
 
             # Select install language

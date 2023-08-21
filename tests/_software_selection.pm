@@ -4,8 +4,6 @@ use testapi;
 
 sub run {
     my $self = shift;
-    # Anaconda hub
-    assert_screen "anaconda_main_hub", 300;
 
     # Select package set. Minimal is the default, if 'default' is specified, skip selection,
     # but verify correct default in some cases

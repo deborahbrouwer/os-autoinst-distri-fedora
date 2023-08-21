@@ -715,6 +715,7 @@ sub gnome_initial_setup {
     # mode (when user was created during install)
     my %args = (
         prelogin => 0,
+        live => 0,
         timeout => 120,
         @_
     );
@@ -729,18 +730,35 @@ sub gnome_initial_setup {
     my @nexts = ('language', 'keyboard', 'privacy', 'timezone', 'software');
     # now, we're going to figure out how many of them this test will
     # *actually* see...
+    if ($args{live}) {
+        # this is the flow we see when booting an F39+ Workstation live
+        # we only get language and keyboard
+        @nexts = ('language', 'keyboard')
+    }
     if ($args{prelogin}) {
-        # 'language', 'keyboard' and 'timezone' are skipped on F28+ in
-        # the 'new user' mode by
+        # 'language', 'keyboard' and 'timezone' were skipped between F28
+        # and F38 in the 'new user' mode by
         # https://fedoraproject.org//wiki/Changes/ReduceInitialSetupRedundancy
         # https://bugzilla.redhat.com/show_bug.cgi?id=1474787 ,
-        # except 'language' is never *really* skipped (see above)
-        @nexts = grep { $_ ne 'keyboard' } @nexts;
-        @nexts = grep { $_ ne 'timezone' } @nexts;
+        # except 'language' was never *really* skipped (see above)
+        # From gnome-initial-setup 45~beta-3 on, these screens aren't
+        # skipped in vendor.conf. They should be skipped for live
+        # installs because they were shown preinstall on the new webUI
+        # workflow, but this is broken till
+        # https://github.com/rhinstaller/anaconda/pull/5056 is merged.
+        # network installs and disk image deployments will show these
+        # screens (which is good for disk image deployments, but
+        # redundant for network installs)
+        # FIXME modify this to drop the pages on F39+ live installs
+        # once the anaconda PR is merged or addressed some other way
+        if ($relnum < 40) {
+            @nexts = grep { $_ ne 'keyboard' } @nexts;
+            @nexts = grep { $_ ne 'timezone' } @nexts;
+        }
     }
     else {
         # 'timezone' and 'software' are suppressed for the 'existing user'
-        # form of g-i-s
+        # form of g-i-s (upstream, not in vendor.conf)
         @nexts = grep { $_ ne 'software' } @nexts;
         @nexts = grep { $_ ne 'timezone' } @nexts;
     }
@@ -767,23 +785,35 @@ sub gnome_initial_setup {
     }
     # GDM 3.24.1 dumps a cursor in the middle of the screen here...
     mouse_hide if ($args{prelogin});
-    for my $n (1 .. scalar(@nexts)) {
+    foreach my $next (@nexts) {
         # click 'Next' $nexts times, moving the mouse to avoid
         # highlight problems, sleeping to give it time to get
         # to the next screen between clicks
         mouse_set(100, 100);
-        if ($n == 1) {
+        if ($next eq 'language') {
             # only accept start_setup one time, to avoid matching
             # on it during transition to next screen. also accept
             # next_button as in per-user mode, first screen has that
             # not start_setup
             wait_screen_change { assert_and_click ["next_button", "start_setup"]; };
         }
+        elsif ($next eq 'timezone') {
+            assert_screen ["next_button", "next_button_inactive"];
+            if (match_has_tag "next_button_inactive") {
+                record_soft_failure "geolocation failed!";
+                send_key "tab";
+                wait_still_screen 3;
+                type_very_safely "washington-d";
+                send_key "down";
+                send_key "ret";
+            }
+            wait_screen_change { assert_and_click "next_button"; };
+        }
         else {
             wait_screen_change { assert_and_click "next_button"; };
         }
     }
-    unless (get_var("VNC_CLIENT")) {
+    unless (get_var("VNC_CLIENT") || $args{live}) {
         # We should be at the GOA screen, except on VNC_CLIENT case
         # where network isn't working yet. click 'Skip' one time. If
         # it's not visible we may have hit
@@ -797,7 +827,10 @@ sub gnome_initial_setup {
             record_soft_failure "GOA screen not seen! Likely RHBZ #1997310";
         }
     }
+    # on the 'live' flow, this will launch the installer
     send_key "ret";
+    # we don't want to do anything further on the 'live' flow
+    return if ($args{live});
     if ($args{prelogin}) {
         # create user
         my $user_login = get_var("USER_LOGIN") || "test";

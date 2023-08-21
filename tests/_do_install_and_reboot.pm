@@ -55,6 +55,7 @@ sub _do_root_and_user {
 
 sub run {
     my $self = shift;
+    my $webui = 0;
     # From F31 onwards (after Fedora-Rawhide-20190722.n.1), user and
     # root password spokes are moved to main hub, so we must do those
     # before we run the install.
@@ -63,9 +64,13 @@ sub run {
     # Sometimes, the 'slide in from the top' animation messes with
     # this - by the time we click the button isn't where it was any
     # more. So wait for screen to stop moving before we click.
-    assert_screen "anaconda_main_hub_begin_installation", 90;
+    assert_screen ["anaconda_main_hub_begin_installation", "anaconda_webui_begin_installation"], 90;
     wait_still_screen 5;
-    assert_and_click "anaconda_main_hub_begin_installation";
+    assert_and_click ["anaconda_main_hub_begin_installation", "anaconda_webui_begin_installation"];
+    if (match_has_tag "anaconda_webui_begin_installation") {
+        $webui = 1;
+        assert_and_click "anaconda_webui_confirm_installation";
+    }
 
     # If we want to test identification we will do it
     # on several places in this procedure, such as
@@ -74,7 +79,7 @@ sub run {
     my $identification = get_var('IDENTIFICATION');
     my $branched = get_var('VERSION');
     if ($identification eq 'true' or ($branched ne "Rawhide" && $branched ne "ELN")) {
-        check_left_bar();
+        check_left_bar() unless ($webui);
         check_prerelease();
         check_version();
     }
@@ -105,7 +110,8 @@ sub run {
     wait_still_screen 3;
     # if this is a live install, let's go ahead and quit the installer
     # in all cases, just to make sure quitting doesn't crash etc.
-    assert_and_click "anaconda_install_done" if (get_var('LIVE'));
+    # not on web UI, as it immediately reboots
+    assert_and_click "anaconda_install_done" if (get_var('LIVE') && !$webui);
     # there are various things we might have to do at a console here
     # before we actually reboot. let's figure them all out first...
     my @actions;
@@ -120,9 +126,10 @@ sub run {
         }
     }
     # memcheck test doesn't need to reboot at all. Rebooting from GUI
-    # for lives is unreliable. And if we're already doing something
+    # for no-webUI lives is unreliable (webUI lives reboot on "Quit"
+    # just like non-lives). And if we're already doing something
     # else at a console, we may as well reboot from there too
-    push(@actions, 'reboot') if (!get_var("MEMCHECK") && (get_var("LIVE") || @actions));
+    push(@actions, 'reboot') if (!get_var("MEMCHECK") && ((get_var("LIVE") && !$webui) || @actions));
     # our approach for taking all these actions doesn't work on VNC
     # installs, fortunately we don't need any of them in that case
     # yet, so for now let's just flush the list here if we're VNC
