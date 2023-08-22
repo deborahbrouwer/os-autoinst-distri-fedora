@@ -37,11 +37,6 @@ sub run {
         # here we're enrolling not just as a client, but as a replica
         # install server packages
         assert_script_run "dnf -y group install freeipa-server", 600;
-        my $advortask = get_var("ADVISORY_OR_TASK");
-        if ($advortask eq "FEDORA-2023-d21ee6d2e9" || $advortask eq "FEDORA-2023-b2095d4ea1") {
-            assert_script_run "dnf -y --best update samba*", 600;
-        }
-
 
         # we need a lot of entropy for this, and we don't care how good
         # it is, so let's use haveged

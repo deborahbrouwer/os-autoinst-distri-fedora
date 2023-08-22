@@ -27,10 +27,6 @@ sub run {
     assert_script_run 'printf "[Service]\nEnvironment=OPTIONS=-d5\n" > /etc/systemd/system/named-pkcs11.service.d/debug.conf';
     # First install the necessary packages
     assert_script_run "dnf -y group install freeipa-server", 600;
-    my $advortask = get_var("ADVISORY_OR_TASK");
-    if ($advortask eq "FEDORA-2023-d21ee6d2e9" || $advortask eq "FEDORA-2023-b2095d4ea1") {
-        assert_script_run "dnf -y --best update samba*", 600;
-    }
     # configure the firewall
     for my $service (qw(freeipa-ldap freeipa-ldaps dns)) {
         assert_script_run "firewall-cmd --permanent --add-service $service";
