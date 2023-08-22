@@ -58,19 +58,35 @@ sub run {
         assert_script_run "systemctl enable ipa.service";
         assert_script_run "systemctl start ipa.service", 300;
 
+        # set sssd debugging level higher (useful for debugging failures)
+        # optional as it's not really part of the test
+        script_run "dnf -y install sssd-tools", 220;
+        script_run "sss_debuglevel 9";
+
         # report that we're ready to go
         mutex_create('domain_replica_ready');
 
         # wait for the client test
         wait_for_children;
+
+        # uninstall ourselves (copied from domain controller test)
+        assert_script_run 'systemctl stop ipa.service', 120;
+        # check server is stopped
+        assert_script_run '! systemctl is-active ipa.service';
+        # decommission the server
+        assert_script_run 'ipa-server-install -U --uninstall', 300;
+        # try and un-garble the screen that the above sometimes garbles
+        # ...we may be on tty1 or tty3 now, so flip between them
+        send_key "ctrl-alt-f1";
+        send_key "ctrl-alt-f3";
     }
     else {
         assert_script_run "echo '${admin_pw}' | realm join --user=${admin_user} ${server}", 300;
+        # set sssd debugging level higher (useful for debugging failures)
+        # optional as it's not really part of the test
+        script_run "dnf -y install sssd-tools", 220;
+        script_run "sss_debuglevel 9";
     }
-    # set sssd debugging level higher (useful for debugging failures)
-    # optional as it's not really part of the test
-    script_run "dnf -y install sssd-tools", 220;
-    script_run "sss_debuglevel 9";
     # if upgrade test, report that we're enrolled
     mutex_create('client_enrolled') if get_var("UPGRADE");
     # if this is an upgrade test, wait for server to be upgraded before
