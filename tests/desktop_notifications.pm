@@ -13,6 +13,7 @@ use packagetest;
 sub run {
     my $self = shift;
     my $desktop = get_var("DESKTOP");
+    my $relnum = get_var("RELNUM");
     # for the live image case, handle bootloader here
     if (get_var("BOOTFROM")) {
         do_bootloader(postinstall => 1, params => '3');
@@ -89,6 +90,10 @@ sub run {
         assert_screen "graphical_login_input";
         type_very_safely get_var("USER_PASSWORD", "weakpassword");
         send_key 'ret';
+    }
+    elsif ($desktop eq 'gnome' && $relnum > 39) {
+        # since g-i-s 45~beta-3 we get a short g-i-s flow on live boot
+        gnome_initial_setup(live => 1);
     }
     check_desktop(timeout => 90);
     # now, WE WAIT. this is just an unconditional wait - rather than
