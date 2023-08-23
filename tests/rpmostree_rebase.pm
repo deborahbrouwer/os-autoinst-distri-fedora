@@ -33,12 +33,21 @@ sub run {
     my $rebase;
     my $target;
     if ($current =~ "iot") {
-        $rebase = $current =~ "stable" ? "devel" : "stable";
+        # previously we did this:
+        #$rebase = $current =~ "stable" ? "devel" : "stable";
+        # but we cannot rebase from F39+ to <F39:
+        # https://github.com/fedora-silverblue/issue-tracker/issues/470
+        #  so let's make sure we don't do that. This can be reverted
+        # when F39 is stable
+        $rebase = $current =~ "devel" ? "rawhide" : "devel";
         $target = "fedora/${rebase}/${arch}/iot";
     }
     elsif ($current =~ "silverblue") {
         my $relnum = get_release_number;
         $rebase = $relnum - 1;
+        # avoid rebasing 39 > 38 due to
+        # https://github.com/fedora-silverblue/issue-tracker/issues/470
+        $rebase = "40" if ($rebase eq "38");
         # on update tests, just rebase to the 'official' ref for the
         # release, as opposed to the custom ref we used when building;
         # this should be more reliable than a different release
