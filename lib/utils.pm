@@ -710,12 +710,17 @@ sub handle_welcome_screen {
 }
 
 sub gnome_initial_setup {
-    # Handle gnome-initial-setup, with variations for the pre-login
-    # mode (when no user was created during install) and post-login
-    # mode (when user was created during install)
+    # Handle gnome-initial-setup, with variations for live mode (the
+    # short run on live boot since F39), the pre-login  mode (when no
+    # user was created during install) and post-login mode (when user
+    # was created during install). post-login mode currently (2023-08)
+    # unused, but may come back in future. 'livetry' indicates whether
+    # to launch the installer (0) or desktop (1) at the end of live
+    # flow
     my %args = (
         prelogin => 0,
         live => 0,
+        livetry => 0,
         timeout => 120,
         @_
     );
@@ -827,6 +832,7 @@ sub gnome_initial_setup {
             record_soft_failure "GOA screen not seen! Likely RHBZ #1997310";
         }
     }
+    send_key "tab" if ($args{live} && $args{livetry});
     # on the 'live' flow, this will launch the installer
     send_key "ret";
     # we don't want to do anything further on the 'live' flow

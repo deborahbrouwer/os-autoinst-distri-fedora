@@ -93,7 +93,7 @@ sub run {
     }
     elsif ($desktop eq 'gnome' && $relnum > 39) {
         # since g-i-s 45~beta-3 we get a short g-i-s flow on live boot
-        gnome_initial_setup(live => 1);
+        gnome_initial_setup(live => 1, livetry => 1);
     }
     check_desktop(timeout => 90);
     # now, WE WAIT. this is just an unconditional wait - rather than
