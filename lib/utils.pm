@@ -756,7 +756,7 @@ sub gnome_initial_setup {
         # redundant for network installs)
         # FIXME modify this to drop the pages on F39+ live installs
         # once the anaconda PR is merged or addressed some other way
-        if ($relnum < 40) {
+        if ($relnum < 39) {
             @nexts = grep { $_ ne 'keyboard' } @nexts;
             @nexts = grep { $_ ne 'timezone' } @nexts;
         }
