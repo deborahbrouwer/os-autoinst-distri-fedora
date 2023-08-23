@@ -13,7 +13,7 @@ use packagetest;
 sub run {
     my $self = shift;
     my $desktop = get_var("DESKTOP");
-    my $relnum = get_var("RELNUM");
+    my $relnum = get_release_number;
     # for the live image case, handle bootloader here
     if (get_var("BOOTFROM")) {
         do_bootloader(postinstall => 1, params => '3');
