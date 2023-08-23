@@ -14,8 +14,10 @@ sub run {
         # long term we'll want two paths through select_disks or
         # a webui_select_disks, but for now, just throw it in here
         # as it's simple on this single path
-        assert_and_click "anaconda_webui_disk_select";
-        assert_and_click "anaconda_install_destination_select_disk_1";
+        if (get_var("NUMDISKS") > 1) {
+            assert_and_click "anaconda_webui_disk_select";
+            assert_and_click "anaconda_install_destination_select_disk_1";
+        }
         # assume default selection is the appropriate one; if it
         # isn't, we'll fail soon enough
         wait_screen_change { assert_and_click "anaconda_webui_next"; };
