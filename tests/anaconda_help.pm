@@ -18,9 +18,6 @@ sub run {
     # Now, we should be on Anaconda Main hub, but the hub differs for various
     # installation media. For each such media (ServerDVD, WS Live, KDE Live),
     # we create a tailored test plan.
-    #
-    # At first, we check for the main hub help.
-    check_help_on_pane("main");
 
     # Create test plans
     my @testplan;
@@ -49,6 +46,9 @@ sub run {
     else {
         @testplan = qw/keyboard_layout language_support time_date installation_source select_packages install_destination network_host_name root_password user_creation/;
     }
+
+    # At first, we check for the main hub help.
+    check_help_on_pane("main");
 
     # Iterate over test plan and do the tests.
     foreach (@testplan) {
