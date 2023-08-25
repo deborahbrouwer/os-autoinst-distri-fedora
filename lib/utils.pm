@@ -738,7 +738,7 @@ sub gnome_initial_setup {
     if ($args{live}) {
         # this is the flow we see when booting an F39+ Workstation live
         # we only get language and keyboard
-        @nexts = ('language', 'keyboard')
+        @nexts = ('language', 'keyboard');
     }
     if ($args{prelogin}) {
         # 'language', 'keyboard' and 'timezone' were skipped between F28
