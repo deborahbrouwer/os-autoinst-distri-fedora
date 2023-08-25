@@ -30,6 +30,15 @@ sub run {
     }
     # For LIVE Workstation
     elsif ((get_var('LIVE')) && (get_var('DESKTOP') eq "gnome")) {
+        my $relnum = get_release_number;
+        # the webUI installer from F39+ does not really have Help in
+        # a traditional sense, it's planned to have contextual help
+        # in future which we may be able to test, but for now just
+        # skip it
+        if ($relnum > 38) {
+            register_soft_failure "no Help in anaconda webUI currently!";
+            return;
+        }
         @testplan = qw/keyboard_layout install_destination time_date/;
     }
     # For Silverblue
