@@ -36,7 +36,7 @@ sub run {
         # in future which we may be able to test, but for now just
         # skip it
         if ($relnum > 38) {
-            register_soft_failure "no Help in anaconda webUI currently!";
+            record_soft_failure "no Help in anaconda webUI currently!";
             return;
         }
         @testplan = qw/keyboard_layout install_destination time_date/;
