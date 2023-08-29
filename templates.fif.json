@@ -2816,6 +2816,7 @@
         },
         "toolbox": {
             "profiles": {
+                "fedora-KDE-live-iso-x86_64-*-64bit": 40,
                 "fedora-Workstation-live-iso-x86_64-*-64bit": 40,
                 "fedora-Workstation-raw_xz-raw.xz-aarch64-*-aarch64": 40,
                 "fedora-CoreOS-colive-iso-x86_64-*-64bit": 40,
