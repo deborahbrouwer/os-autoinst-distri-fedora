@@ -790,11 +790,26 @@ sub gnome_initial_setup {
         # to the next screen between clicks
         mouse_set(100, 100);
         if ($next eq 'language') {
+            my $lang = get_var("LANGUAGE") // "english";
             # only accept start_setup one time, to avoid matching
             # on it during transition to next screen. also accept
-            # next_button as in live and existing user modes, first
-            # screen has that not start_setup
-            wait_screen_change { assert_and_click ["next_button", "start_setup"]; };
+            # next_button as in per-user mode, first screen has that
+            # not start_setup
+            assert_screen ["next_button", "start_setup"];
+            if (match_has_tag("start_setup") || check_screen("gis_lang_${lang}_selected")) {
+                # we're at the 'welcome' version of the screen, or we're
+                # at the 'language' version and the language we want is
+                # selected
+                wait_screen_change { click_lastmatch(); };
+            }
+            else {
+                # we're at the language version and the language we want isn't
+                # selected
+                assert_and_click("install_lang_search_field");
+                type_very_safely($lang);
+                assert_and_click("gis_lang_${lang}_select");
+                wait_screen_change { assert_and_click("next_button"); };
+            }
         }
         elsif ($next eq 'timezone') {
             assert_screen ["next_button", "next_button_inactive"];
@@ -809,7 +824,10 @@ sub gnome_initial_setup {
             wait_screen_change { assert_and_click "next_button"; };
         }
         else {
-            wait_screen_change { assert_and_click "next_button"; };
+            # Sometimes, the previous version was expection the next button, although
+            # the wizard had proceeded to the final screen with no such button on it.
+            # Therefore, we also try to assert the installation button to start Anaconda.
+            wait_screen_change { assert_and_click ["next_button"]; };
         }
     }
     unless (get_var("VNC_CLIENT") || $args{live}) {

@@ -204,6 +204,10 @@ for typus in ("swap",  "ext4",  "xfs", "linuxroot"):
     testtags.append(f"disks_parttype_changed_{typus}")
 # variable-y in custom_change_device but we only have one value
 testtags.append("anaconda_part_device_sda")
+# For language needles
+for lang in ("english", "russian", "chinese", "arabic", "japanese", "turkish", "french"):
+    testtags.append(f"gis_lang_{lang}_select")
+    testtags.append(f"gis_lang_{lang}_selected")
 # for Anaconda help related needles.
 testtags.extend(f"anaconda_help_{fsys}" for fsys in ('install_destination',
 'installation_progress', 'keyboard_layout', 'language_support', 'network_host_name',
