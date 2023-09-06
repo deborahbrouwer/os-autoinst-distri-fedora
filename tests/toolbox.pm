@@ -7,7 +7,7 @@ sub run {
     my $self = shift;
     $self->root_console(tty => 3);
     # on non-canned flavors, we need to install toolbox
-    assert_script_run "dnf -y install toolbox", 240 unless (get_var("CANNED"));
+    assert_script_run "dnf -y install toolbox", 360 unless (get_var("CANNED"));
     # check toolbox is installed
     assert_script_run "rpm -q toolbox";
     # check to see if you can create a new toolbox container
