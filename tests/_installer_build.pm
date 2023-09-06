@@ -13,7 +13,9 @@ sub run {
     my $arch = get_var("ARCH");
     # we need the update repo mounted to use it in image creation
     mount_update_image;
-    assert_script_run "dnf -y install lorax", 90;
+    my $packages = "lorax";
+    $packages .= " hfsplus-tools" if ($arch eq "ppc64le");
+    assert_script_run "dnf -y install $packages", 120;
     # this 'temporary file cleanup' thing can actually wipe bits of
     # the lorax install root while lorax is still running...
     assert_script_run "systemctl stop systemd-tmpfiles-clean.timer";
