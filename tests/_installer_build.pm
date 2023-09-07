@@ -36,7 +36,7 @@ sub run {
     # good to have the log around for checks
     upload_logs "pylorax.log", failok => 1;
     assert_script_run "mv results/images/boot.iso ./${advortask}-netinst-${arch}.iso";
-    upload_asset "./${advortask}-netinst-x86_64.iso";
+    upload_asset "./${advortask}-netinst-${arch}.iso";
 }
 
 sub test_flags {
