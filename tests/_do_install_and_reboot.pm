@@ -171,7 +171,15 @@ sub run {
     }
     if (grep { $_ eq 'rootpw' } @actions) {
         my $root_password = get_var("ROOT_PASSWORD") || "weakpassword";
-        assert_script_run "echo 'root:$root_password' | chpasswd -R $mount";
+        # this seems to have started to fail periodically with "failure while
+        # writing changes to /etc/shadow" on 2023-09-01, attempt to work
+        # around that
+        my $count = 5;
+        while ($count) {
+            last unless (script_run "echo 'root:$root_password' | chpasswd -R $mount");
+            die "setting root password failed five time!" unless ($count);
+            $count -= 1;
+        }
     }
     if (grep { $_ eq 'noplymouth' } @actions) {
         assert_script_run "chroot $mount dnf -y remove plymouth";
