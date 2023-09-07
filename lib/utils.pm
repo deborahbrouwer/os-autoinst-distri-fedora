@@ -725,6 +725,16 @@ sub gnome_initial_setup {
         @_
     );
     my $relnum = get_release_number;
+
+    # note: when 'language' is "skipped", it's turned into a 'welcome'
+    # page, which has a "Start Setup" button, not a "Next" button
+    unless (check_screen ["next_button", "start_setup"], $args{timeout}) {
+        record_soft_failure "g-i-s taking longer than expected to start up!";
+        assert_screen ["next_button", "start_setup"], $args{timeout};
+    }
+    # GDM 3.24.1 dumps a cursor in the middle of the screen here...
+    mouse_hide if ($args{prelogin});
+
     # the pages we *may* need to click 'next' on. *NOTE*: 'language'
     # is the 'welcome' page, and is in fact never truly skipped; if
     # it's configured to be skipped, it just shows without the language
@@ -746,19 +756,22 @@ sub gnome_initial_setup {
         # https://fedoraproject.org//wiki/Changes/ReduceInitialSetupRedundancy
         # https://bugzilla.redhat.com/show_bug.cgi?id=1474787 ,
         # except 'language' was never *really* skipped (see above)
-        # From gnome-initial-setup 45~beta-3 on, these screens aren't
-        # skipped in vendor.conf. They should be skipped for live
-        # installs because they were shown preinstall on the new webUI
-        # workflow, but this is broken till
-        # https://github.com/rhinstaller/anaconda/pull/5056 is merged.
-        # network installs and disk image deployments will show these
-        # screens (which is good for disk image deployments, but
-        # redundant for network installs)
-        # FIXME modify this to drop the pages on F39+ live installs
-        # once the anaconda PR is merged or addressed some other way
         if ($relnum < 39) {
             @nexts = grep { $_ ne 'keyboard' } @nexts;
             @nexts = grep { $_ ne 'timezone' } @nexts;
+        }
+        # From gnome-initial-setup 45~beta-3 on, no screens are
+        # skipped in vendor.conf. 'language' and 'keyboard' should be
+        # skipped (meaning 'language' is turned into 'welcome' and
+        # 'keyboard' is really skipped) on live installs because we saw
+        # them already, but this only works from anaconda 39.32.2 /
+        # 40.3 onwards. network installs and disk image deployments
+        # will show these screens (which is good for disk image
+        # deployments, but redundant for network installs)
+        elsif (match_has_tag "start_setup") {
+            # if we saw start_setup, that means 'language' was skipped
+            # and we can assume 'keyboard' will also be skipped
+            @nexts = grep { $_ ne 'keyboard' } @nexts;
         }
     }
     else {
@@ -768,29 +781,9 @@ sub gnome_initial_setup {
         @nexts = grep { $_ ne 'timezone' } @nexts;
     }
 
-    # note: in g-i-s 3.37.91 and later, the first screen in systemwide
-    # mode has a "Start Setup" button, not a "Next" button
-    unless (check_screen ["next_button", "start_setup", "auth_required"], $args{timeout}) {
-        record_soft_failure "g-i-s taking longer than expected to start up!";
-        assert_screen ["next_button", "start_setup", "auth_required"], $args{timeout};
-    }
-    # workaround auth dialog appearing to change timezone even
-    # though timezone screen is disabled
-    if (match_has_tag("auth_required")) {
-        record_soft_failure "Unexpected authentication required: https://gitlab.gnome.org/GNOME/gnome-initial-setup/-/issues/106";
-        send_key "esc";
-        assert_screen ["next_button", "start_setup"];
-    }
-    # wait a bit in case of animation
-    wait_still_screen 3;
-    # one more check for frickin auth_required
-    if (check_screen "auth_required") {
-        record_soft_failure "Unexpected authentication required: https://gitlab.gnome.org/GNOME/gnome-initial-setup/-/issues/106";
-        send_key "esc";
-    }
-    # GDM 3.24.1 dumps a cursor in the middle of the screen here...
-    mouse_hide if ($args{prelogin});
     foreach my $next (@nexts) {
+        # give animations a bit to settle down
+        wait_still_screen 3;
         # click 'Next' $nexts times, moving the mouse to avoid
         # highlight problems, sleeping to give it time to get
         # to the next screen between clicks
@@ -798,8 +791,8 @@ sub gnome_initial_setup {
         if ($next eq 'language') {
             # only accept start_setup one time, to avoid matching
             # on it during transition to next screen. also accept
-            # next_button as in per-user mode, first screen has that
-            # not start_setup
+            # next_button as in live and existing user modes, first
+            # screen has that not start_setup
             wait_screen_change { assert_and_click ["next_button", "start_setup"]; };
         }
         elsif ($next eq 'timezone') {
