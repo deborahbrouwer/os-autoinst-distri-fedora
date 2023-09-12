@@ -32,7 +32,7 @@ sub run {
         # a traditional sense, it's planned to have contextual help
         # in future which we may be able to test, but for now just
         # skip it
-        if ($relnum > 38) {
+        if ($relnum > 39) {
             record_soft_failure "no Help in anaconda webUI currently!";
             return;
         }

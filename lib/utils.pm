@@ -747,17 +747,17 @@ sub gnome_initial_setup {
     # now, we're going to figure out how many of them this test will
     # *actually* see...
     if ($args{live}) {
-        # this is the flow we see when booting an F39+ Workstation live
+        # this is the flow we see when booting an F40+ Workstation live
         # we only get language and keyboard
         @nexts = ('language', 'keyboard');
     }
     if ($args{prelogin}) {
         # 'language', 'keyboard' and 'timezone' were skipped between F28
-        # and F38 in the 'new user' mode by
+        # and F39 in the 'new user' mode by
         # https://fedoraproject.org//wiki/Changes/ReduceInitialSetupRedundancy
         # https://bugzilla.redhat.com/show_bug.cgi?id=1474787 ,
         # except 'language' was never *really* skipped (see above)
-        if ($relnum < 39 || $advortask eq "FEDORA-2023-73c4f1a802") {
+        if ($relnum < 40) {
             @nexts = grep { $_ ne 'keyboard' } @nexts;
             @nexts = grep { $_ ne 'timezone' } @nexts;
         }
