@@ -1154,6 +1154,18 @@
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%"
             }
         },
+        "flatpak": {
+            "profiles": {
+                "fedora-Silverblue-dvd_ostree-iso-ppc64le-*-ppc64le": 50,
+                "fedora-Silverblue-dvd_ostree-iso-x86_64-*-64bit": 50
+            },
+            "settings": {
+                "BOOTFROM": "c",
+                "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
+                "POSTINSTALL": "flatpak_fedora flatpak_flathub flatpak_update",
+                "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%"
+            }
+        },
         "gnome-panel": {
             "profiles": {
                 "fedora-Silverblue-dvd_ostree-iso-ppc64le-*-ppc64le": 50,

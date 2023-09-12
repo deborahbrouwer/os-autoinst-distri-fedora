@@ -307,6 +307,14 @@ sub desktop_vt {
             assert_script_run "echo SCAN ${user}-finger-1 | socat STDIN UNIX-CONNECT:/run/fprintd-virt";
             send_key "ctrl-alt-f${tty}";
         }
+        elsif (match_has_tag "auth_required_locked") {
+            # When console operation takes a long time, the screen locks
+            # and typing password fails. If that happens, unlock
+            # the screen first and then type password.
+            send_key("ret");
+            wait_still_screen(2);
+            type_very_safely "weakpassword\n";
+        }
         else {
             # bit sloppy but in all cases where this is used, this is the
             # correct password
@@ -1540,6 +1548,9 @@ sub check_and_install_git {
 # The data repository is located at https://pagure.io/fedora-qa/openqa_testdata.
 
 sub download_testdata {
+    # We can select which Data to copy over.
+    my $data = shift;
+    $data = 'structure' unless ($data);
     # Navigate to the user's home directory
     my $user = get_var("USER_LOGIN") // "test";
     assert_script_run("cd /home/$user/");
@@ -1551,11 +1562,17 @@ sub download_testdata {
     # Untar it.
     assert_script_run("tar -zxvf repository.tar.gz");
     # Copy out the files into the VMs directory structure.
-    assert_script_run("cp music/* /home/$user/Music");
-    assert_script_run("cp documents/* /home/$user/Documents");
-    assert_script_run("cp pictures/* /home/$user/Pictures");
-    assert_script_run("cp video/* /home/$user/Videos");
-    assert_script_run("cp reference/* /home/$user/");
+    if ($data eq "structure") {
+        assert_script_run("cp music/* /home/$user/Music");
+        assert_script_run("cp documents/* /home/$user/Documents");
+        assert_script_run("cp pictures/* /home/$user/Pictures");
+        assert_script_run("cp video/* /home/$user/Videos");
+        assert_script_run("cp reference/* /home/$user/");
+    }
+    else {
+        assert_script_run("mkdir /home/$user/$data");
+        assert_script_run("cp $data/* /home/$user/$data/");
+    }
     # Delete the temporary directory and the downloaded file.
     assert_script_run("cd");
     assert_script_run("rm -rf /home/$user/temp");
