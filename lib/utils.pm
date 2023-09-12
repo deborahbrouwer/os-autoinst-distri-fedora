@@ -725,6 +725,7 @@ sub gnome_initial_setup {
         @_
     );
     my $relnum = get_release_number;
+    my $advortask = get_var("ADVISORY_OR_TASK");
 
     # note: when 'language' is "skipped", it's turned into a 'welcome'
     # page, which has a "Start Setup" button, not a "Next" button
@@ -756,7 +757,7 @@ sub gnome_initial_setup {
         # https://fedoraproject.org//wiki/Changes/ReduceInitialSetupRedundancy
         # https://bugzilla.redhat.com/show_bug.cgi?id=1474787 ,
         # except 'language' was never *really* skipped (see above)
-        if ($relnum < 39) {
+        if ($relnum < 39 || $advortask eq "FEDORA-2023-73c4f1a802") {
             @nexts = grep { $_ ne 'keyboard' } @nexts;
             @nexts = grep { $_ ne 'timezone' } @nexts;
         }

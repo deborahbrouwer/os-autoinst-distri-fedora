@@ -79,6 +79,11 @@ sub run {
     if ($version eq $rawrel) {
         assert_script_run 'echo "repo --name=koji-rawhide --baseurl=https://kojipkgs.fedoraproject.org/repos/f' . $version . '-build/latest/\$basearch/" >> ' . $repoks;
     }
+    # this update implements the reversion of webUI for F39, so we
+    # need to make the appropriate kickstart change to test it
+    if ($advortask eq "FEDORA-2023-73c4f1a802") {
+        script_run "sed -i -e 's,anaconda-webui,,g' fedora-live-${lcsubv}.ks";
+    }
     # now flatten the kickstart
     assert_script_run "ksflatten -c fedora-live-${lcsubv}.ks -o openqa.ks";
     # upload the kickstart so we can check it
