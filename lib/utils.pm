@@ -809,6 +809,7 @@ sub gnome_initial_setup {
             wait_screen_change { assert_and_click "next_button"; };
         }
         else {
+            diag("CHECK: $next");
             wait_screen_change { assert_and_click "next_button"; };
         }
     }
