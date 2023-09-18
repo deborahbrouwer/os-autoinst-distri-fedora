@@ -9,7 +9,7 @@ sub run {
     my $self = shift;
 
     # Start the application
-    start_with_launcher('apps_menu_imageviewer');
+    start_with_launcher('apps_menu_imageviewer', 'apps_menu_utilities');
     # Check that is started
     assert_screen 'apps_run_imageviewer';
     # Register application
