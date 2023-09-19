@@ -41,7 +41,7 @@ sub run {
         assert_script_run "mount /var/lib/mock";
     }
     # install the tools we need
-    assert_script_run "dnf -y install mock git pykickstart tar", 120;
+    assert_script_run "dnf -y install mock git pykickstart tar", 300;
     # base mock config on original
     assert_script_run "echo \"include('/etc/mock/fedora-${mockver}-${arch}.cfg')\" > /etc/mock/openqa.cfg";
     # make the side and workarounds repos and the serial device available inside the mock root
