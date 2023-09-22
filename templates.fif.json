@@ -1288,8 +1288,6 @@
         },
         "loupe": {
             "profiles": {
-                "fedora-Silverblue-dvd_ostree-iso-ppc64le-*-ppc64le": 50,
-                "fedora-Silverblue-dvd_ostree-iso-x86_64-*-64bit": 50,
                 "fedora-Workstation-live-iso-ppc64le-*-ppc64le": 20,
                 "fedora-Workstation-live-iso-x86_64-*-64bit": 20,
                 "fedora-Workstation-raw_xz-raw.xz-aarch64-*-aarch64": 22
