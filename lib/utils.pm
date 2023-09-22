@@ -826,7 +826,7 @@ sub gnome_initial_setup {
             record_soft_failure "GOA screen not seen! Likely RHBZ #1997310";
         }
     }
-    send_key "tab" if ($args{live} && $args{livetry});
+    send_key "shift-tab" if ($args{live} && $args{livetry});
     # on the 'live' flow, this will launch the installer
     send_key "ret";
     # we don't want to do anything further on the 'live' flow
