@@ -7,17 +7,26 @@ use utils;
 
 sub run {
     my $self = shift;
+    my $relnum = get_release_number;
+    # neochat replaced konversation in F40+; while we're still running
+    # this test on F39 the test has to handle both...
+    my $app = $relnum > 39 ? 'neochat' : 'konversation';
 
     # Start the application
-    menu_launch_type 'konversation';
+    menu_launch_type $app;
     # Connect to Freenode
-    assert_and_click 'konversation_connect', timeout => 60;
+    assert_and_click "${app}_connect", timeout => 60 if ($app eq 'konversation');
     # Check that it is started
-    assert_screen 'konversation_runs';
+    assert_screen "${app}_runs";
     # Close the application
-    send_key 'alt-f4';
-    wait_still_screen 2;
-    assert_and_click 'konversation_confirm_close';
+    if ($app eq 'konversation') {
+        send_key 'alt-f4';
+        wait_still_screen 2;
+        assert_and_click "${app}_confirm_close";
+    }
+    else {
+        quit_with_shortcut();
+    }
 }
 
 sub test_flags {
