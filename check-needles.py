@@ -202,6 +202,10 @@ for typus in ("swap",  "ext4",  "xfs", "linuxroot"):
     testtags.append(f"disks_select_{typus}")
     testtags.append(f"disks_select_filesystem_{typus}")
     testtags.append(f"disks_parttype_changed_{typus}")
+# Needles for konversation/neochat
+for app in ("neochat", "konversation"):
+    testtags.append(f"{app}_runs")
+testtags.extend(("konversation_connect", "konversation_confirm_close"))
 # variable-y in custom_change_device but we only have one value
 testtags.append("anaconda_part_device_sda")
 # For language needles
