@@ -30,6 +30,9 @@ sub run {
 
     # Go back to graphics.
     desktop_vt();
+    # Set the update notification_timestamp
+    set_update_notification_timestamp();
+
     menu_launch_type("disks");
     wait_still_screen(3);
 

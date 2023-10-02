@@ -20,6 +20,9 @@ sub run {
     # Return back
     desktop_vt();
 
+    # Set the update notification timestamp
+    set_update_notification_timestamp();
+
     # Start the Application
     menu_launch_type("clocks");
     assert_screen ["apps_run_clocks", "grant_access"];

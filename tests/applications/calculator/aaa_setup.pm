@@ -7,6 +7,8 @@ use utils;
 
 sub run {
     my $self = shift;
+    # Set update notification timestamp
+    set_update_notification_timestamp();
     # Run the application
     menu_launch_type("Calculator");
     assert_screen("apps_run_calculator");

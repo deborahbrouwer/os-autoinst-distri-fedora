@@ -9,6 +9,8 @@ use utils;
 sub run {
     my $self = shift;
 
+    # Set the update notification timestamp
+    set_update_notification_timestamp();
     # Start the Application
     menu_launch_type("system monitor");
     assert_screen("systemmonitor_runs");

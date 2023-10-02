@@ -9,6 +9,8 @@ use utils;
 
 sub run {
     my $self = shift;
+    # Set the update notification timestamp
+    set_update_notification_timestamp();
     # Start the application
     menu_launch_type("Maps");
     # Check it has started, or we got the permission prompt

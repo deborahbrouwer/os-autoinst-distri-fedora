@@ -23,6 +23,8 @@ sub run {
     script_run("chmod 666 /dev/ttyS0");
     # Return to Desktop
     desktop_vt();
+    # Set the update notification timestamp
+    set_update_notification_timestamp();
     # Check that the upper panel shows correct date and time.
     assert_screen("panel_datetime");
 }
