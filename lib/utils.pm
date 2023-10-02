@@ -7,7 +7,8 @@ use Exporter;
 
 use lockapi;
 use testapi;
-our @EXPORT = qw/run_with_error_check type_safely type_very_safely desktop_vt boot_to_login_screen console_login console_switch_layout desktop_switch_layout console_loadkeys_us do_bootloader boot_decrypt check_release menu_launch_type repo_setup setup_workaround_repo disable_updates_repos mount_update_image umount_update_image cleanup_workaround_repo console_initial_setup handle_welcome_screen gnome_initial_setup anaconda_create_user check_desktop download_modularity_tests quit_firefox advisory_get_installed_packages advisory_check_nonmatching_packages start_with_launcher quit_with_shortcut disable_firefox_studies select_rescue_mode copy_devcdrom_as_isofile get_release_number check_left_bar check_top_bar check_prerelease check_version spell_version_number _assert_and_click is_branched rec_log repos_mirrorlist register_application get_registered_applications solidify_wallpaper check_and_install_git download_testdata make_serial_writable/;
+our @EXPORT = qw/run_with_error_check type_safely type_very_safely desktop_vt boot_to_login_screen console_login console_switch_layout desktop_switch_layout console_loadkeys_us do_bootloader boot_decrypt check_release menu_launch_type repo_setup setup_workaround_repo disable_updates_repos mount_update_image umount_update_image cleanup_workaround_repo console_initial_setup handle_welcome_screen gnome_initial_setup anaconda_create_user check_desktop download_modularity_tests quit_firefox advisory_get_installed_packages advisory_check_nonmatching_packages start_with_launcher quit_with_shortcut disable_firefox_studies select_rescue_mode copy_devcdrom_as_isofile get_release_number check_left_bar check_top_bar check_prerelease check_version spell_version_number _assert_and_click is_branched rec_log repos_mirrorlist register_application get_registered_applications solidify_wallpaper check_and_install_git download_testdata make_serial_writable set_update_notification_timestamp/;
+
 
 # We introduce this global variable to hold the list of applications that have
 # registered during the apps_startstop_test when they have sucessfully run.
@@ -1580,6 +1581,25 @@ sub make_serial_writable {
     # Exit the root account
     enter_cmd("exit");
     sleep 2;
+}
+
+# Sometimes, especially in between freezes, there are Software Updates available
+# that trigger a notification pop-up which covers some part of the screen
+# and possibly steals focus from the applications, thus making tests to fail.
+# This will set the update notification timestamp to the current time (-30 seconds),
+# forcing the notification mechanism to think it already had notified.
+# Note, that this has to be run under the user under which the tests run,
+# not root.
+sub set_update_notification_timestamp {
+    # Get the current time
+    my $ep_time = time();
+    # Subtract 30 seconds from the number.
+    $ep_time -= 30;
+    # Run a command using the command dialogue
+    send_key('alt-f2');
+    wait_still_screen(2);
+    # Set the new timestamp using the gsettings command.
+    type_very_safely("gsettings set org.gnome.software update-notification-timestamp $ep_time\n");
 }
 
 1;
