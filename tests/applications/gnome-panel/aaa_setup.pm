@@ -7,6 +7,11 @@ use utils;
 
 sub run {
     my $self = shift;
+    # Set the update notification timestamp
+    # note: this will mean it's waaay in the future compared to the
+    # fake time we set below and use for the rest of the test, but
+    # that should do the job fine
+    set_update_notification_timestamp();
 
     # Go to the root console to set up the test data and necessary stuff.
     $self->root_console(tty => 3);
@@ -23,8 +28,6 @@ sub run {
     script_run("chmod 666 /dev/ttyS0");
     # Return to Desktop
     desktop_vt();
-    # Set the update notification timestamp
-    set_update_notification_timestamp();
     # Check that the upper panel shows correct date and time.
     assert_screen("panel_datetime");
 }
