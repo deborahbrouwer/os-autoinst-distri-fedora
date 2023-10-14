@@ -30,10 +30,7 @@ sub run {
     send_key("super-up");
     # Read the file into the application.
     send_key("ctrl-o");
-    unless (get_var("CANNED")) {
-        # Silverblue still has EOG, which starts in the right dir
-        assert_and_click("gnome_dirs_pictures");
-    }
+    assert_and_click("gnome_dirs_pictures");
     assert_and_click("maps_select_file");
     assert_and_click("gnome_button_open");
     wait_still_screen(2);
