@@ -7,6 +7,9 @@ use utils;
 
 sub run {
     my $self = shift;
+    # FIXME after F39 is stable, drop this test entirely
+    my $relnum = get_release_number;
+    return unless ($relnum < 40);
 
     # Start the application
     menu_launch_type 'kmag';
