@@ -11,7 +11,11 @@ sub run {
     # Start the application
     menu_launch_type 'krfb';
     # Check that it is started
-    assert_screen 'krfb_runs', timeout => 60;
+    assert_screen ['krfb_runs', 'kde_cancel_button'], timeout => 60;
+    if (match_has_tag 'kde_cancel_button') {
+        click_lastmatch;
+        assert_screen 'krfb_runs';
+    }
     wait_still_screen(3);
     # close the "remote control requested" window if shown
     send_key "esc";
