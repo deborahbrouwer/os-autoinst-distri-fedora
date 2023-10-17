@@ -8,16 +8,13 @@ use utils;
 sub run {
     # wait for the restore to settle down
     wait_still_screen 3;
-    # Press Alt-3 to see the file systems
-    send_key("alt-3");
+    assert_and_click("sysmon_fsystems_button");
     assert_screen("sysmon_fsystems_shown");
 
-    # Press Alt-1 to see the processes
-    send_key("alt-1");
+    assert_and_click("sysmon_processes_button");
     assert_screen("sysmon_processes_shown");
 
-    # Press Alt-2 to see the resources
-    send_key("alt-2");
+    assert_and_click("sysmon_resources_button");
     assert_screen("sysmon_resources_shown");
 }
 
