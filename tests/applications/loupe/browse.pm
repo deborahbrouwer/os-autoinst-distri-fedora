@@ -8,6 +8,8 @@ use utils;
 sub run {
     my $self = shift;
 
+    # wait to settle from snapshot
+    wait_still_screen 3;
     # Go to next picture.
     send_key("right");
     assert_screen("loupe_image_next", timeout => 90);
