@@ -12,9 +12,15 @@ sub run {
     menu_launch_type 'krfb';
     # Check that it is started
     assert_screen ['krfb_runs', 'kde_cancel_button'], timeout => 60;
+    # we may see *two* cancel buttons - one for remote control
+    # permissions, one for kwallet
     if (match_has_tag 'kde_cancel_button') {
         click_lastmatch;
-        assert_screen 'krfb_runs';
+        assert_screen ['krfb_runs', 'kde_cancel_button'];
+        if (match_has_tag 'kde_cancel_button') {
+            click_lastmatch;
+            assert_screen 'krfb_runs';
+        }
     }
     wait_still_screen(3);
     # close the "remote control requested" window if shown
