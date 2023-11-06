@@ -81,8 +81,12 @@ sub run {
         }
     }
     assert_and_click "printing_print";
+    wait_still_screen 5;
+    save_screenshot;
     # Exit the application
     send_key "alt-f4";
+    wait_still_screen 5;
+    save_screenshot;
 
     # Get the name of the printed file. The path location depends
     # on the selected method. We do this on a VT because there's
