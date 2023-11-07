@@ -81,12 +81,15 @@ sub run {
         }
     }
     assert_and_click "printing_print";
-    wait_still_screen 5;
-    save_screenshot;
-    # Exit the application
-    send_key "alt-f4";
-    wait_still_screen 5;
-    save_screenshot;
+    # In Rawhide from 2023-11-04 onwards, sometimes g-t-e has
+    # already died somehow at this point
+    if (check_screen "apps_run_terminal", 10) {
+        record_soft_failure "gnome-text-editor died!"
+    }
+    else {
+        # Exit the application
+        send_key "alt-f4";
+    }
 
     # Get the name of the printed file. The path location depends
     # on the selected method. We do this on a VT because there's
