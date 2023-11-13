@@ -981,6 +981,7 @@
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
                 "USE_CUPS": "1",
                 "POSTINSTALL": "desktop_printing",
+                "RETRY": "10",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%"
             }
         },
