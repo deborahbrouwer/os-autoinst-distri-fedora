@@ -84,7 +84,7 @@ sub run {
     # In Rawhide from 2023-11-04 onwards, sometimes g-t-e has
     # already died somehow at this point
     if (check_screen "apps_run_terminal", 10) {
-        record_soft_failure "gnome-text-editor died!"
+        record_soft_failure "gnome-text-editor died!";
     }
     else {
         # Exit the application
