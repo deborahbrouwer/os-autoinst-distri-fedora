@@ -8,7 +8,7 @@ use anaconda;
 
 sub run {
     my $self = shift;
-    if (get_var("PXEBOOT")) {
+    if (get_var("IS_PXE")) {
         # PXE tests have DELAYED_START set, so VM is not running yet,
         # because if we boot immediately PXE will time out waiting for
         # DHCP before the support server is ready. So we wait here for
@@ -72,7 +72,7 @@ sub run {
 
     # we need a longer timeout for the PXE boot test
     my $timeout = 30;
-    $timeout = 120 if (get_var("PXEBOOT"));
+    $timeout = 120 if (get_var("IS_PXE"));
 
     # call do_bootloader with postinstall=0, the params, and the mutex,
     # unless we're a VNC install client (no bootloader there)

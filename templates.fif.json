@@ -1889,10 +1889,10 @@
             "settings": {
                 "+ISO": "",
                 "DELAYED_START": "1",
+                "IS_PXE": "1",
                 "KICKSTART": "1",
                 "NICTYPE": "tap",
                 "PARALLEL_WITH": "support_server_2@%ARCH_BASE_MACHINE%",
-                "PXEBOOT": "once",
                 "ROOT_PASSWORD": "111111",
                 "TEST_TARGET": "COMPOSE",
                 "USER_LOGIN": "false",
