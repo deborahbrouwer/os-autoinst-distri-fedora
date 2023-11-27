@@ -87,6 +87,9 @@ sub login_user {
     type_very_safely "$password\n";
     check_desktop(timeout => 60) if ($args{checklogin});
     wait_still_screen(stilltime => 5, similarity_level => 45);
+    if ($desktop eq "kde") {
+        click_lastmatch if (check_screen "getting_started");
+    }
 }
 
 sub check_user_logged_in {
