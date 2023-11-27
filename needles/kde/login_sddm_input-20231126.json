@@ -1,0 +1,19 @@
+{
+  "area": [
+    {
+      "xpos": 384,
+      "width": 74,
+      "ypos": 454,
+      "type": "match",
+      "height": 17
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "DESKTOP-kde",
+    "LANGUAGE-english",
+    "graphical_login",
+    "graphical_login_input",
+    "login_screen"
+  ]
+}
