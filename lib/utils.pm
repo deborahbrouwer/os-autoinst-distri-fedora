@@ -1507,7 +1507,9 @@ sub solidify_wallpaper {
         assert_and_click "deskset_select_color";
         wait_still_screen 2;
         # Select black
-        assert_and_click "deskset_select_black";
+        assert_and_dclick "deskset_html_color";
+        wait_still_screen 2;
+        type_safely "000000";
         wait_still_screen 2;
         # Confirm
         assert_and_click "kde_ok";
