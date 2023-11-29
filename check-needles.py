@@ -64,6 +64,7 @@ for testpath in testpaths:
         matchfuncs = (
             "assert_screen",
             "assert_and_click",
+            "assert_and_dclick",
             "check_screen",
             "start_with_launcher",
             "send_key_until_needlematch",
