@@ -9,7 +9,7 @@ use testapi;
 use utils;
 use bugzilla;
 
-our @EXPORT = qw/select_disks custom_scheme_select custom_blivet_add_partition custom_blivet_format_partition custom_blivet_resize_partition custom_change_type custom_change_fs custom_change_device custom_delete_part get_full_repo check_help_on_pane get_mirrorlist_url crash_anaconda_text report_bug_text/;
+our @EXPORT = qw/select_disks custom_scheme_select custom_blivet_add_partition custom_blivet_format_partition custom_blivet_resize_partition custom_change_type custom_change_fs custom_change_device custom_delete_part get_full_repo get_mirrorlist_url crash_anaconda_text report_bug_text/;
 
 sub select_disks {
     # Handles disk selection. Has one optional argument - number of
@@ -305,58 +305,6 @@ sub get_full_repo {
 
 sub get_mirrorlist_url {
     return "mirrors.fedoraproject.org/mirrorlist?repo=fedora-" . lc(get_var("VERSION")) . "&arch=" . get_var('ARCH');
-}
-
-sub check_help_on_pane {
-    # This subroutine opens the selected Anaconda pane and checks
-    # if the Help button can be clicked to obtain relevant help.
-    #
-    # Pass an argument to select particular pane to check.
-    my $screen = shift;
-
-    # Some Help buttons need to be accessed directly according
-    # to various installation steps (and not from the main hub),
-    # namely the Main hub Help button, Language selection Help button
-    # and Installation progress Help button. For the aforementioned
-    # step, we are skipping selecting the panes.
-    if ($screen ne "main" && $screen ne "language_selection" && $screen ne "installation_progress") {
-        send_key_until_needlematch("anaconda_main_hub_$screen", "shift-tab");
-        wait_screen_change { click_lastmatch; };
-    }
-    # For Help, click on the the Help button.
-    assert_and_click "anaconda_help_button";
-
-    # On the main hub, the Help summary is shown, from where a link
-    # takes us to Installation progress. This is a specific situation,
-    # so let's handle this differently.
-    if ($screen eq "main") {
-        # Check the Installation Summary screen.
-        assert_screen "anaconda_help_summary";
-        # Click on Installation Progress link
-        assert_and_click "anaconda_help_progress_link";
-        # Check the Installation Progress screen
-        assert_screen "anaconda_help_installation_progress";
-    }
-    # Otherwise, only check the relevant screen.
-    else {
-        assert_screen "anaconda_help_$screen";
-    }
-    # Close Help window
-    assert_and_click "anaconda_help_quit";
-    # Where panes were not opened, we will not close them.
-    if ($screen ne "main" && $screen ne "language_selection" && $screen ne "installation_progress") {
-        assert_and_click "anaconda_spoke_done";
-    }
-    # In the situation, when we do not arrive at main hub, we will skip
-    # testing that main hub is shown.
-    if ($screen ne "language_selection" && $screen ne "installation_progress") {
-        # on leaving a spoke, it is highlighted on the main hub, which
-        # can throw off the match here. so we'll try hitting shift-tab
-        # a few times to shift focus
-        send_key_until_needlematch("anaconda_main_hub", "shift-tab");
-        # things can take some time to settle after this one
-        wait_still_screen 10 if ($screen eq "install_destination");
-    }
 }
 
 sub crash_anaconda_text {

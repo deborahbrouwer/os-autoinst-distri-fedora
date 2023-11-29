@@ -174,12 +174,6 @@ sub run {
             # appropriate language, here
             assert_and_click "anaconda_select_install_lang_filtered";
             assert_screen "anaconda_select_install_lang_selected", 10;
-            # Check for Help on the Language selection pane, if HELPCHECK is
-            # required
-            if (get_var('HELPCHECK')) {
-                check_help_on_pane("language_selection");
-            }
-
             assert_and_click "anaconda_select_install_lang_continue";
 
             # wait 180 secs for hub or Rawhide warning dialog to appear
