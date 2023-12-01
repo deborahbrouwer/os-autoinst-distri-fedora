@@ -11,7 +11,7 @@ sub run {
     my $self = shift;
 
     # Start the application
-    menu_launch_type 'info';
+    menu_launch_type 'info center';
     # Check that it is started
     assert_screen 'infocenter_runs', timeout => 60;
     # Open the Devices menu item.

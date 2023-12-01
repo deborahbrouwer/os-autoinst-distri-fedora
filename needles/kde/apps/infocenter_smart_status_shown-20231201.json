@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "type": "match",
+      "height": 20,
+      "xpos": 338,
+      "width": 121,
+      "ypos": 63
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "infocenter_smart_status_shown"
+  ]
+}
