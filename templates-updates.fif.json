@@ -51,7 +51,7 @@
                 "+HDD_1": "disk_f%VERSION%_kde_4_%ARCH%.qcow2",
                 "DESKTOP": "kde",
                 "NUMDISKS": "2",
-                "RETRY": "2"
+                "RETRY": "1"
             },
             "version": "*"
         },
