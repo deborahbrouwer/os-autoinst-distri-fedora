@@ -340,7 +340,17 @@ def run(args):
         if args.update:
             loadargs.append('--update')
         loadargs.append('-')
-        subprocess.run(loadargs, input=json.dumps(out), text=True, check=True)
+        tries = 20
+        while True:
+            ret = subprocess.run(loadargs, input=json.dumps(out), text=True, check=True)
+            if ret.returncode:
+                if tries:
+                    print(f"loader failed! retrying ({tries} attempts remaining)")
+                    tries -= 1
+                else:
+                    sys.exit("loader failed and all retries exhausted!")
+            else:
+                break
 
 def main():
     """Main loop."""
