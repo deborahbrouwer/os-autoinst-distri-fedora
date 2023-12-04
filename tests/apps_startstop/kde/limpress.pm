@@ -12,7 +12,7 @@ sub run {
     # Check that it is started
     assert_screen 'limpress_runs', timeout => 60;
     # Close the template chooser, then the application
-    send_key 'alt-f4';
+    send_key 'esc';
     quit_with_shortcut();
 }
 
