@@ -99,8 +99,9 @@ sub run {
         desktop_vt;
     }
 
-    # Move the mouse somewhere it won't highlight the match areas
-    mouse_set(300, 800);
+    # Move the mouse somewhere it won't highlight the match areas and
+    # hopefully won't negatively interact with anything else later
+    mouse_set(1023, 384);
     # KDE can take ages to start up
     check_desktop(timeout => 120);
 }
