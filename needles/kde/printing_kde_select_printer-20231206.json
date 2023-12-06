@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "ypos": 320,
+      "width": 129,
+      "xpos": 440,
+      "height": 15,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "printing_kde_select_printer"
+  ]
+}
