@@ -188,7 +188,9 @@ sub run {
     }
     if ($desktop eq "kde") {
         # use solid blue background for SDDM
-        assert_script_run "sed -i -e 's,image,solid,g' /usr/share/sddm/themes/01-breeze-fedora/theme.conf.user";
+        # theme.conf.user was dropped in 5.90.0-2.fc40, doing
+        # theme.conf* should work before and after
+        assert_script_run "sed -i -e 's,image,solid,g' /usr/share/sddm/themes/01-breeze-fedora/theme.conf*";
     }
     adduser(name => "Jack Sparrow", login => "jack", password => $jackpass);
     if ($desktop eq "gnome") {
