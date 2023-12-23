@@ -79,12 +79,6 @@ sub run {
     if ($version eq $rawrel) {
         assert_script_run 'echo "repo --name=koji-rawhide --baseurl=https://kojipkgs.fedoraproject.org/repos/f' . $version . '-build/latest/\$basearch/" >> ' . $repoks;
     }
-    # FIXME until the next compose after 2023-12-15 to include
-    # https://pagure.io/fedora-comps/pull-request/920 , we need to
-    # hack the same changes into the kickstart for KDE
-    if ($lcsubv eq "kde" && $version eq $rawrel) {
-        assert_script_run 'printf "%%packages\nakonadi-server\nakonadi-server-mysql\n-kf5-akonadi-server\n-kf5-akonadi-server-mysql\n%%end\n" >> ' . "fedora-live-${lcsubv}.ks";
-    }
     # now flatten the kickstart
     assert_script_run "ksflatten -c fedora-live-${lcsubv}.ks -o openqa.ks";
     # upload the kickstart so we can check it
