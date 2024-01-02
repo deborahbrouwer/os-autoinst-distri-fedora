@@ -66,14 +66,16 @@ sub run {
     send_key "alt-f2";
     console_login(user => "test", password => "weakpassword");
     assert_script_run "sudo python3 -m unittest tunirtests.cloudservice.TestServiceAfter -v";
-    assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestDockerInstalled -v";
-    assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestDockerStorageSetup -v";
-    assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestAtomicFirstBootRun -v";
-    assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestAtomicCommand -v";
-    assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestAtomicDockerImage -v";
-    assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestRootMount -v";
-    assert_script_run "sudo python3 -m unittest tunirtests.atomictests.Testreadonlymount -v";
-    assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestDockerDaemon -v";
+    if (get_var("CANNED")) {
+        assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestDockerInstalled -v";
+        assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestDockerStorageSetup -v";
+        assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestAtomicFirstBootRun -v";
+        assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestAtomicCommand -v";
+        assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestAtomicDockerImage -v";
+        assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestRootMount -v";
+        assert_script_run "sudo python3 -m unittest tunirtests.atomictests.Testreadonlymount -v";
+        assert_script_run "sudo python3 -m unittest tunirtests.atomictests.TestDockerDaemon -v";
+    }
 }
 
 
