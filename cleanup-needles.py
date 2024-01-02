@@ -47,6 +47,8 @@ keeplist = (
     "upgrade_fail",
     # text install just doesn't fail very often
     "anaconda_text_error",
+    # weather conditions can vary!
+    "weather_icon",
 )
 
 changed = False
