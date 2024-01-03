@@ -12,6 +12,8 @@ sub run {
     # Run the application
     menu_launch_type("Calculator");
     assert_screen("apps_run_calculator");
+    # wait for system to settle before snapshotting
+    sleep 10;
 }
 
 sub test_flags {
