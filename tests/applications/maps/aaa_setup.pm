@@ -52,6 +52,8 @@ sub run {
     send_key("esc");
     # Check that Map is shown with the correct location
     assert_screen("maps_found_brno", timeout => 90);
+    # wait a bit to settle before snapshotting
+    sleep 10;
 }
 
 sub test_flags {
