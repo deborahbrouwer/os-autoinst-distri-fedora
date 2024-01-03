@@ -292,6 +292,7 @@
                 "CANNED": "1",
                 "DEPLOY_UPLOAD_TEST": "install_default_upload",
                 "DESKTOP": "gnome",
+                "HDDSIZEGB": "20",
                 "PACKAGE_SET": "default",
                 "TEST_TARGET": "ISO"
             },
@@ -305,6 +306,7 @@
                 "CANNED": "1",
                 "DEPLOY_UPLOAD_TEST": "install_default_upload",
                 "DESKTOP": "gnome",
+                "HDDSIZEGB": "20",
                 "PACKAGE_SET": "default",
                 "TEST_TARGET": "ISO"
             },
