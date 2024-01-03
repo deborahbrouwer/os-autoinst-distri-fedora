@@ -408,6 +408,11 @@ sub boot_decrypt {
     # decrypt storage during boot; arg is timeout (in seconds)
     my $timeout = shift || 60;
     assert_screen "boot_enter_passphrase", $timeout;
+    # FIXME: wait and re-assert to workaround
+    # https://bugzilla.redhat.com/show_bug.cgi?id=2256682 , can
+    # drop this is that is fixed
+    wait_still_screen 3;
+    assert_screen "boot_enter_passphrase";
     type_string get_var("ENCRYPT_PASSWORD");
     send_key "ret";
 }
