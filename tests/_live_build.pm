@@ -81,6 +81,11 @@ sub run {
     }
     # now flatten the kickstart
     assert_script_run "ksflatten -c fedora-live-${lcsubv}.ks -o openqa.ks";
+    # FIXME: we need to hack this back out till a compose with the new
+    # group has run, remove after next Rawhide compose
+    if ($version eq $rawrel && $lcsubv eq "kde") {
+        assert_script_run "sed -i -e '/kde-spin-initial-setup/d' openqa.ks";
+    }
     # upload the kickstart so we can check it
     upload_logs "openqa.ks";
     # now install the tools into the mock
