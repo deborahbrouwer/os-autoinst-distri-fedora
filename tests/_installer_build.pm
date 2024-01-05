@@ -11,8 +11,6 @@ sub run {
     my $repo = $version eq $rawrel ? "fedora-rawhide.repo" : "fedora.repo";
     my $advortask = get_var("ADVISORY_OR_TASK");
     my $arch = get_var("ARCH");
-    # we need the update repo mounted to use it in image creation
-    mount_update_image;
     my $packages = "lorax";
     $packages .= " hfsplus-tools" if ($arch eq "ppc64le");
     assert_script_run "dnf -y install $packages", 120;
@@ -27,9 +25,9 @@ sub run {
     unless ($version > $currrel) {
         $cmd .= " --isfinal --repo=/etc/yum.repos.d/fedora-updates.repo";
     }
-    $cmd .= " --repo=/etc/yum.repos.d/advisory.repo" if (get_var("ISO_2"));
-    $cmd .= " --repo=/etc/yum.repos.d/workarounds.repo" if (get_var("ISO_3"));
+    $cmd .= " --repo=/etc/yum.repos.d/workarounds.repo";
     $cmd .= " --repo=/etc/yum.repos.d/koji-rawhide.repo" if ($version eq $rawrel);
+    $cmd .= " --repo=/etc/yum.repos.d/advisory.repo" unless (get_var("TAG"));
     $cmd .= " --repo=/etc/yum.repos.d/openqa-testtag.repo" if (get_var("TAG"));
     $cmd .= " ./results";
     assert_script_run $cmd, 2400;

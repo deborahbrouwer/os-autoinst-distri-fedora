@@ -1,7 +1,6 @@
 use base "installedtest";
 use strict;
 use testapi;
-use utils;
 
 sub run {
     my $self = shift;
@@ -16,9 +15,6 @@ sub run {
     # tests that need to edit boot params will see it. Don't use
     # assert_script_run as this will fail when it's not set
     script_run("grub2-editenv - unset menu_auto_hide", 0);
-    # similarly, drop the updateiso/workaroundsiso edits to /etc/fstab
-    # in case the drive is enumerated differently on a follow-up test
-    umount_update_image if (get_var("ISO_2") || get_var("ISO_3"));
     script_run("poweroff", 0);
     assert_shutdown 180;
 }

@@ -23,8 +23,7 @@ sub run {
     my $arch = get_var("ARCH");
     my $subv = get_var("SUBVARIANT");
     my $lcsubv = lc($subv);
-    # we need the update repo mounted to use it in image creation
-    mount_update_image;
+    my $tag = get_var("TAG");
     # mount our nice big empty scratch disk as /var/tmp
     assert_script_run "rm -rf /var/tmp/*";
     assert_script_run "echo 'type=83' | sfdisk /dev/vdc";
@@ -41,16 +40,16 @@ sub run {
     assert_script_run 'pushd workstation-ostree-config';
     assert_script_run "git checkout ${branch}";
     # now copy the advisory, workaround repo and koji-rawhide config files
-    assert_script_run 'cp /etc/yum.repos.d/advisory.repo .' if (get_var("ISO_2"));
-    assert_script_run 'cp /etc/yum.repos.d/workarounds.repo .' if (get_var("ISO_3"));
+    assert_script_run 'cp /etc/yum.repos.d/workarounds.repo .';
     assert_script_run 'cp /etc/yum.repos.d/koji-rawhide.repo .' if ($version eq $rawrel);
-    assert_script_run 'cp /etc/yum.repos.d/openqa-testtag.repo .' if (get_var("TAG"));
+    assert_script_run 'cp /etc/yum.repos.d/advisory.repo .' unless ($tag);
+    assert_script_run 'cp /etc/yum.repos.d/openqa-testtag.repo .' if ($tag);
     # and add them to the config file
     my $repl = 'repos:';
-    $repl .= '\n  - advisory' if (get_var("ISO_2"));
-    $repl .= '\n  - workarounds' if (get_var("ISO_3"));
+    $repl .= '\n  - workarounds';
     $repl .= '\n  - koji-rawhide' if ($version eq $rawrel);
-    $repl .= '\n  - openqa-testtag' if (get_var("TAG"));
+    $repl .= '\n  - advisory' unless ($tag);
+    $repl .= '\n  - openqa-testtag' if ($tag);
     assert_script_run 'sed -i -e "s,repos:,' . $repl . ',g" fedora-' . $lcsubv . '.yaml';
     # change the ref name to a custom one (so we can test rebasing to
     # the 'normal' ref later)
@@ -99,10 +98,10 @@ sub run {
     unless ($version > $currrel) {
         $cmd .= " --isfinal --repo=/etc/yum.repos.d/fedora-updates.repo";
     }
-    $cmd .= " --repo=/etc/yum.repos.d/advisory.repo" if (get_var("ISO_2"));
-    $cmd .= " --repo=/etc/yum.repos.d/workarounds.repo" if (get_var("ISO_3"));
+    $cmd .= " --repo=/etc/yum.repos.d/workarounds.repo";
     $cmd .= " --repo=/etc/yum.repos.d/koji-rawhide.repo" if ($version eq $rawrel);
-    $cmd .= " --repo=/etc/yum.repos.d/openqa-testtag.repo" if (get_var("TAG"));
+    $cmd .= " --repo=/etc/yum.repos.d/advisory.repo" unless ($tag);
+    $cmd .= " --repo=/etc/yum.repos.d/openqa-testtag.repo" if ($tag);
     $cmd .= " ./results";
     assert_script_run $cmd, 7000;
     # good to have the log around for checks

@@ -7,7 +7,7 @@ use Exporter;
 
 use lockapi;
 use testapi;
-our @EXPORT = qw/run_with_error_check type_safely type_very_safely desktop_vt boot_to_login_screen console_login console_switch_layout desktop_switch_layout console_loadkeys_us do_bootloader boot_decrypt check_release menu_launch_type repo_setup setup_workaround_repo disable_updates_repos mount_update_image umount_update_image cleanup_workaround_repo console_initial_setup handle_welcome_screen gnome_initial_setup anaconda_create_user check_desktop download_modularity_tests quit_firefox advisory_get_installed_packages advisory_check_nonmatching_packages start_with_launcher quit_with_shortcut disable_firefox_studies select_rescue_mode copy_devcdrom_as_isofile get_release_number check_left_bar check_top_bar check_prerelease check_version spell_version_number _assert_and_click is_branched rec_log repos_mirrorlist register_application get_registered_applications solidify_wallpaper check_and_install_git download_testdata make_serial_writable set_update_notification_timestamp/;
+our @EXPORT = qw/run_with_error_check type_safely type_very_safely desktop_vt boot_to_login_screen console_login console_switch_layout desktop_switch_layout console_loadkeys_us do_bootloader boot_decrypt check_release menu_launch_type repo_setup setup_workaround_repo disable_updates_repos cleanup_workaround_repo console_initial_setup handle_welcome_screen gnome_initial_setup anaconda_create_user check_desktop download_modularity_tests quit_firefox advisory_get_installed_packages advisory_check_nonmatching_packages start_with_launcher quit_with_shortcut disable_firefox_studies select_rescue_mode copy_devcdrom_as_isofile get_release_number check_left_bar check_top_bar check_prerelease check_version spell_version_number _assert_and_click is_branched rec_log repos_mirrorlist register_application get_registered_applications solidify_wallpaper check_and_install_git download_testdata make_serial_writable set_update_notification_timestamp/;
 
 
 # We introduce this global variable to hold the list of applications that have
@@ -463,56 +463,63 @@ sub repos_mirrorlist {
     assert_script_run "sed -i -e 's,metalink,mirrorlist,g' ${files}";
 }
 
-sub mount_update_image {
-    # mount the update and workarounds images (whichever are attached)
-    if (get_var("ISO_2") && script_run "grep updateiso /proc/mounts") {
-        script_run "mkdir -p /mnt/updateiso";
-        my $devnode = "/dev/sr0";
-        $devnode = "/dev/sr1" if (get_var("ISO") || get_var("ISO_1"));
-        assert_script_run 'echo "' . $devnode . ' /mnt/updateiso iso9660 loop 0 0" >> /etc/fstab';
-        assert_script_run "mount /mnt/updateiso";
-    }
-    if (get_var("ISO_3") && script_run "grep workaroundsiso /proc/mounts") {
-        script_run "mkdir -p /mnt/workaroundsiso";
-        my $devnum = 0;
-        $devnum++ if (get_var("ISO") || get_var("ISO_1"));
-        $devnum++ if (get_var("ISO_2"));
-        my $devnode = "/dev/sr${devnum}";
-        assert_script_run 'echo "' . $devnode . ' /mnt/workaroundsiso iso9660 loop 0 0" >> /etc/fstab';
-        assert_script_run "mount /mnt/workaroundsiso";
-    }
-}
-
-sub umount_update_image {
-    # inverse of mount_update_image
-    assert_script_run "sed -i '/updateiso/d' /etc/fstab" if (get_var("ISO_2"));
-    assert_script_run "sed -i '/workaroundsiso/d' /etc/fstab" if (get_var("ISO_3"));
-    assert_script_run "umount /mnt/updateiso" unless (!get_var("ISO_2") || script_run "grep updateiso /proc/mounts");
-    assert_script_run "umount /mnt/workaroundsiso" unless (!get_var("ISO_3") || script_run "grep workaroundsiso /proc/mounts");
-}
-
 sub cleanup_workaround_repo {
     # clean up the workaround repo (see next).
+    script_run "rm -rf /mnt/workarounds_repo";
     script_run "rm -f /etc/yum.repos.d/workarounds.repo";
 }
 
 sub setup_workaround_repo {
     # we periodically need to pull an update from updates-testing in
     # to fix some bug or other. so, here's an organized way to do it.
-    # the code that builds the image, and the workaround lists, are
-    # in fedora_openqa schedule.py. If there are no workarounds, we
-    # don't get an ISO
-    return unless (get_var("ISO_3"));
+    # we do this here so the workaround packages are in the repo data
+    # but *not* in the package lists generated above (those should
+    # only include packages from the update under test). we'll define
+    # a hash of releases and update IDs. if no workarounds are needed
+    # for any release, the hash can be empty and this will do nothing
     my $version = shift || get_var("VERSION");
     cleanup_workaround_repo;
-    mount_update_image;
     # write a repo config file, unless this is the support_server test
     # and it is running on a different release than the update is for
     # (in this case we need the repo to exist but do not want to use
     # it on the actual support_server system)
     unless (get_var("TEST") eq "support_server" && $version ne get_var("CURRREL")) {
-        assert_script_run 'printf "[workarounds]\nname=Workarounds repo\nbaseurl=file:///mnt/workaroundsiso/workarounds_repo\nenabled=1\nmetadata_expire=1\ngpgcheck=0" > /etc/yum.repos.d/workarounds.repo';
+        assert_script_run 'printf "[workarounds]\nname=Workarounds repo\nbaseurl=file:///mnt/workarounds_repo\nenabled=1\nmetadata_expire=1\ngpgcheck=0" > /etc/yum.repos.d/workarounds.repo';
     }
+    assert_script_run "mkdir -p /mnt/workarounds_repo";
+    assert_script_run "pushd /mnt/workarounds_repo";
+    my %workarounds = (
+        "38" => [],
+        "39" => [],
+        "40" => [],
+    );
+    # then we'll download each update for our release:
+    my $advortasks = $workarounds{$version};
+    my $pkgs = "createrepo_c";
+    $pkgs .= " bodhi-client koji" if @$advortasks;
+    script_run "dnf -y install $pkgs", 300;
+    foreach my $advortask (@$advortasks) {
+        my $cmd = "bodhi updates download --updateid=$advortask";
+        if ($advortask =~ /^\d+$/) {
+            my $arch = get_var("ARCH");
+            $cmd = "koji download-task --arch=$arch --arch=noarch $advortask";
+        }
+        my $count = 3;
+        my $success = 0;
+        while ($count) {
+            if (script_run $cmd, 600) {
+                $count -= 1;
+            }
+            else {
+                $count = 0;
+                $success = 1;
+            }
+        }
+        die "Workaround update download failed!" unless $success;
+    }
+    # and create repo metadata
+    assert_script_run "createrepo .";
+    assert_script_run "popd";
 }
 
 sub disable_updates_repos {
@@ -556,13 +563,102 @@ sub _repo_setup_compose {
     # }
 }
 
+sub _download_packages_pre {
+    # create and mount the filesystem where we will store update/task packages
+    # this is separate from _download_packages as it has to happen before we
+    # enter the toolbox container on the CANNED workflow
+    assert_script_run "mkdir -p /mnt/update_repo";
+    # if NUMDISKS is above 1, assume we want to put the update repo on
+    # the second disk (to avoid huge updates exhausting space on the main
+    # disk)
+    if (get_var("NUMDISKS") > 1) {
+        # I think the disk will always be vdb. This creates a single large
+        # partition.
+        assert_script_run "echo 'type=83' | sfdisk /dev/vdb";
+        assert_script_run "mkfs.ext4 /dev/vdb1";
+        assert_script_run "echo '/dev/vdb1 /mnt/update_repo ext4 defaults 1 2' >> /etc/fstab";
+        assert_script_run "mount /mnt/update_repo";
+    }
+    assert_script_run "cd /mnt/update_repo";
+}
+
+sub _download_packages {
+    # actually do the work of downloading packages and creating a repoistory,
+    # for update and task cases. a repository is needed for various reasons:
+    # to ensure later package operations use the update packages, and for
+    # use when creating deliverables in the tests that do that
+    my $arch = get_var("ARCH");
+    script_run "dnf -y install createrepo_c koji", 300;
+    if (get_var("ADVISORY_NVRS") || get_var("ADVISORY_NVRS_1")) {
+        # regular update case
+        # old style single ADVISORY_NVRS var
+        my @nvrs = split(/ /, get_var("ADVISORY_NVRS"));
+        unless (@nvrs) {
+            # new style chunked ADVISORY_NVRS_N vars
+            my $count = 1;
+            while ($count) {
+                if (get_var("ADVISORY_NVRS_$count")) {
+                    push @nvrs, split(/ /, get_var("ADVISORY_NVRS_$count"));
+                    $count++;
+                }
+                else {
+                    $count = 0;
+                }
+            }
+        }
+        foreach my $nvr (@nvrs) {
+            my $kojitime = 600;
+            # texlive has a ridiculous number of subpackages
+            $kojitime = 1500 if ((rindex $nvr, "texlive", 0) == 0);
+            if (script_run "koji download-build --arch=$arch --arch=noarch $nvr 2> download.log", $kojitime) {
+                # if the error was because the build has no packages
+                # for our arch, that's okay, skip it. otherwise, die
+                if (script_run "grep 'No .*available for $nvr' download.log") {
+                    die "koji download-build failed!";
+                }
+            }
+        }
+    }
+    elsif (get_var("KOJITASK")) {
+        # Koji task case (KOJITASK will be set). If multiple tasks,
+        # they're concatenated with underscores
+        my @tasks = split(/_/, get_var("KOJITASK"));
+        foreach my $task (@tasks) {
+            assert_script_run "koji download-task --arch=$arch --arch=noarch $task", 600;
+        }
+    }
+    else {
+        die "Neither ADVISORY_NVRS nor KOJITASK nor TAG set! Don't know what to do";
+    }
+
+    if (script_run 'ls *.rpm') {
+        # we didn't actually download any packages (as they are all
+        # for an arch we don't test), so write dummy files
+        assert_script_run 'touch /mnt/updatepkgnames.txt /mnt/updatepkgs.txt';
+    }
+    else {
+        # log the exact packages in the update at test time, with their
+        # source packages and epochs. we use /mnt as the path for this
+        # and similar files because, on ostree-based installs where we
+        # have to use a toolbox container for part of this, it's common
+        # to the host system and container
+        assert_script_run 'rpm -qp *.rpm --qf "%{SOURCERPM} %{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE}\n" | sort -u > /mnt/updatepkgs.txt';
+        # also log just the binary package names: this is so we can check
+        # later whether any package from the update *should* have been
+        # installed, but was not
+        assert_script_run 'rpm -qp *.rpm --qf "%{NAME} " > /mnt/updatepkgnames.txt';
+    }
+    upload_logs "/mnt/updatepkgnames.txt";
+    upload_logs "/mnt/updatepkgs.txt";
+
+    # create the repo metadata
+    assert_script_run "createrepo .", timeout => 180;
+}
+
 sub _repo_setup_updates {
     # Appropriate repo setup steps for testing a Bodhi update
-    # sanity check
-    die "_repo_setup_updates called, but ISO_2 is not attached!" unless (get_var("ISO_2") || get_var("TAG"));
-    mount_update_image if (get_var("ISO_2"));
     # Check if we already ran, bail if so
-    return unless script_run "test -f /root/.oqarsurun";
+    return unless script_run "test -f /mnt/updatepkgs.txt";
     my $version = get_var("VERSION");
     my $currrel = get_var("CURRREL", "0");
     my $arch = get_var("ARCH");
@@ -572,64 +668,61 @@ sub _repo_setup_updates {
     #     upload_logs "/etc/yum.repos.d/yumreposd.tar.gz";
     # }
 
-    # Set up an additional repo containing the update or task packages. We do
-    # this rather than simply running a one-time update because it may be the
-    # case that a package from the update isn't installed *now* but will be
-    # installed by one of the tests; by setting up a repo containing the
-    # update and enabling it here, we ensure all later 'dnf install' calls
-    # will get the packages from the update.
+    # prepare the directory the packages will be downloaded to, unless we're
+    # testing a side tag
+    _download_packages_pre() unless ($tag);
+
     # on CANNED, we need to enter the toolbox at this point
     if (get_var("CANNED")) {
         type_string "toolbox -y enter\n";
         # look for the little purple dot
         assert_screen "console_in_toolbox", 180;
     }
+
     # use mirrorlist not metalink in repo configs
     repos_mirrorlist();
     # Disable updates-testing so other bad updates don't break us
     disable_updates_repos(both => 0) if ($version > $currrel);
     # use the buildroot repo on Rawhide: see e.g.
     # https://pagure.io/fedora-ci/general/issue/376 for why
-    if ($version eq get_var("RAWREL") && get_var("TEST") ne "support_server") {
-        assert_script_run 'printf "[koji-rawhide]\nname=koji-rawhide\nbaseurl=https://kojipkgs.fedoraproject.org/repos/f' . $version . '-build/latest/' . $arch . '/\ncost=2000\nenabled=1\nmetadata_expire=30\ngpgcheck=0\nskip_if_unavailable=1\n" > /etc/yum.repos.d/koji-rawhide.repo';
+    if (get_var("VERSION") eq get_var("RAWREL") && get_var("TEST") ne "support_server") {
+        assert_script_run 'printf "[koji-rawhide]\nname=koji-rawhide\nbaseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/' . $arch . '/\ncost=2000\nenabled=1\ngpgcheck=0\n" > /etc/yum.repos.d/koji-rawhide.repo';
     }
     # set up the workaround repo
     setup_workaround_repo;
-    upload_logs "/mnt/updateiso/updatepkgnames.txt" unless ($tag);
-    upload_logs "/mnt/updateiso/updatepkgs.txt" unless ($tag);
+    if (get_var("CANNED")) {
+        # install and use en_US.UTF-8 locale for consistent sort
+        # ordering
+        assert_script_run "dnf -y install glibc-langpack-en", 300;
+        assert_script_run "export LC_ALL=en_US.UTF-8";
+    }
+
+    # download the packages, unless we're testing a side tag
+    _download_packages unless ($tag);
+
     # write a repo config file, unless this is the support_server test
     # and it is running on a different release than the update is for
     # (in this case we need the repo to exist but do not want to use
     # it on the actual support_server system)
     unless (get_var("TEST") eq "support_server" && $version ne get_var("CURRREL")) {
-        if ($tag) {
-            assert_script_run 'printf "[openqa-testtag]\nname=openqa-testtag\nbaseurl=https://kojipkgs.fedoraproject.org/repos/' . "$tag/latest/$arch" . '/\ncost=2000\nenabled=1\ngpgcheck=0\n" > /etc/yum.repos.d/openqa-testtag.repo';
-        }
-        else {
-            assert_script_run 'printf "[advisory]\nname=Advisory repo\nbaseurl=file:///mnt/updateiso/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0" > /etc/yum.repos.d/advisory.repo';
-        }
+        assert_script_run 'printf "[advisory]\nname=Advisory repo\nbaseurl=file:///mnt/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0" > /etc/yum.repos.d/advisory.repo' unless ($tag);
+        assert_script_run 'printf "[openqa-testtag]\nname=openqa-testtag\nbaseurl=https://kojipkgs.fedoraproject.org/repos/' . "$tag/latest/$arch" . '/\ncost=2000\nenabled=1\ngpgcheck=0\n" > /etc/yum.repos.d/openqa-testtag.repo' if ($tag);
         # run an update now, except for upgrade or install tests,
         # where the updated packages should have been installed
         # already and we want to fail if they weren't, or CANNED
         # tests, there's no point updating the toolbox
         script_run "dnf -y update", 1200 unless (get_var("UPGRADE") || get_var("INSTALL") || get_var("CANNED"));
-        # work around update removing 'dnf' command for the dnf5
-        # revert: https://bodhi.fedoraproject.org/updates/FEDORA-2023-5fd964c1bf#comment-3149533
-        if (get_var("ADVISORY_OR_TASK") eq "FEDORA-2023-5fd964c1bf") {
-            script_run "dnf5 -y --best install 'dnf < 5'", 300 unless (get_var("UPGRADE") || get_var("INSTALL") || get_var("CANNED"));
-        }
         # on liveinst tests, we'll remove the packages we installed
         # above (and their deps, which dnf will include automatically),
         # just in case they're in the update under test; otherwise we
         # get a bogus failure for the package not being updated
-        script_run "dnf -y remove bodhi-client createrepo koji", 600 if (get_var("INSTALL") && !get_var("CANNED"));
+        script_run "dnf -y remove bodhi-client createrepo_c koji", 600 if (get_var("INSTALL") && !get_var("CANNED"));
     }
     # exit the toolbox on CANNED
     if (get_var("CANNED")) {
         type_string "exit\n";
         wait_still_screen 5;
     }
-    assert_script_run "touch /root/.oqarsurun";
 }
 
 sub repo_setup {
@@ -1111,21 +1204,18 @@ sub quit_with_shortcut {
 sub advisory_get_installed_packages {
     # can't do anything useful when testing a side tag
     return if (get_var("TAG"));
-    # sanity check
-    die "advisory_get_installed_packages, but ISO_2 is not attached!" unless (get_var("ISO_2"));
-    mount_update_image;
     # bail out if the file doesn't exist: this is in case we get
     # here in the post-fail hook but we failed before creating it
-    return if script_run "test -f /mnt/updateiso/updatepkgs.txt";
+    return if script_run "test -f /mnt/updatepkgs.txt";
     assert_script_run 'rpm -qa --qf "%{SOURCERPM} %{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE}\n" | sort -u > /tmp/allpkgs.txt', timeout => 90;
     # this finds lines which appear in both files
     # http://www.unix.com/unix-for-dummies-questions-and-answers/34549-find-matching-lines-between-2-files.html
-    if (script_run 'comm -12 /tmp/allpkgs.txt /mnt/updateiso/updatepkgs.txt > /mnt/testedpkgs.txt') {
+    if (script_run 'comm -12 /tmp/allpkgs.txt /mnt/updatepkgs.txt > /mnt/testedpkgs.txt') {
         # occasionally, for some reason, it's unhappy about sorting;
         # we shouldn't fail the test in this case, just upload the
         # files so we can see why...
         upload_logs "/tmp/allpkgs.txt", failok => 1;
-        upload_logs "/mnt/updateiso/updatepkgs.txt", failok => 1;
+        upload_logs "/mnt/updatepkgs.txt", failok => 1;
     }
     # we'll try and upload the output even if comm 'failed', as it
     # does in fact still write it in some cases
@@ -1144,19 +1234,16 @@ sub advisory_check_nonmatching_packages {
     );
     # can't do anything useful when testing a side tag
     return if (get_var("TAG"));
-    # sanity check
-    die "advisory_check_nonmatching_packages called, but ISO_2 is not attached!" unless (get_var("ISO_2"));
-    mount_update_image;
     # bail out if the file doesn't exist: this is in case we get
     # here in the post-fail hook but we failed before creating it
-    return if script_run "test -f /mnt/updateiso/updatepkgnames.txt";
+    return if script_run "test -f /mnt/updatepkgnames.txt";
     # if this fails in advisory_post, we don't want to do it *again*
     # unnecessarily in post_fail_hook
     return if (get_var("_ACNMP_DONE"));
     script_run 'touch /tmp/installedupdatepkgs.txt';
     # this creates /tmp/installedupdatepkgs.txt as a sorted list of installed
     # packages with the same name as packages from the update, in the same form
-    # as /mnt/updateiso/updatepkgs.txt. The '--last | head -1' tries to handle the
+    # as /mnt/updatepkgs.txt. The '--last | head -1' tries to handle the
     # problem of installonly packages like the kernel, where we wind up with
     # *multiple* versions installed after the update; the first line of output
     # for any given package with --last is the most recent version, i.e. the
@@ -1167,15 +1254,15 @@ sub advisory_check_nonmatching_packages {
     # (we need four to reach bash, and half of them get eaten by perl or
     # something along the way). Yes, it only works with *single* quotes. Yes,
     # I hate escaping
-    script_run 'for pkg in $(cat /mnt/updateiso/updatepkgnames.txt); do rpm -q $pkg && rpm -q $pkg --last | head -1 | cut -d" " -f1 | sed -e \'s,\^,\\\\\\\\^,g\' | xargs rpm -q --qf "%{SOURCERPM} %{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE}\n" >> /tmp/installedupdatepkgs.txt; done', timeout => 180;
+    script_run 'for pkg in $(cat /mnt/updatepkgnames.txt); do rpm -q $pkg && rpm -q $pkg --last | head -1 | cut -d" " -f1 | sed -e \'s,\^,\\\\\\\\^,g\' | xargs rpm -q --qf "%{SOURCERPM} %{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE}\n" >> /tmp/installedupdatepkgs.txt; done', timeout => 180;
     script_run 'sort -u -o /tmp/installedupdatepkgs.txt /tmp/installedupdatepkgs.txt';
     # for debugging, may as well always upload these, can't hurt anything
     upload_logs "/tmp/installedupdatepkgs.txt", failok => 1;
-    upload_logs "/mnt/updateiso/updatepkgs.txt", failok => 1;
+    upload_logs "/mnt/updatepkgs.txt", failok => 1;
     # download the check script and run it
     assert_script_run 'curl --verbose --retry-delay 10 --max-time 30 --retry 5 -o updvercheck.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/updvercheck.py', timeout => 180;
     my $advisory = get_var("ADVISORY");
-    my $cmd = 'python3 ./updvercheck.py /mnt/updateiso/updatepkgs.txt /tmp/installedupdatepkgs.txt';
+    my $cmd = 'python3 ./updvercheck.py /mnt/updatepkgs.txt /tmp/installedupdatepkgs.txt';
     $cmd .= " $advisory" if ($advisory);
     my $ret = script_run $cmd;
     # 2 is warnings only, 3 is problems, 1 means the script died in
