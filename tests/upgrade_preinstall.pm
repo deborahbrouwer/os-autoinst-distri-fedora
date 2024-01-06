@@ -13,7 +13,9 @@ sub run {
     if (index($testname, "upgrade_2") != -1) {
         $version = get_var("UP2REL");
     }
-    setup_workaround_repo $version;
+    # setup the workarounds repository for the pre-upgrade release,
+    # in case we need workarounds for that environment
+    setup_repos(waonly => 1, version => $version);
     # disable updates-testing, this is needed for the case of upgrade
     # from branched to rawhide to ensure we don't get packages from
     # updates-testing for anything we do between here and upgrade_run

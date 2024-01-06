@@ -7,7 +7,7 @@ use Exporter;
 
 use lockapi;
 use testapi;
-our @EXPORT = qw/run_with_error_check type_safely type_very_safely desktop_vt boot_to_login_screen console_login console_switch_layout desktop_switch_layout console_loadkeys_us do_bootloader boot_decrypt check_release menu_launch_type repo_setup setup_workaround_repo disable_updates_repos cleanup_workaround_repo console_initial_setup handle_welcome_screen gnome_initial_setup anaconda_create_user check_desktop download_modularity_tests quit_firefox advisory_get_installed_packages advisory_check_nonmatching_packages start_with_launcher quit_with_shortcut disable_firefox_studies select_rescue_mode copy_devcdrom_as_isofile get_release_number check_left_bar check_top_bar check_prerelease check_version spell_version_number _assert_and_click is_branched rec_log repos_mirrorlist register_application get_registered_applications solidify_wallpaper check_and_install_git download_testdata make_serial_writable set_update_notification_timestamp/;
+our @EXPORT = qw/run_with_error_check type_safely type_very_safely desktop_vt boot_to_login_screen console_login console_switch_layout desktop_switch_layout console_loadkeys_us do_bootloader boot_decrypt check_release menu_launch_type setup_repos repo_setup get_workarounds disable_updates_repos cleanup_workaround_repo console_initial_setup handle_welcome_screen gnome_initial_setup anaconda_create_user check_desktop download_modularity_tests quit_firefox advisory_get_installed_packages advisory_check_nonmatching_packages start_with_launcher quit_with_shortcut disable_firefox_studies select_rescue_mode copy_devcdrom_as_isofile get_release_number check_left_bar check_top_bar check_prerelease check_version spell_version_number _assert_and_click is_branched rec_log repos_mirrorlist register_application get_registered_applications solidify_wallpaper check_and_install_git download_testdata make_serial_writable set_update_notification_timestamp/;
 
 
 # We introduce this global variable to hold the list of applications that have
@@ -463,63 +463,29 @@ sub repos_mirrorlist {
     assert_script_run "sed -i -e 's,metalink,mirrorlist,g' ${files}";
 }
 
-sub cleanup_workaround_repo {
-    # clean up the workaround repo (see next).
-    script_run "rm -rf /mnt/workarounds_repo";
-    script_run "rm -f /etc/yum.repos.d/workarounds.repo";
+sub get_setup_repos_script {
+    # ensure the 'setup_repos.py' downloader script is present
+    if (script_run "ls /usr/local/bin/setup_repos.py") {
+        assert_script_run 'curl --retry-delay 10 --max-time 30 --retry 5 -o /usr/local/bin/setup_repos.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/concdl/f/setup_repos.py', timeout => 180;
+        assert_script_run 'chmod ugo+x /usr/local/bin/setup_repos.py';
+    }
 }
 
-sub setup_workaround_repo {
-    # we periodically need to pull an update from updates-testing in
-    # to fix some bug or other. so, here's an organized way to do it.
-    # we do this here so the workaround packages are in the repo data
-    # but *not* in the package lists generated above (those should
-    # only include packages from the update under test). we'll define
-    # a hash of releases and update IDs. if no workarounds are needed
-    # for any release, the hash can be empty and this will do nothing
+sub get_workarounds {
     my $version = shift || get_var("VERSION");
-    cleanup_workaround_repo;
-    # write a repo config file, unless this is the support_server test
-    # and it is running on a different release than the update is for
-    # (in this case we need the repo to exist but do not want to use
-    # it on the actual support_server system)
-    unless (get_var("TEST") eq "support_server" && $version ne get_var("CURRREL")) {
-        assert_script_run 'printf "[workarounds]\nname=Workarounds repo\nbaseurl=file:///mnt/workarounds_repo\nenabled=1\nmetadata_expire=1\ngpgcheck=0" > /etc/yum.repos.d/workarounds.repo';
-    }
-    assert_script_run "mkdir -p /mnt/workarounds_repo";
-    assert_script_run "pushd /mnt/workarounds_repo";
     my %workarounds = (
         "38" => [],
         "39" => [],
         "40" => [],
     );
-    # then we'll download each update for our release:
     my $advortasks = $workarounds{$version};
-    my $pkgs = "createrepo_c";
-    $pkgs .= " bodhi-client koji" if @$advortasks;
-    script_run "dnf -y install $pkgs", 300;
-    foreach my $advortask (@$advortasks) {
-        my $cmd = "bodhi updates download --updateid=$advortask";
-        if ($advortask =~ /^\d+$/) {
-            my $arch = get_var("ARCH");
-            $cmd = "koji download-task --arch=$arch --arch=noarch $advortask";
-        }
-        my $count = 3;
-        my $success = 0;
-        while ($count) {
-            if (script_run $cmd, 600) {
-                $count -= 1;
-            }
-            else {
-                $count = 0;
-                $success = 1;
-            }
-        }
-        die "Workaround update download failed!" unless $success;
-    }
-    # and create repo metadata
-    assert_script_run "createrepo .";
-    assert_script_run "popd";
+    return @$advortasks;
+}
+
+sub cleanup_workaround_repo {
+    # clean up the workaround repo (see next).
+    script_run "rm -rf /mnt/workarounds_repo";
+    script_run "rm -f /etc/yum.repos.d/workarounds.repo";
 }
 
 sub disable_updates_repos {
@@ -563,9 +529,9 @@ sub _repo_setup_compose {
     # }
 }
 
-sub _download_packages_pre {
+sub _prepare_update_mount {
     # create and mount the filesystem where we will store update/task packages
-    # this is separate from _download_packages as it has to happen before we
+    # this is separate from setup_repos as it has to happen before we
     # enter the toolbox container on the CANNED workflow
     assert_script_run "mkdir -p /mnt/update_repo";
     # if NUMDISKS is above 1, assume we want to put the update repo on
@@ -582,13 +548,41 @@ sub _download_packages_pre {
     assert_script_run "cd /mnt/update_repo";
 }
 
-sub _download_packages {
-    # actually do the work of downloading packages and creating a repoistory,
-    # for update and task cases. a repository is needed for various reasons:
-    # to ensure later package operations use the update packages, and for
-    # use when creating deliverables in the tests that do that
+sub setup_repos {
+    # setup workarounds (if necessary) and updates or tag repositories,
+    # using the setup_repos.py script. It's necessary to set up repos
+    # (rather than just downloading the RPMs and doing a one-time update)
+    # for various reasons: to ensure later package operations use the
+    # update packages, and for use when creating deliverables in the
+    # tests that do that. Has a 'workarounds only' mode for
+    # upgrade_preinstall to use (in case we need workarounds for the
+    # pre-upgrade environment)
+    my %args = (
+        # workarounds only
+        waonly => 0,
+        # release to get workarounds for
+        version => get_var("VERSION"),
+        # whether to write repo configs
+        configs => 1,
+        @_
+    );
     my $arch = get_var("ARCH");
-    script_run "dnf -y install createrepo_c koji", 300;
+    my $tag = get_var("TAG");
+    # write the tag repo config if appropriate
+    assert_script_run 'printf "[openqa-testtag]\nname=openqa-testtag\nbaseurl=https://kojipkgs.fedoraproject.org/repos/' . "$tag/latest/$arch" . '/\ncost=2000\nenabled=1\ngpgcheck=0\n" > /etc/yum.repos.d/openqa-testtag.repo' if ($tag && !$args{waonly});
+    my @was = get_workarounds($args{version});
+    # bail if there are no workarounds:
+    # * if we're in workarounds-only mode
+    # * if we're testing a side tag (so no packages to dl)
+    if ($args{waonly} || $tag) {
+        return unless (@was);
+    }
+    # if we got this far, we're definitely downloading *something*
+    script_run "dnf -y install createrepo_c bodhi-client koji", 300;
+    get_setup_repos_script;
+    my $wastring = join(',', @was);
+    my $udstring;
+    # work out the list of update/task NVRs to test
     if (get_var("ADVISORY_NVRS") || get_var("ADVISORY_NVRS_1")) {
         # regular update case
         # old style single ADVISORY_NVRS var
@@ -606,53 +600,28 @@ sub _download_packages {
                 }
             }
         }
-        foreach my $nvr (@nvrs) {
-            my $kojitime = 600;
-            # texlive has a ridiculous number of subpackages
-            $kojitime = 1500 if ((rindex $nvr, "texlive", 0) == 0);
-            if (script_run "koji download-build --arch=$arch --arch=noarch $nvr 2> download.log", $kojitime) {
-                # if the error was because the build has no packages
-                # for our arch, that's okay, skip it. otherwise, die
-                if (script_run "grep 'No .*available for $nvr' download.log") {
-                    die "koji download-build failed!";
-                }
-            }
-        }
+        $udstring = join(',', @nvrs);
     }
     elsif (get_var("KOJITASK")) {
         # Koji task case (KOJITASK will be set). If multiple tasks,
-        # they're concatenated with underscores
-        my @tasks = split(/_/, get_var("KOJITASK"));
-        foreach my $task (@tasks) {
-            assert_script_run "koji download-task --arch=$arch --arch=noarch $task", 600;
-        }
+        # they're concatenated with underscores, switch to commas
+        $udstring =~ s/_/,/;
     }
     else {
-        die "Neither ADVISORY_NVRS nor KOJITASK nor TAG set! Don't know what to do";
+        die "Neither ADVISORY_NVRS nor KOJITASK set! Don't know what to do";
     }
-
-    if (script_run 'ls *.rpm') {
-        # we didn't actually download any packages (as they are all
-        # for an arch we don't test), so write dummy files
-        assert_script_run 'touch /mnt/updatepkgnames.txt /mnt/updatepkgs.txt';
+    my $cmd = "/usr/local/bin/setup_repos.py";
+    # don't download updates if we're in workarounds-only mode or testing a tag
+    $cmd .= " -u $udstring" unless ($args{waonly} || $tag);
+    $cmd .= " -w $wastring" if (@was);
+    # write repo config files if asked
+    $cmd .= " -c" if ($args{configs});
+    $cmd .= " $arch";
+    assert_script_run $cmd, 600;
+    unless ($args{waonly} || $tag) {
+        upload_logs "/mnt/updatepkgnames.txt";
+        upload_logs "/mnt/updatepkgs.txt";
     }
-    else {
-        # log the exact packages in the update at test time, with their
-        # source packages and epochs. we use /mnt as the path for this
-        # and similar files because, on ostree-based installs where we
-        # have to use a toolbox container for part of this, it's common
-        # to the host system and container
-        assert_script_run 'rpm -qp *.rpm --qf "%{SOURCERPM} %{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE}\n" | sort -u > /mnt/updatepkgs.txt';
-        # also log just the binary package names: this is so we can check
-        # later whether any package from the update *should* have been
-        # installed, but was not
-        assert_script_run 'rpm -qp *.rpm --qf "%{NAME} " > /mnt/updatepkgnames.txt';
-    }
-    upload_logs "/mnt/updatepkgnames.txt";
-    upload_logs "/mnt/updatepkgs.txt";
-
-    # create the repo metadata
-    assert_script_run "createrepo .", timeout => 180;
 }
 
 sub _repo_setup_updates {
@@ -670,7 +639,7 @@ sub _repo_setup_updates {
 
     # prepare the directory the packages will be downloaded to, unless we're
     # testing a side tag
-    _download_packages_pre() unless ($tag);
+    _prepare_update_mount() unless ($tag);
 
     # on CANNED, we need to enter the toolbox at this point
     if (get_var("CANNED")) {
@@ -688,25 +657,22 @@ sub _repo_setup_updates {
     if (get_var("VERSION") eq get_var("RAWREL") && get_var("TEST") ne "support_server") {
         assert_script_run 'printf "[koji-rawhide]\nname=koji-rawhide\nbaseurl=https://kojipkgs.fedoraproject.org/repos/rawhide/latest/' . $arch . '/\ncost=2000\nenabled=1\ngpgcheck=0\n" > /etc/yum.repos.d/koji-rawhide.repo';
     }
-    # set up the workaround repo
-    setup_workaround_repo;
     if (get_var("CANNED")) {
         # install and use en_US.UTF-8 locale for consistent sort
         # ordering
         assert_script_run "dnf -y install glibc-langpack-en", 300;
         assert_script_run "export LC_ALL=en_US.UTF-8";
     }
-
-    # download the packages, unless we're testing a side tag
-    _download_packages unless ($tag);
-
-    # write a repo config file, unless this is the support_server test
-    # and it is running on a different release than the update is for
-    # (in this case we need the repo to exist but do not want to use
-    # it on the actual support_server system)
-    unless (get_var("TEST") eq "support_server" && $version ne get_var("CURRREL")) {
-        assert_script_run 'printf "[advisory]\nname=Advisory repo\nbaseurl=file:///mnt/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0" > /etc/yum.repos.d/advisory.repo' unless ($tag);
-        assert_script_run 'printf "[openqa-testtag]\nname=openqa-testtag\nbaseurl=https://kojipkgs.fedoraproject.org/repos/' . "$tag/latest/$arch" . '/\ncost=2000\nenabled=1\ngpgcheck=0\n" > /etc/yum.repos.d/openqa-testtag.repo' if ($tag);
+    # set up workarounds and updates repos (if needed)
+    if (get_var("TEST") eq "support_server" && $version ne get_var("CURRREL")) {
+        # don't write repo configs if this is the support_server test
+        # and it is running on a different release than the update is for
+        # (in this case we need the repo to exist but do not want to use
+        # it on the actual support_server system)
+        setup_repos(configs => 0);
+    }
+    else {
+        setup_repos(configs => 1);
         # run an update now, except for upgrade or install tests,
         # where the updated packages should have been installed
         # already and we want to fail if they weren't, or CANNED
@@ -1102,9 +1068,9 @@ sub download_modularity_tests {
     my ($whitelist) = @_;
     # we need python3-yaml for the script to run
     assert_script_run 'dnf -y install python3-yaml', 180;
-    assert_script_run 'curl --verbose --retry-delay 10 --max-time 30 --retry 5 -o /root/test.py https://pagure.io/fedora-qa/modularity_testing_scripts/raw/master/f/modular_functions.py', timeout => 180;
+    assert_script_run 'curl --retry-delay 10 --max-time 30 --retry 5 -o /root/test.py https://pagure.io/fedora-qa/modularity_testing_scripts/raw/master/f/modular_functions.py', timeout => 180;
     if ($whitelist eq 'whitelist') {
-        assert_script_run 'curl --verbose --retry-delay 10 --max-time 30 --retry 5 -o /root/whitelist https://pagure.io/fedora-qa/modularity_testing_scripts/raw/master/f/whitelist', timeout => 180;
+        assert_script_run 'curl --retry-delay 10 --max-time 30 --retry 5 -o /root/whitelist https://pagure.io/fedora-qa/modularity_testing_scripts/raw/master/f/whitelist', timeout => 180;
     }
     assert_script_run 'chmod 755 /root/test.py';
 }
@@ -1260,7 +1226,7 @@ sub advisory_check_nonmatching_packages {
     upload_logs "/tmp/installedupdatepkgs.txt", failok => 1;
     upload_logs "/mnt/updatepkgs.txt", failok => 1;
     # download the check script and run it
-    assert_script_run 'curl --verbose --retry-delay 10 --max-time 30 --retry 5 -o updvercheck.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/updvercheck.py', timeout => 180;
+    assert_script_run 'curl --retry-delay 10 --max-time 30 --retry 5 -o updvercheck.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/updvercheck.py', timeout => 180;
     my $advisory = get_var("ADVISORY");
     my $cmd = 'python3 ./updvercheck.py /mnt/updatepkgs.txt /tmp/installedupdatepkgs.txt';
     $cmd .= " $advisory" if ($advisory);
@@ -1647,7 +1613,7 @@ sub download_testdata {
     assert_script_run("mkdir temp");
     assert_script_run("cd temp");
     # Download the compressed file with the repository content.
-    assert_script_run("curl --verbose --retry-delay 10 --max-time 120 --retry 5 -o repository.tar.gz https://pagure.io/fedora-qa/openqa_testdata/blob/thetree/f/repository.tar.gz", timeout => 600);
+    assert_script_run("curl --retry-delay 10 --max-time 120 --retry 5 -o repository.tar.gz https://pagure.io/fedora-qa/openqa_testdata/blob/thetree/f/repository.tar.gz", timeout => 600);
     # Untar it.
     assert_script_run("tar -zxvf repository.tar.gz");
     # Copy out the files into the VMs directory structure.

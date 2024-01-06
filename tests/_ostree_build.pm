@@ -24,6 +24,7 @@ sub run {
     my $subv = get_var("SUBVARIANT");
     my $lcsubv = lc($subv);
     my $tag = get_var("TAG");
+    my $workarounds = get_workarounds;
     # mount our nice big empty scratch disk as /var/tmp
     assert_script_run "rm -rf /var/tmp/*";
     assert_script_run "echo 'type=83' | sfdisk /dev/vdc";
@@ -40,13 +41,13 @@ sub run {
     assert_script_run 'pushd workstation-ostree-config';
     assert_script_run "git checkout ${branch}";
     # now copy the advisory, workaround repo and koji-rawhide config files
-    assert_script_run 'cp /etc/yum.repos.d/workarounds.repo .';
+    assert_script_run 'cp /etc/yum.repos.d/workarounds.repo .' if ($workarounds);
     assert_script_run 'cp /etc/yum.repos.d/koji-rawhide.repo .' if ($version eq $rawrel);
     assert_script_run 'cp /etc/yum.repos.d/advisory.repo .' unless ($tag);
     assert_script_run 'cp /etc/yum.repos.d/openqa-testtag.repo .' if ($tag);
     # and add them to the config file
     my $repl = 'repos:';
-    $repl .= '\n  - workarounds';
+    $repl .= '\n  - workarounds' if ($workarounds);
     $repl .= '\n  - koji-rawhide' if ($version eq $rawrel);
     $repl .= '\n  - advisory' unless ($tag);
     $repl .= '\n  - openqa-testtag' if ($tag);
@@ -98,7 +99,7 @@ sub run {
     unless ($version > $currrel) {
         $cmd .= " --isfinal --repo=/etc/yum.repos.d/fedora-updates.repo";
     }
-    $cmd .= " --repo=/etc/yum.repos.d/workarounds.repo";
+    $cmd .= " --repo=/etc/yum.repos.d/workarounds.repo" if ($workarounds);
     $cmd .= " --repo=/etc/yum.repos.d/koji-rawhide.repo" if ($version eq $rawrel);
     $cmd .= " --repo=/etc/yum.repos.d/advisory.repo" unless ($tag);
     $cmd .= " --repo=/etc/yum.repos.d/openqa-testtag.repo" if ($tag);

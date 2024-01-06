@@ -25,7 +25,7 @@ sub run {
     unless ($version > $currrel) {
         $cmd .= " --isfinal --repo=/etc/yum.repos.d/fedora-updates.repo";
     }
-    $cmd .= " --repo=/etc/yum.repos.d/workarounds.repo";
+    $cmd .= " --repo=/etc/yum.repos.d/workarounds.repo" if (get_workarounds);
     $cmd .= " --repo=/etc/yum.repos.d/koji-rawhide.repo" if ($version eq $rawrel);
     $cmd .= " --repo=/etc/yum.repos.d/advisory.repo" unless (get_var("TAG"));
     $cmd .= " --repo=/etc/yum.repos.d/openqa-testtag.repo" if (get_var("TAG"));

@@ -28,6 +28,7 @@ sub run {
     my $subv = get_var("SUBVARIANT");
     my $lcsubv = lc($subv);
     my $tag = get_var("TAG");
+    my $workarounds = get_workarounds;
     if (get_var("NUMDISKS") > 2) {
         # put /var/lib/mock on the third disk, so we don't run out of
         # space on the main disk. The second disk will have already
@@ -45,14 +46,14 @@ sub run {
     # make the side and workarounds repos and the serial device available inside the mock root
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_enable\'] = True" >> /etc/mock/openqa.cfg';
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/mnt/update_repo\', \'/mnt/update_repo\'))" >> /etc/mock/openqa.cfg' unless ($tag);
-    assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/mnt/workarounds_repo\', \'/mnt/workarounds_repo\'))" >> /etc/mock/openqa.cfg';
+    assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/mnt/workarounds_repo\', \'/mnt/workarounds_repo\'))" >> /etc/mock/openqa.cfg' if ($workarounds);
     assert_script_run 'echo "config_opts[\'plugin_conf\'][\'bind_mount_opts\'][\'dirs\'].append((\'/dev/' . $serialdev . '\', \'/dev/' . $serialdev . '\'))" >> /etc/mock/openqa.cfg';
     my $repos = 'config_opts[\'dnf.conf\'] += \"\"\"\n';
     # add the update repo or tag repo to the config
     $repos .= '[advisory]\nname=Advisory repo\nbaseurl=file:///mnt/update_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n' unless ($tag);
     $repos .= '[openqa-testtag]\nname=Tag test repo\nbaseurl=https://kojipkgs.fedoraproject.org/repos/' . "${tag}/latest/${arch}" . '\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n' if ($tag);
     # and the workaround repo
-    $repos .= '\n[workarounds]\nname=Workarounds repo\nbaseurl=file:///mnt/workarounds_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n';
+    $repos .= '\n[workarounds]\nname=Workarounds repo\nbaseurl=file:///mnt/workarounds_repo\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\n' if ($workarounds);
     # also the buildroot repo, for Rawhide
     if ($version eq $rawrel) {
         $repos .= '\n[koji-rawhide]\nname=Buildroot repo\nbaseurl=https://kojipkgs.fedoraproject.org/repos/f' . $version . '-build/latest/\$basearch/\nenabled=1\nmetadata_expire=3600\ngpgcheck=0\nskip_if_unavailable=1\n';
@@ -71,7 +72,7 @@ sub run {
     assert_script_run 'echo "repo --name=advisory --baseurl=file:///mnt/update_repo" >> ' . $repoks unless ($tag);
     assert_script_run 'echo "repo --name=openqa-testtag --baseurl=https://kojipkgs.fedoraproject.org/repos/' . "${tag}/latest/${arch}" . '" >> ' . $repoks if ($tag);
     # and the workarounds repo
-    assert_script_run 'echo "repo --name=workarounds --baseurl=file:///mnt/workarounds_repo" >> ' . $repoks;
+    assert_script_run 'echo "repo --name=workarounds --baseurl=file:///mnt/workarounds_repo" >> ' . $repoks if ($workarounds);
     # and the buildroot repo, for Rawhide
     if ($version eq $rawrel) {
         assert_script_run 'echo "repo --name=koji-rawhide --baseurl=https://kojipkgs.fedoraproject.org/repos/f' . $version . '-build/latest/\$basearch/" >> ' . $repoks;
