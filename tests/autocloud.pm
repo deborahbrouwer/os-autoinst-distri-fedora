@@ -22,7 +22,7 @@ sub run {
     # we need to use script_run as regular user
     assert_script_run "chmod ugo+w /dev/" . $serialdev;
     # let's go to another tty and login as regular user
-    send_key "alt-f2";
+    select_console "tty2-console";
     console_login(user => "test", password => "weakpassword");
     assert_script_run "curl -O https://fedorapeople.org/groups/qa/tunirtests.tar.gz";
     assert_script_run "tar xvf tunirtests.tar.gz";
@@ -51,7 +51,7 @@ sub run {
     # we need to use script_run as regular user again
     assert_script_run "sudo chmod ugo+w /dev/" . $serialdev;
     # let's go to another tty and login as regular user again
-    send_key "alt-f2";
+    select_console "tty2-console";
     console_login(user => "test", password => "weakpassword");
     _soft_fail_run "tunirtests.testreboot.TestReboot";
     assert_script_run "sudo python3 -m unittest tunirtests.cloudservice.TestServiceManipulation -v";
@@ -63,7 +63,7 @@ sub run {
     # we need to use script_run as regular user again
     assert_script_run "sudo chmod ugo+w /dev/" . $serialdev;
     # let's go to another tty and login as regular user again
-    send_key "alt-f2";
+    select_console "tty2-console";
     console_login(user => "test", password => "weakpassword");
     assert_script_run "sudo python3 -m unittest tunirtests.cloudservice.TestServiceAfter -v";
     if (get_var("CANNED")) {

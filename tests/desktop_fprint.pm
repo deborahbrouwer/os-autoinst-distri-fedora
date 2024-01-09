@@ -43,7 +43,7 @@ sub run {
     # the GDM tty needs to be active when the scan happens, so we will
     # schedule the scan to happen in 20 seconds then go deal with gdm
     type_string "sleep 20; echo SCAN $user-finger-1 | socat STDIN UNIX-CONNECT:/run/fprintd-virt\n";
-    send_key "ctrl-alt-f1";
+    select_console "tty1-console";
     mouse_hide;
     send_key_until_needlematch("graphical_login_input", "ret", 3, 5);
     # now we check that we see the "or scan fingerprint" message, then
@@ -59,7 +59,7 @@ sub run {
     # we're doing the same as before, but scanning the 'wrong thing'
     # (note finger-2 not finger-1)
     type_string "sleep 20; echo SCAN $user-finger-2 | socat STDIN UNIX-CONNECT:/run/fprintd-virt\n";
-    send_key "ctrl-alt-f1";
+    select_console "tty1-console";
     mouse_hide;
     send_key_until_needlematch("graphical_login_input", "ret", 3, 5);
     assert_screen "graphical_login_fprint";

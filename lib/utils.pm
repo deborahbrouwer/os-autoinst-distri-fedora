@@ -6,7 +6,7 @@ use base 'Exporter';
 use Exporter;
 
 use lockapi;
-use testapi;
+use testapi qw(is_serial_terminal :DEFAULT);
 our @EXPORT = qw/run_with_error_check type_safely type_very_safely desktop_vt boot_to_login_screen console_login console_switch_layout desktop_switch_layout console_loadkeys_us do_bootloader boot_decrypt check_release menu_launch_type setup_repos repo_setup get_workarounds disable_updates_repos cleanup_workaround_repo console_initial_setup handle_welcome_screen gnome_initial_setup anaconda_create_user check_desktop download_modularity_tests quit_firefox advisory_get_installed_packages advisory_check_nonmatching_packages start_with_launcher quit_with_shortcut disable_firefox_studies select_rescue_mode copy_devcdrom_as_isofile get_release_number check_left_bar check_top_bar check_prerelease check_version spell_version_number _assert_and_click is_branched rec_log repos_mirrorlist register_application get_registered_applications solidify_wallpaper check_and_install_git download_testdata make_serial_writable set_update_notification_timestamp/;
 
 
@@ -163,7 +163,7 @@ sub console_login {
     # and let us simplify the process.
     # We will check if we are logged in, and if so, we will log out to
     # enable a new proper login based on the user variable.
-    if (get_var("SERIAL_CONSOLE")) {
+    if (get_var("SERIAL_CONSOLE") || is_serial_terminal()) {
         # Check for the usual prompt.
         if (wait_serial("~\][#\$]", timeout => 5, quiet => 1)) {
             type_string "logout\n";
@@ -173,7 +173,7 @@ sub console_login {
         # Do the new login.
         type_string $args{user};
         type_string "\n";
-        sleep 2;
+        wait_serial("Password:", timeout => 2, quiet => 1);
         type_string $args{password};
         type_string "\n";
         # Let's perform a simple login test. This is the same as
@@ -285,7 +285,7 @@ sub desktop_vt {
     while ($xout =~ /tty(\d)/g) {
         $tty = $1;    # most recent match is probably best
     }
-    send_key "ctrl-alt-f${tty}";
+    select_console "tty${tty}-console";
     # work around https://gitlab.gnome.org/GNOME/gnome-software/issues/582
     # if it happens. As of 2019-05, seeing something similar on KDE too
     my $desktop = get_var('DESKTOP');
@@ -302,10 +302,10 @@ sub desktop_vt {
         click_lastmatch if ($desktop eq 'kde');
         if (match_has_tag "auth_required_fprint") {
             my $user = get_var("USER_LOGIN", "test");
-            send_key "ctrl-alt-f6";
+            select_console "tty6-console";
             console_login;
             assert_script_run "echo SCAN ${user}-finger-1 | socat STDIN UNIX-CONNECT:/run/fprintd-virt";
-            send_key "ctrl-alt-f${tty}";
+            select_console "tty${tty}-console";
         }
         elsif (match_has_tag "auth_required_locked") {
             # When console operation takes a long time, the screen locks
@@ -636,7 +636,23 @@ sub _repo_setup_updates {
     # unless (script_run 'pushd /etc/yum.repos.d && tar czvf yumreposd.tar.gz * && popd') {
     #     upload_logs "/etc/yum.repos.d/yumreposd.tar.gz";
     # }
-
+    # if no current console is registered, assume we're on tty1
+    my $currcon = current_console || "tty1-console";
+    # do all this setup from a serial console for speed (especially when
+    # downloading large updates)
+    # the console we register as 'virtio-console' is the first virtio
+    # serial console, 'virtio_console' on the qemu command line.
+    # on most platforms, this console is /dev/hvc0 (and the default
+    # qemu serial console, which for openQA is backed by a ringbuf
+    # device and logged as serial0.txt, is /dev/ttyS0). however, on
+    # Power, the default serial console is /dev/hvc0 and the first
+    # virtio serial console is /dev/hvc1.
+    # it seems we get a getty on ttyS0 and hvc0 by default, but we
+    # don't get one on hvc1. so on Power, start a tty on hvc1
+    assert_script_run 'systemctl start serial-getty@hvc1.service' if (get_var("OFW"));
+    script_run "echo 'Package download and repo creation happening on serial console...'";
+    select_console("virtio-console");
+    console_login();
     # prepare the directory the packages will be downloaded to, unless we're
     # testing a side tag
     _prepare_update_mount() unless ($tag);
@@ -644,8 +660,8 @@ sub _repo_setup_updates {
     # on CANNED, we need to enter the toolbox at this point
     if (get_var("CANNED")) {
         type_string "toolbox -y enter\n";
-        # look for the little purple dot
-        assert_screen "console_in_toolbox", 180;
+        # this is simply to wait till we're in the toolbox
+        assert_script_run "true", 180;
     }
 
     # use mirrorlist not metalink in repo configs
@@ -687,8 +703,10 @@ sub _repo_setup_updates {
     # exit the toolbox on CANNED
     if (get_var("CANNED")) {
         type_string "exit\n";
-        wait_still_screen 5;
+        wait_serial "# ";
     }
+    # flip back to whatever console we were on before
+    select_console $currcon;
 }
 
 sub repo_setup {

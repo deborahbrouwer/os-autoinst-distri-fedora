@@ -90,7 +90,7 @@ sub run {
     if (get_var("IMAGE_DEPLOY")) {
         # if this was an image deployment, we also need to create
         # root user now, for subsequent tests to work
-        send_key "ctrl-alt-f3";
+        select_console "tty3-console";
         console_login(user => get_var("USER_LOGIN", "test"), password => get_var("USER_PASSWORD", "weakpassword"));
         type_string "sudo su\n";
         type_string "$password\n";

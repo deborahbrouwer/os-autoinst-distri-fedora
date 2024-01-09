@@ -31,7 +31,7 @@ sub run {
     # desktop_vt subroutine, but since we do not have networking
     # it does not work reliably. Ergo, we will use the old known
     # ctrl-alt-f2
-    send_key("ctrl-alt-f2");
+    select_console "tty2-console";
     sleep(3);
 
     # Toggle network

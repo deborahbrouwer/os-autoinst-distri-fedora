@@ -20,7 +20,7 @@ use Cwd;
 
 # importing whole testapi creates circular dependency, so import only
 # necessary functions from testapi
-use testapi qw(check_var get_var send_key type_string assert_screen check_screen assert_script_run validate_script_output enter_cmd type_password);
+use testapi qw(check_var get_var send_key type_string assert_screen check_screen assert_script_run validate_script_output enter_cmd type_password select_console);
 use utils qw(console_login desktop_vt menu_launch_type);
 
 # Class constructor
@@ -48,6 +48,12 @@ sub init() {
             # "virtio-console1", third as "virtio-console2" etc.
             $self->add_console('virtio-console' . $num, 'virtio_terminal', {socked_path => cwd() . '/virtio_console' . $num});
         }
+        $self->add_console('tty1-console', 'tty-console', {tty => 1});
+        $self->add_console('tty2-console', 'tty-console', {tty => 2});
+        $self->add_console('tty3-console', 'tty-console', {tty => 3});
+        $self->add_console('tty4-console', 'tty-console', {tty => 4});
+        $self->add_console('tty5-console', 'tty-console', {tty => 5});
+        $self->add_console('tty6-console', 'tty-console', {tty => 6});
     }
 }
 
@@ -79,7 +85,7 @@ sub ensure_installed {
         # In that case, we want to return to GUI after the routine finishes.
         $stay_on_console = 0;
         # From GUI we need to switch to the console.
-        send_key("ctrl-alt-f3");
+        select_console "tty3-console";
         # Let's wait to allow for screen changes.
         sleep 5;
         # And do the login.

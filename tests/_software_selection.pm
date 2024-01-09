@@ -22,7 +22,7 @@ sub run {
         # line looks like:
         # 07:40:26,614 DBG ui.lib.software: Selecting the 'custom-environment' environment.
         assert_script_run "grep 'Selecting the.*environment' /tmp/anaconda.log /tmp/packaging.log | tail -1 | grep $env";
-        send_key "ctrl-alt-f6";
+        select_console "tty6-console";
         assert_screen "anaconda_main_hub", 30;
         return;
     }
