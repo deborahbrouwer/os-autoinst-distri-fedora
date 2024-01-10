@@ -193,13 +193,6 @@ sub mount_partition {
     my $number = shift;
     # Select the first partition if not selected.
     assert_and_click("disks_select_partition_$number");
-    # FIXME: handle partition being mounted at /run/udisk2/temp-mount-XXXXX:
-    # https://github.com/storaged-project/udisks/issues/1102
-    # drop this when that bug is fixed
-    if (check_screen("disks_temp_mounted", 5)) {
-        click_lastmatch;
-        authenticate;
-    }
     # Click on the Play symbout to mount the partition.
     assert_and_click("disks_button_mount");
     # Authenticate if necessary.
