@@ -466,7 +466,7 @@ sub repos_mirrorlist {
 sub get_setup_repos_script {
     # ensure the 'setup_repos.py' downloader script is present
     if (script_run "ls /usr/local/bin/setup_repos.py") {
-        assert_script_run 'curl --retry-delay 10 --max-time 30 --retry 5 -o /usr/local/bin/setup_repos.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/concdl/f/setup_repos.py', timeout => 180;
+        assert_script_run 'curl --retry-delay 10 --max-time 30 --retry 5 -o /usr/local/bin/setup_repos.py https://pagure.io/fedora-qa/os-autoinst-distri-fedora/raw/main/f/setup_repos.py', timeout => 180;
         assert_script_run 'chmod ugo+x /usr/local/bin/setup_repos.py';
     }
 }
