@@ -22,9 +22,10 @@ sub run {
 
     # Try and cancel any running rpm-ostree operations (GNOME Software
     # may be trying to refresh or something). This often needs to be
-    # done multiple times, so let's go with 6
+    # done multiple times, so let's go with 6. for some reason as of
+    # 2024-01, this often takes a long time, so bump timeout
     for my $n (1 .. 6) {
-        script_run "rpm-ostree cancel";
+        script_run "rpm-ostree cancel", timeout => 180;
     }
 
     # Install htop as rpm-ostree overlay. Let's have timeout defined
@@ -72,7 +73,7 @@ sub run {
 
     # Cancel running operations again
     for my $n (1 .. 6) {
-        script_run "rpm-ostree cancel";
+        script_run "rpm-ostree cancel", timeout => 180;
     }
 
     # Uninstall htop and postgresql again.
