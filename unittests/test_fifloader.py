@@ -25,6 +25,7 @@
 # core imports
 import json
 import os
+import subprocess
 import tempfile
 from unittest import mock
 
@@ -154,6 +155,9 @@ def test_parse_args():
 @mock.patch('subprocess.run', autospec=True)
 def test_run(fakerun):
     "Test for run()."""
+    # this is testing our little wrapper doesn't fail
+    with pytest.raises(SystemExit, match=r".No such file or directory.*"):
+        fifloader.run(['-w', 'foobar.fif.json'])
     with pytest.raises(SystemExit, match=r".neither --write nor --load.*"):
         fifloader.run(['--no-validate', 'foo.json'])
     with pytest.raises(SystemExit) as excinfo:
@@ -168,14 +172,24 @@ def test_run(fakerun):
         written = json.load(tempfh)
     # check written data matches upstream data schema
     assert fifloader.schema_validate(written, fif=False, complete=True) is True
+    # test the loader stuff, first with one failure of subprocess.run
+    # and success on the second try:
+    fakerun.side_effect=[subprocess.CalledProcessError(1, "cmd"), True]
     fifloader.run(['-l', '--loader', '/tmp/newloader', '--host',
                    'https://openqa.example', '--clean', '--update',
                    os.path.join(DATAPATH, 'templates.fif.json'),
                    os.path.join(DATAPATH, 'templates-updates.fif.json')])
-    assert fakerun.call_count == 1
+    assert fakerun.call_count == 2
     assert fakerun.call_args[0][0] == ['/tmp/newloader', '--host', 'https://openqa.example',
                                        '--clean', '--update', '-']
     assert fakerun.call_args[1]['input'] == json.dumps(written)
     assert fakerun.call_args[1]['text'] is True
+    # now with all subprocess.run calls failing:
+    fakerun.side_effect=subprocess.CalledProcessError(1, "cmd")
+    with pytest.raises(SystemExit, match=r"loader failed and all retries exhausted.*"):
+        fifloader.run(['-l', '--loader', '/tmp/newloader', '--host',
+                       'https://openqa.example', '--clean', '--update',
+                       os.path.join(DATAPATH, 'templates.fif.json'),
+                       os.path.join(DATAPATH, 'templates-updates.fif.json')])
 
 # vim: set textwidth=100 ts=8 et sw=4:
