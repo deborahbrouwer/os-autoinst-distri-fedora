@@ -605,6 +605,7 @@ sub setup_repos {
     elsif (get_var("KOJITASK")) {
         # Koji task case (KOJITASK will be set). If multiple tasks,
         # they're concatenated with underscores, switch to commas
+        $udstring = get_var("KOJITASK");
         $udstring =~ s/_/,/;
     }
     else {
