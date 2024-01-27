@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "type": "match",
+      "width": 30,
+      "height": 27,
+      "xpos": 9,
+      "ypos": 42
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "gnome_icon_search"
+  ]
+}

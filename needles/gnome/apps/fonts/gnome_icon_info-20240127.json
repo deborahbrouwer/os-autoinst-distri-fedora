@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "ypos": 44,
+      "height": 22,
+      "xpos": 950,
+      "type": "match",
+      "width": 22
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "gnome_icon_info"
+  ]
+}
