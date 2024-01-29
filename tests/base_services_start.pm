@@ -34,12 +34,6 @@ sub run {
             assert_script_run "systemctl is-failed lm_sensors.service";
             record_soft_failure "lm_sensors failed - https://bugzilla.redhat.com/show_bug.cgi?id=1899896";
         }
-        elsif ($arch eq "x86_64") {
-            # fail if it's something other than colord
-            # https://bugzilla.redhat.com/show_bug.cgi?id=2260663
-            assert_script_run "systemctl is-failed colord";
-            record_soft_failure "colord failed - https://bugzilla.redhat.com/show_bug.cgi?id=2260663";
-        }
         else {
             die "Unexpected service start failure";
         }
