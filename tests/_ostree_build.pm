@@ -104,7 +104,7 @@ sub run {
     $cmd .= " --repo=/etc/yum.repos.d/advisory.repo" unless ($tag);
     $cmd .= " --repo=/etc/yum.repos.d/openqa-testtag.repo" if ($tag);
     $cmd .= " ./results";
-    assert_script_run $cmd, 7000;
+    assert_script_run $cmd, 9000;
     # good to have the log around for checks
     upload_logs "lorax.log", failok => 1;
     assert_script_run "mv results/images/boot.iso ./${advortask}-${subv}-ostree-${arch}.iso";
