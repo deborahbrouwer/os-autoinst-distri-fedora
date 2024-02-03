@@ -1,0 +1,16 @@
+{
+  "area": [
+    {
+      "width": 32,
+      "type": "match",
+      "xpos": 959,
+      "height": 21,
+      "ypos": 60
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "LANGUAGE-arabic",
+    "anaconda_spoke_done"
+  ]
+}
