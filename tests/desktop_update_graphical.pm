@@ -52,6 +52,8 @@ sub run {
         mouse_set 10, 10;
         mouse_hide;
     }
+    # wait out a possible animation
+    wait_still_screen 5;
     assert_and_click 'desktop_package_tool_update';
     # wait for things to settle if e.g. GNOME is refreshing
     wait_still_screen 5, 90;
