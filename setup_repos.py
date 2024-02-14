@@ -90,6 +90,7 @@ async def download_item(item, arch, targetdir):
         # "No .*available for {nvr}" indicates there are no
         # packages for this arch in the build
         if not f"available for {item}" in stderr:
+            print(f"Downloading {item} failed: {stderr}")
             return item
     return False
 
