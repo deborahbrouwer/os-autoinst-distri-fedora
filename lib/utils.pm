@@ -477,6 +477,7 @@ sub get_workarounds {
         "38" => [],
         "39" => [],
         "40" => ["FEDORA-2024-912d46e3da", "FEDORA-2024-97337ce169", "FEDORA-2024-ca9110e3f3"],
+        "41" => [],
     );
     my $advortasks = $workarounds{$version};
     return @$advortasks;
