@@ -949,14 +949,9 @@ sub gnome_initial_setup {
         my $user_password = get_var("USER_PASSWORD") || "weakpassword";
         type_very_safely $user_login;
         wait_screen_change { assert_and_click "next_button"; };
-        # temporarily (until the versions are stable) we need to check
-        # whether we're on 43 or 44 here
-        my $extratab = 0;
-        $extratab = 1 if (check_screen 'initial_setup_44', 5);
         type_very_safely $user_password;
-        send_key "tab";
-        # on GNOME 44+ we need a second tab here to reach the confirm box
-        send_key "tab" if ($extratab);
+        # two tabs to get to the confirm box since GNOME 44
+        type_string "\t\t";
         type_very_safely $user_password;
         wait_screen_change { assert_and_click "next_button"; };
         send_key "ret";
