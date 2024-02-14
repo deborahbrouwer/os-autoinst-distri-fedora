@@ -11,7 +11,16 @@ sub run {
     # don't have any requirement for what background Rawhide uses.
     my $version = get_var('VERSION');
     my $rawrel = get_var('RAWREL');
-    assert_screen "${version}_background" if ($version ne "Rawhide" && $version ne $rawrel);
+    if ($version ne "Rawhide" && $version ne $rawrel) {
+        unless (check_screen "${version}_background", 30) {
+            if ($version eq "40") {
+                record_soft_failure "No backgrounds for F40 yet: https://bugzilla.redhat.com/show_bug.cgi?id=2230720";
+            }
+            else {
+                die "Correct background not found!"
+            }
+        }
+    }
 }
 
 sub test_flags {
