@@ -51,7 +51,12 @@ sub run {
     $repl .= '\n  - koji-rawhide' if ($version eq $rawrel);
     $repl .= '\n  - advisory' unless ($tag);
     $repl .= '\n  - openqa-testtag' if ($tag);
+    # Up to Fedora 39, repo definitions are in the subvariant config...
     assert_script_run 'sed -i -e "s,repos:,' . $repl . ',g" fedora-' . $lcsubv . '.yaml';
+    # From Fedora 40 onwards, they're in the common config. Let's just
+    # unconditionally sub both, as this is harmless when the file does
+    # not have 'repos:' in it
+    assert_script_run 'sed -i -e "s,repos:,' . $repl . ',g" fedora-common-ostree.yaml';
     # change the ref name to a custom one (so we can test rebasing to
     # the 'normal' ref later)
     assert_script_run 'sed -i -e "s,ref: fedora/,ref: fedora-openqa/,g" fedora-' . $lcsubv . '.yaml';

@@ -39,8 +39,8 @@ import sys
 
 # these are variables to make testing this script easier...change them
 # to /tmp for testing
-WORKAROUNDS_DIR = "/mnt/workarounds_repo"
-UPDATES_DIR = "/mnt/update_repo"
+WORKAROUNDS_DIR = "/tmp/workarounds_repo"
+UPDATES_DIR = "/tmp/update_repo"
 UPDATES_FILE_PATH = "/mnt"
 
 
