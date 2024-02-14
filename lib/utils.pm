@@ -920,12 +920,16 @@ sub gnome_initial_setup {
             wait_screen_change { assert_and_click ["next_button"]; };
         }
     }
-    unless (get_var("VNC_CLIENT") || $args{live}) {
+    unless (get_var("VNC_CLIENT") || $args{live} || $relnum > 39) {
         # We should be at the GOA screen, except on VNC_CLIENT case
         # where network isn't working yet. click 'Skip' one time. If
         # it's not visible we may have hit
         # https://bugzilla.redhat.com/show_bug.cgi?id=1997310 , which
         # we'll handle as a soft failure
+        # This screen was removed from g-i-s in Jan 2024:
+        # https://gitlab.gnome.org/GNOME/gnome-initial-setup/-/merge_requests/221
+        # so we don't see it on F40+, and can drop this block when
+        # F39 is EOL
         mouse_set(100, 100);
         if (check_screen "skip_button", 60) {
             wait_screen_change { click_lastmatch; };
