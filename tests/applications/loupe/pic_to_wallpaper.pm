@@ -13,8 +13,10 @@ sub run {
     send_key("f10");
     # Set as background
     assert_and_click("loupe_menu_set_wallpaper");
+    wait_still_screen(2);
     # Confirm
     assert_and_click("loupe_set_wallpaper");
+    wait_still_screen(2);
     # Close the application
     send_key("alt-f4");
     # Check that the wallpaper was set
