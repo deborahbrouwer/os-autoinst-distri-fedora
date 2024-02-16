@@ -41,9 +41,16 @@ sub run {
     # GNOME Software 44+ has a 3rd party source pop-up, get rid of it
     # if it shows up (but don't fail if it doesn't, we're not testing that)
     if ($desktop eq 'gnome' && check_screen 'gnome_software_ignore', 10) {
-        wait_still_screen 3;
-        # match again as the dialog may have moved a bit
-        assert_and_click 'gnome_software_ignore';
+        # keep clicking till we hit it, it tends to wobble around,
+        # especially with GNOME 46 - part of
+        # https://gitlab.gnome.org/GNOME/gnome-software/-/issues/2442
+        click_lastmatch;
+        my $count = 20;
+        while (check_screen 'gnome_software_ignore', 3) {
+            die "couldn't get rid of ignore screen!" if ($count == 0);
+            $count -= 1;
+            click_lastmatch;
+        }
     }
     # go to the 'update' interface. We may be waiting some time at a
     # 'Software catalog is being loaded' screen.
@@ -52,8 +59,17 @@ sub run {
         mouse_set 10, 10;
         mouse_hide;
     }
-    # wait out a possible animation
-    wait_still_screen 5;
+    if ($desktop eq 'gnome') {
+        # wait for it to settle, it seems to take a long time and sometimes
+        # go into 'app is not responding' mode - part of
+        # https://gitlab.gnome.org/GNOME/gnome-software/-/issues/2442
+        wait_still_screen 10;
+        # try to click in a 'neutral' area of the UI to get rid of the
+        # weird 'short window' state - another part of
+        # https://gitlab.gnome.org/GNOME/gnome-software/-/issues/2442
+        mouse_set 36, 128;
+        mouse_click;
+    }
     assert_and_click 'desktop_package_tool_update';
     # wait for things to settle if e.g. GNOME is refreshing
     wait_still_screen 5, 90;
