@@ -16,6 +16,9 @@ sub run {
     assert_and_click("archiver_file_one", button => 'right');
     # Select to archive it.
     assert_and_click("archiver_context_archive");
+    # Wait for the screen to appear and settle
+    assert_screen("archiver_format_selector");
+    wait_still_screen 2;
     # Type the name for the archive
     type_very_safely("archived_files");
     # Open the selection of formats.
