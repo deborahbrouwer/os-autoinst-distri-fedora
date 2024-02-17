@@ -12,6 +12,8 @@ sub run {
     # Go to menu and click on Export.
     assert_and_click("gnome_burger_menu");
     assert_and_click("maps_menu_export");
+    # wait for the export screen to appear and settle
+    assert_screen("maps_button_export");
     wait_still_screen(2);
 
     # Rename the file and export it.
