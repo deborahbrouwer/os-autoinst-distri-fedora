@@ -12,6 +12,7 @@ sub run {
     # Zoom in several times and check for zoomed map.
     assert_and_click("maps_button_zoom_in");
     foreach (my @counter = (1 .. 4)) {
+        sleep 1;
         click_lastmatch();
     }
     assert_screen("maps_map_zoomed", timeout => 60);
@@ -20,6 +21,7 @@ sub run {
     # Zoom out several times and check for zoomed out map.
     assert_and_click("maps_button_zoom_out");
     foreach (my @counter = (1 .. 4)) {
+        sleep 1;
         click_lastmatch();
     }
     assert_screen("maps_found_brno", timeout => 60);
