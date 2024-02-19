@@ -16,9 +16,9 @@ sub run {
     # Download the test data
     download_testdata();
 
-    enter_cmd("touch /home/test/Documents/.invisible.txt");
-    enter_cmd("chown test:test /home/test/Documents/.invisible.txt");
-    enter_cmd("rm -f /home/test/*reference*");
+    assert_script_run("touch /home/test/Documents/.invisible.txt");
+    assert_script_run("chown test:test /home/test/Documents/.invisible.txt");
+    assert_script_run("rm -f /home/test/*reference*");
 
     # Exit the terminal
     desktop_vt;
