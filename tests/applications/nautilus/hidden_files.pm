@@ -5,6 +5,21 @@ use utils;
 
 # Show and unshow hidden files.
 
+sub toggle_hidden {
+    # Toggle hidden files using keyboard short cut or menu.
+    my $type = shift;
+    if ($type eq "menu") {
+        assert_and_click("gnome_burger_menu");
+        wait_still_screen(2);
+        assert_and_click("nautilus_toggle_hidden_files", timeout => '30', button => 'left', mousehide => '1');
+        wait_still_screen(5);
+    }
+    else {
+        send_key("ctrl-h");
+        wait_still_screen(5);
+    }
+}
+
 sub run {
     my $self = shift;
 
@@ -25,8 +40,7 @@ sub run {
 
     # Now toggle the status of the invisible files and check that it is changed now
     # using the keyboard shortcut.
-    send_key("ctrl-h");
-    wait_still_screen(2);
+    toggle_hidden("key");
 
     # Now let us check again, if the invisible file is seen.
     if (check_screen("nautilus_hidden_file_shown")) {
@@ -38,11 +52,8 @@ sub run {
         die("The ctrl-h keyboard shortcut should have changed the status of invisible files, but the status has not been changed which indicates that the shortcut might not have worked correctly.");
     }
 
-    # Now use the menu to change the status of the invisible files.
-    assert_and_click("gnome_burger_menu");
-    wait_still_screen(2);
-    assert_and_click("nautilus_toggle_hidden_files", timeout => '30', button => 'left', mousehide => '1');
-    wait_still_screen(2);
+    # Toggle again
+    toggle_hidden("menu");
 
     # Check the current status of the invisible files.
     if (check_screen("nautilus_hidden_file_shown")) {

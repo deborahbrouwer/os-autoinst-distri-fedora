@@ -16,7 +16,7 @@ sub run {
 
     # Press the keyboard shortcut to delete the file and wait until file disappears
     send_key("delete");
-    wait_still_screen(1);
+    wait_still_screen(2);
 
     # Now, find the confirmation and click on Undo to return the operation.
     assert_and_click("nautilus_delete_undo");
