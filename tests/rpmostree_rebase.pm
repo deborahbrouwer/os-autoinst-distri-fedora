@@ -57,7 +57,7 @@ sub run {
     }
     elsif ($current =~ "coreos") {
         $rebase = $current =~ "stable" ? "testing" : "stable";
-        $target = "fedora/${arch}/coreos/${rebase}";
+        $target = "fedora:fedora/${arch}/coreos/${rebase}";
     }
 
     # rebase to the chosen target
