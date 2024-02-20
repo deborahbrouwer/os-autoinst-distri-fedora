@@ -12,11 +12,11 @@ sub toggle_hidden {
         assert_and_click("gnome_burger_menu");
         wait_still_screen(2);
         assert_and_click("nautilus_toggle_hidden_files", timeout => '30', button => 'left', mousehide => '1');
-        wait_still_screen(5);
+        sleep(10);
     }
     else {
         send_key("ctrl-h");
-        wait_still_screen(5);
+        sleep(10);
     }
 }
 

@@ -31,6 +31,9 @@ sub run {
     assert_screen 'apps_run_files';
     wait_still_screen("2");
 
+    # Check that the icons are shown
+    assert_screen("nautilus_big_icon");
+
     # Fullsize the Nautilus window.
     wait_screen_change { send_key("super-up"); };
 
