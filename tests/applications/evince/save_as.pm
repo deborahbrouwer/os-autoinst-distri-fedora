@@ -13,6 +13,7 @@ sub run {
 
     # Select Save As
     assert_and_click("evince_menu_saveas", button => "left", timeout => 30);
+    wait_still_screen(2);
 
     # Type a new name.
     type_very_safely("alternative");
