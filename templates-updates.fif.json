@@ -445,7 +445,7 @@
                 "+CANNED": "",
                 "BOOTFROM": "c",
                 "HDD_1": "disk_f%VERSION%_minimal_3_%ARCH%.qcow2",
-                "HDDSIZEGB_3": "25",
+                "HDDSIZEGB_3": "30",
                 "MAX_JOB_TIME": "12600",
                 "+NUMDISKS": "3",
                 "POSTINSTALL": "_ostree_build",
