@@ -15,7 +15,7 @@ sub run {
         assert_and_click('vinagre_enable_shortcuts');
         sleep 2;
     }
-    assert_and_click('gnome_allow');
+    assert_and_click('grant_access');
     assert_and_click('vinagre_fullscreen');
 }
 

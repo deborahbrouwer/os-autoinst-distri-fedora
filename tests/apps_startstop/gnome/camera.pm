@@ -13,8 +13,8 @@ sub run {
     # Start the application
     start_with_launcher('apps_menu_camera');
     # Check that is started or we see the camera access dialog
-    assert_screen ['apps_run_camera', 'gnome_allow'];
-    if (match_has_tag 'gnome_allow') {
+    assert_screen ['apps_run_camera', 'grant_access'];
+    if (match_has_tag 'grant_access') {
         click_lastmatch;
         assert_screen 'apps_run_camera';
     }
