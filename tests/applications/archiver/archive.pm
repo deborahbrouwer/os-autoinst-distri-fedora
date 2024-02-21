@@ -9,11 +9,13 @@ use utils;
 sub run {
     my $self = shift;
 
-    # We are already in the correct directory, so let's just
-    # select all the files.
+    # At first, let us click on one of the icons to get focus
+    # and then use ctrl-a to select all.
+    assert_and_click("archiver_file_one");
     send_key("ctrl-a");
     # Right click on the first of them to open the context menu.
     assert_and_click("archiver_file_one", button => 'right');
+    wait_still_screen(3);
     # Select to archive it.
     assert_and_click("archiver_context_archive");
     # Wait for the screen to appear and settle
