@@ -13,7 +13,14 @@ sub run {
 
     # Start the application
     menu_launch_type("fonts");
-    # Check that is started
+    # BUG https://gitlab.gnome.org/GNOME/gnome-font-viewer/-/issues/78
+    # Flatpakked Fonts (version 45.0) starts and crashes for the first time,
+    # therefore on Silverblue, let's check first and
+    # if it crashes, try to run the application again before dying.
+    # Check that the application is running on Silverblue
+    if (get_var("SUBVARIANT" eq "Silverblue") && ! (check_screen('apps_run_fonts', timeout => 30))) {
+        menu_launch_type("fonts");
+    }
     assert_screen 'apps_run_fonts';
 
     # Fullsize the window.
