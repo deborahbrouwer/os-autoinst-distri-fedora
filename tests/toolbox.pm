@@ -1,6 +1,7 @@
 use base "installedtest";
 use strict;
 use testapi;
+use utils;
 
 
 sub run {
@@ -10,8 +11,30 @@ sub run {
     assert_script_run "dnf -y install toolbox", 360 unless (get_var("CANNED"));
     # check toolbox is installed
     assert_script_run "rpm -q toolbox";
-    # check to see if you can create a new toolbox container
+    # check to see if you can create a new toolbox container (this
+    # will download the 'current' image for the same release and use
+    # that; we want to check that works even if we will go on to test
+    # an image from the compose below)
     assert_script_run "toolbox create container1 -y", 300;
+    my $image = get_var("TOOLBOX_IMAGE");
+    if ($image) {
+        # we have a toolbox image to test in the item under test
+        # (probably a compose), so let's recreate container1 using
+        # that instead
+        my $relnum = get_release_number;
+        assert_script_run 'toolbox rm container1';
+        assert_script_run "toolbox rmi containers-storage:registry.fedoraproject.org/fedora-toolbox:$relnum";
+        assert_script_run "curl -o /var/tmp/toolbox.tar.gz $image", 300;
+        # this registers the downloaded image such that `toolbox create`
+        # will use it, rather than downloading one. it takes a while
+        
+        assert_script_run "skopeo copy docker-archive:/var/tmp/toolbox.tar.gz containers-storage:registry.fedoraproject.org/fedora-toolbox:$relnum", 600;
+        # we do not pass -y this time as we do not want to allow a
+        # download, if toolbox wants to do one, something has gone
+        # wrong. unfortunately there is no -n so we just have to let
+        # it time out in that case
+        assert_script_run "toolbox create container1", 60;
+    }
     # check to see if toolbox can list container
     assert_script_run "toolbox list | grep container1";
     # run a specific command on a given container
