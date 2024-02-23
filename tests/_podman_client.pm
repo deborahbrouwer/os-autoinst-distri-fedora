@@ -9,6 +9,9 @@ use utils;
 sub run {
     my $self = shift;
     $self->root_console(tty => 3);
+    type_string "rm /etc/resolv.conf\n";
+    type_string "echo 'nameserver 8.8.8.8' > /etc/resolv.conf\n";
+
     # wait for server to be set up
     mutex_lock "podman_server_ready";
     mutex_unlock "podman_server_ready";

@@ -9,6 +9,9 @@ use utils;
 sub run {
     my $self = shift;
     $self->root_console(tty => 3);
+    type_string "rm /etc/resolv.conf\n";
+    type_string "echo 'nameserver 8.8.8.8' > /etc/resolv.conf\n";
+
     # on non-canned flavors, we need to install podman
     assert_script_run "dnf -y install podman", 240 unless (get_var("CANNED"));
     # check podman is installed
