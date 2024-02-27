@@ -10,19 +10,15 @@ sub run {
 
     # Start the application
     menu_launch_type 'kmail';
-    # Cancel Kmail data wizard
-    assert_and_click 'kde_cancel_button', timeout => 60;
-    # Sometimes, the Kmail window is shown over the settings window.
-    # If that is the case, assert that Kmail is running and exit.
-    unless (check_screen("kmail_runs")) {
-        if (check_screen("kde_cancel_button", 1)) {
-            click_lastmatch;
-        }
-        assert_screen("kmail_runs");
+    # The Kmail window is now covered with an account
+    # creation dialogue. Let's get rid of it to be able
+    # to assert the Kmail window again.
+    if (check_screen("kmail_account_dialogue", timeout => 30)) {
+        # Click on the exit icon
+        assert_and_click("kde_exit_icon");
     }
-    else {
-        assert_screen("kmail_runs");
-    }
+    assert_screen("kmail_runs");
+
     # Close the application
     quit_with_shortcut();
 }

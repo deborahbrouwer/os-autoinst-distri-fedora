@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "xpos": 888,
+      "ypos": 27,
+      "width": 23,
+      "height": 19,
+      "type": "match"
+    }
+  ],
+  "properties": [],
+  "tags": [
+    "kde_exit_icon"
+  ]
+}

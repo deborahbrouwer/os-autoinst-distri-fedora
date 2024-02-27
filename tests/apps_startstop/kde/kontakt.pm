@@ -10,9 +10,13 @@ sub run {
 
     # Start the application
     menu_launch_type 'kontact';
-    # Get rid of personal data
-    assert_and_click 'kde_cancel_button', timeout => 60;
-    # Check that it is started
+    # Similar to Kmail, we have the same dialogue
+    # covering the application. Let's get rid of it, too.
+    if (check_screen("kmail_account_dialogue", timeout => 30)) {
+        # Click on the exit icon
+        assert_and_click("kde_exit_icon");
+    }
+    # Check that the application window is there.
     assert_screen 'kontact_runs';
     # Close the application
     quit_with_shortcut();
