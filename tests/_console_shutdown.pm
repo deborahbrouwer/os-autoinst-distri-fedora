@@ -15,6 +15,10 @@ sub run {
     # tests that need to edit boot params will see it. Don't use
     # assert_script_run as this will fail when it's not set
     script_run("grub2-editenv - unset menu_auto_hide", 0);
+    # drop the update_repo mount definition on update tests, as
+    # child tests won't have the same disk image attached as HDD_2
+    # so won't have this there to mount
+    script_run("sed -i '/update_repo/d' /etc/fstab") if (get_var("ADVISORY_OR_TASK"));
     script_run("poweroff", 0);
     assert_shutdown 180;
 }

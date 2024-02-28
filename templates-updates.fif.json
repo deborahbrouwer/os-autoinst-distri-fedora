@@ -61,6 +61,7 @@
             "flavor": "updates-server",
             "settings": {
                 "+HDD_1": "disk_f%VERSION%_server_3_%ARCH%.qcow2",
+                "NUMDISKS": "2",
                 "RETRY": "1"
             },
             "version": "*"
@@ -71,6 +72,7 @@
             "flavor": "updates-server",
             "settings": {
                 "+HDD_1": "disk_f%VERSION%_server_3_%ARCH%.qcow2",
+                "NUMDISKS": "2",
                 "RETRY": "1"
             },
             "version": "*"
@@ -112,6 +114,7 @@
             "flavor": "updates-server",
             "settings": {
                 "+HDD_1": "disk_f%VERSION%_server_3_%ARCH%.qcow2",
+                "NUMDISKS": "2",
                 "RETRY": "1"
             },
             "version": "*"
@@ -125,6 +128,7 @@
                 "DESKTOP": "gnome",
                 "DEPLOY_UPLOAD_TEST": "install_default_update_ostree",
                 "HDDSIZEGB": "15",
+                "NUMDISKS": "2",
                 "PACKAGE_SET": "default",
                 "RETRY": "1",
                 "SUBVARIANT": "Silverblue"
