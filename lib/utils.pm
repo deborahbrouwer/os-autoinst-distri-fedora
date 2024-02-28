@@ -847,7 +847,7 @@ sub gnome_initial_setup {
         # https://fedoraproject.org//wiki/Changes/ReduceInitialSetupRedundancy
         # https://bugzilla.redhat.com/show_bug.cgi?id=1474787 ,
         # except 'language' was never *really* skipped (see above)
-        if ($relnum < 40) {
+        if ($relnum < 41) {
             @nexts = grep { $_ ne 'keyboard' } @nexts;
             @nexts = grep { $_ ne 'timezone' } @nexts;
         }
