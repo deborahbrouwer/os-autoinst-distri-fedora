@@ -12,6 +12,9 @@ sub run {
     type_string "rm /etc/resolv.conf\n";
     type_string "echo 'nameserver 8.8.8.8' > /etc/resolv.conf\n";
 
+    my $test_server = get_var("TEST_SERVER");
+    type_string "iptables -t nat -A OUTPUT -d 172.16.2.114 -j DNAT --to-destination $test_server\n";
+
     # wait for server to be set up
     mutex_lock "podman_server_ready";
     mutex_unlock "podman_server_ready";
