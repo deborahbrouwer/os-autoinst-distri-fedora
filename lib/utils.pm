@@ -583,6 +583,9 @@ sub setup_repos {
     get_setup_repos_script;
     my $wastring = join(',', @was);
     my $udstring;
+    # this will be the timeout for the download command, we set it now
+    # so we can make it longer for really big updates below
+    my $timeout = 600;
     # work out the list of update/task NVRs to test
     if (get_var("ADVISORY_NVRS") || get_var("ADVISORY_NVRS_1")) {
         # regular update case
@@ -602,6 +605,8 @@ sub setup_repos {
             }
         }
         $udstring = join(',', @nvrs);
+        # bump the timeout if we have a huge update
+        $timeout = 1800 if (scalar(@nvrs) > 100);
     }
     elsif (get_var("KOJITASK")) {
         # Koji task case (KOJITASK will be set). If multiple tasks,
@@ -619,7 +624,7 @@ sub setup_repos {
     # write repo config files if asked
     $cmd .= " -c" if ($args{configs});
     $cmd .= " $arch";
-    assert_script_run $cmd, 600;
+    assert_script_run $cmd, $timeout;
     unless ($args{waonly} || $tag) {
         upload_logs "/mnt/updatepkgnames.txt";
         upload_logs "/mnt/updatepkgs.txt";
