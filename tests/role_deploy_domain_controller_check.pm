@@ -33,7 +33,7 @@ sub run {
     # check server is stopped
     assert_script_run '! systemctl is-active ipa.service';
     # decommission the server
-    assert_script_run 'ipa-server-install -U --uninstall', 300;
+    assert_script_run 'ipa-server-install -U --uninstall', 600;
     # try and un-garble the screen that the above sometimes garbles
     # ...we may be on tty1 or tty3 now, so flip between them
     select_console "tty1-console";
