@@ -12,8 +12,6 @@ sub run {
         $repourl = get_mirrorlist_url();
     }
     else {
-        # we kinda intentionally don't check ADD_REPOSITORY_GRAPHICAL
-        # here, as we cover that case with a postinstall check
         $repourl = get_var("REPOSITORY_VARIATION", get_var("REPOSITORY_GRAPHICAL"));
         $repourl = get_full_repo($repourl) if ($repourl);
         $addrepourl = get_var("ADD_REPOSITORY_VARIATION");

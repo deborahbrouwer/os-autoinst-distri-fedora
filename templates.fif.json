@@ -1350,17 +1350,6 @@
                 "RETRY": 2
             }
         },
-        "install_addrepo_metalink_graphical": {
-            "profiles": {
-                "fedora-Server-dvd-iso-aarch64-*-aarch64": 50,
-                "fedora-Server-dvd-iso-ppc64le-*-ppc64le": 50,
-                "fedora-Server-dvd-iso-x86_64-*-64bit": 50
-            },
-            "settings": {
-                "ADD_REPOSITORY_GRAPHICAL": "ml:https://fedorapeople.org/groups/qa/openqa-repos/openqa-testrepo-2.xml",
-                "POSTINSTALL": "_addrepo_metalink_post"
-            }
-        },
         "install_anaconda_text": {
             "profiles": {
                 "fedora-Server-dvd-iso-aarch64-*-aarch64": 20,

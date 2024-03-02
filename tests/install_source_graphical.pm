@@ -51,30 +51,6 @@ sub main_repo {
     }
 }
 
-sub add_repo {
-    my $repourl = get_var("ADD_REPOSITORY_GRAPHICAL");
-    my $metalink;
-    if ($repourl =~ m/^ml:/) {
-        $metalink = 1;
-        $repourl =~ s/^ml://;
-    }
-    # configure an additional repository
-    assert_and_click "anaconda_add_dropdown";
-    assert_and_click "anaconda_add";
-    # shift-tab four times gets us to the URL box
-    for (my $i = 0; $i < 4; $i++) {
-        send_key "shift-tab";
-        usleep 100;
-    }
-    type_string $repourl;
-    if ($metalink) {
-        # select metalink in URL type dropdown
-        send_key "tab";
-        send_key "down";
-        send_key "down";
-    }
-}
-
 sub run {
     my $self = shift;
     # Anaconda hub
@@ -84,7 +60,6 @@ sub run {
     assert_and_click "anaconda_main_hub_installation_source";
 
     main_repo() if (get_var("REPOSITORY_GRAPHICAL") || get_var("MIRRORLIST_GRAPHICAL"));
-    add_repo() if (get_var("ADD_REPOSITORY_GRAPHICAL"));
 
     assert_and_click "anaconda_spoke_done";
 
