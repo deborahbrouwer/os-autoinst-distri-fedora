@@ -1691,11 +1691,10 @@
             "settings": {
                 "ANACONDA_STATIC": "172.16.2.111",
                 "INSTALL_UNLOCK": "support_ready",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "support_server_2",
                 "PARTITIONING": "custom_iscsi",
                 "ROOT_PASSWORD": "weakpassword",
-                "WORKER_CLASS": "tap"
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "install_kickstart_firewall_configured": {
@@ -1752,11 +1751,16 @@
                 "GRUB": "inst.ks=nfs:172.16.2.120:/export/root-user-crypted-net.ks",
                 "INSTALL_UNLOCK": "support_ready",
                 "KICKSTART": "1",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "support_server_2",
                 "ROOT_PASSWORD": "111111",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "install_kickstart_user_creation": {
@@ -1904,12 +1908,17 @@
                 "DELAYED_START": "1",
                 "IS_PXE": "1",
                 "KICKSTART": "1",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "support_server_2@%ARCH_BASE_MACHINE%",
                 "ROOT_PASSWORD": "111111",
                 "TEST_TARGET": "COMPOSE",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "install_repository_hd_variation": {
@@ -1953,10 +1962,15 @@
             },
             "settings": {
                 "INSTALL_UNLOCK": "support_ready",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "support_server",
                 "REPOSITORY_GRAPHICAL": "nfs:nfsvers=4:172.16.2.110:/repo",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "install_repository_nfs_variation": {
@@ -1967,10 +1981,15 @@
             },
             "settings": {
                 "INSTALL_UNLOCK": "support_ready",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "support_server",
                 "REPOSITORY_VARIATION": "nfs:nfsvers=4:172.16.2.110:/repo",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "install_repository_nfsiso_variation": {
@@ -1981,10 +2000,15 @@
             },
             "settings": {
                 "INSTALL_UNLOCK": "support_ready",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "support_server",
                 "REPOSITORY_VARIATION": "nfs:nfsvers=4:172.16.2.110:/iso/image.iso",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "install_rescue_encrypted": {
@@ -2143,11 +2167,16 @@
             "settings": {
                 "GRUB": "inst.stage2=nfs:nfsvers=4:172.16.2.110:/repo",
                 "INSTALL_UNLOCK": "support_ready",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "support_server",
                 "QEMURAM": "3072",
                 "TEST_UPDATES": "1",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "install_vnc_client": {
@@ -2161,11 +2190,16 @@
                 "DESKTOP": "gnome",
                 "HDD_1": "disk_f%CURRREL%_desktop_4_%ARCH%.qcow2",
                 "INSTALL": "1",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "install_vnc_server",
                 "PREINSTALL": "_vnc_client_connect_pre _graphical_wait_login _vnc_client_connect",
                 "VNC_CLIENT": "1",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "install_vnc_server": {
@@ -2176,9 +2210,14 @@
             },
             "settings": {
                 "GRUB": "inst.vnc net.ifnames=0 biosdevname=0 ip=172.16.2.114::172.16.2.2:255.255.255.0:vnc001.test.openqa.fedoraproject.org:eth0:off",
-                "NICTYPE": "tap",
                 "VNC_SERVER": "1",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "install_vncconnect_client": {
@@ -2192,10 +2231,15 @@
                 "DESKTOP": "gnome",
                 "HDD_1": "disk_f%CURRREL%_desktop_4_%ARCH%.qcow2",
                 "INSTALL": "1",
-                "NICTYPE": "tap",
                 "PREINSTALL": "_vncconnect_client_setup_pre _graphical_wait_login _vncconnect_client_setup",
                 "VNC_CLIENT": "1",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "install_vncconnect_server": {
@@ -2207,10 +2251,15 @@
             "settings": {
                 "GRUB": "inst.vnc inst.vncconnect=172.16.2.117:5500 net.ifnames=0 biosdevname=0 ip=172.16.2.116::172.16.2.2:255.255.255.0:vnc003.test.openqa.fedoraproject.org:eth0:off",
                 "INSTALL_UNLOCK": "vncconnect_client_ready",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "install_vncconnect_client",
                 "VNC_SERVER": "1",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "install_xfs": {
@@ -2260,14 +2309,19 @@
                 "BOOTFROM": "c",
                 "GRUB_POSTINSTALL": "zezere.url=http://172.16.2.118",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "iot_zezere_server",
                 "POSTINSTALL": "iot_zezere_ignition",
                 "POST_STATIC": "172.16.2.119 zezere001.test.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "iot_zezere_server": {
@@ -2279,7 +2333,6 @@
                 "BOOTFROM": "c",
                 "CANNED": "",
                 "HDD_1": "disk_f%CURRREL%_minimal-uefi_3_%ARCH%.qcow2",
-                "NICTYPE": "tap",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "POSTINSTALL": "_iot_zezere_server _setup_browser _iot_zezere_remote",
                 "POST_STATIC": "172.16.2.118 zezere002.test.openqa.fedoraproject.org",
@@ -2287,7 +2340,13 @@
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "TEST_TARGET": "NONE",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
 
@@ -2341,13 +2400,18 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
                 "POSTINSTALL": "podman",
                 "POST_STATIC": "172.16.2.114 podman001.test.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap2"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "podman_client": {
@@ -2359,14 +2423,19 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
                 "PARALLEL_WITH": "podman",
                 "POSTINSTALL": "_podman_client",
                 "POST_STATIC": "172.16.2.115 podclient001.test.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap2"
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "realmd_join_cockpit": {
@@ -2379,13 +2448,18 @@
                 "+HDD_1": "disk_%MACHINE%_cockpit.qcow2",
                 "+START_AFTER_TEST": "server_cockpit_default",
                 "BOOTFROM": "c",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "server_role_deploy_domain_controller",
                 "POSTINSTALL": "realmd_join_cockpit freeipa_webui freeipa_password_change domain_client",
                 "POST_STATIC": "172.16.2.102 client002.test.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "realmd_join_cockpit_ad": {
@@ -2398,7 +2472,6 @@
                 "+HDD_1": "disk_%MACHINE%_cockpit.qcow2",
                 "+START_AFTER_TEST": "server_cockpit_default",
                 "BOOTFROM": "c",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "server_samba_domain_controller",
                 "POSTINSTALL": "realmd_join_cockpit domain_client",
                 "POST_STATIC": "172.16.2.132 adclient002.samdom.openqa.fedoraproject.org",
@@ -2409,7 +2482,13 @@
                 "REALMD_DOMAIN": "samdom.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "realmd_join_sssd": {
@@ -2421,14 +2500,19 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "server_role_deploy_domain_controller",
                 "POSTINSTALL": "realmd_join_sssd domain_client",
                 "POST_STATIC": "172.16.2.103 client003.test.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "realmd_join_sssd_ad": {
@@ -2440,7 +2524,6 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "server_samba_domain_controller",
                 "POSTINSTALL": "realmd_join_sssd domain_client",
                 "POST_STATIC": "172.16.2.131 adclient001.samdom.openqa.fedoraproject.org",
@@ -2452,7 +2535,13 @@
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "release_identification": {
@@ -2570,14 +2659,19 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "server_role_deploy_database_server",
                 "POSTINSTALL": "database_client",
                 "POST_STATIC": "172.16.2.105 dbclient.test.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "server_filesystem_default": {
@@ -2618,7 +2712,6 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "server_freeipa_replication_replica",
                 "POSTINSTALL": "realmd_join_sssd domain_client",
                 "POST_STATIC": "172.16.2.108 client005.test.openqa.fedoraproject.org",
@@ -2628,7 +2721,13 @@
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap2"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "server_freeipa_replication_master": {
@@ -2641,14 +2740,19 @@
                 "BOOTFROM": "c",
                 "FREEIPA_REPLICA_MASTER": "1",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "POSTINSTALL": "role_deploy_domain_controller role_deploy_domain_controller_check",
                 "POST_STATIC": "172.16.2.106 ipa002.test.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap2"
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "server_freeipa_replication_replica": {
@@ -2661,7 +2765,12 @@
                 "BOOTFROM": "c",
                 "FREEIPA_REPLICA": "1",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "PARALLEL_WITH": "server_freeipa_replication_master",
                 "POSTINSTALL": "realmd_join_sssd",
@@ -2671,7 +2780,7 @@
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap2"
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "server_realmd_join_kickstart": {
@@ -2685,13 +2794,18 @@
                 "HDD_2": "disk_ks_7.img",
                 "INSTALL_UNLOCK": "domain_server_ready",
                 "KICKSTART": "1",
-                "NICTYPE": "tap",
                 "NUMDISKS": "2",
                 "PARALLEL_WITH": "server_role_deploy_domain_controller",
                 "POSTINSTALL": "domain_client",
                 "ROOT_PASSWORD": "anaconda",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "server_realmd_join_kickstart_ad": {
@@ -2705,7 +2819,6 @@
                 "HDD_2": "disk_ks_7.img",
                 "INSTALL_UNLOCK": "domain_server_ready",
                 "KICKSTART": "1",
-                "NICTYPE": "tap",
                 "NUMDISKS": "2",
                 "PARALLEL_WITH": "server_samba_domain_controller",
                 "POSTINSTALL": "domain_client",
@@ -2713,7 +2826,13 @@
                 "REALMD_DOMAIN": "samdom.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "anaconda",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "server_remote_logging_client": {
@@ -2725,14 +2844,19 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "server_remote_logging_server",
                 "POSTINSTALL": "server_remote_logging_client",
                 "POST_STATIC": "172.16.2.113 rsyslogclient.test.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "server_remote_logging_server": {
@@ -2744,14 +2868,19 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "POSTINSTALL": "server_remote_logging_server",
                 "POST_STATIC": "172.16.2.112 rsyslogserver.test.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "server_role_deploy_database_server": {
@@ -2763,14 +2892,19 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "POSTINSTALL": "role_deploy_database_server",
                 "POST_STATIC": "172.16.2.104 db.test.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "server_role_deploy_domain_controller": {
@@ -2782,14 +2916,19 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "POSTINSTALL": "role_deploy_domain_controller role_deploy_domain_controller_check",
                 "POST_STATIC": "172.16.2.100 ipa001.test.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "server_samba_domain_controller": {
@@ -2801,14 +2940,19 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2",
-                "NICTYPE": "tap",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "POSTINSTALL": "samba_domain_controller samba_domain_controller_check",
                 "POST_STATIC": "172.16.2.130 ad001.samdom.openqa.fedoraproject.org",
                 "ROOT_PASSWORD": "weakpassword",
                 "START_AFTER_TEST": "%DEPLOY_UPLOAD_TEST%",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "support_server": {
@@ -2820,7 +2964,6 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_f%CURRREL%_support_5_%ARCH%.qcow2",
-                "NICTYPE": "tap",
                 "NUMDISKS": "2",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "POSTINSTALL": "_support_server",
@@ -2828,7 +2971,13 @@
                 "ROOT_PASSWORD": "weakpassword",
                 "TEST_TARGET": "NONE",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "support_server_2": {
@@ -2840,7 +2989,6 @@
             "settings": {
                 "BOOTFROM": "c",
                 "HDD_1": "disk_f%CURRREL%_support_5_%ARCH%.qcow2",
-                "NICTYPE": "tap",
                 "NUMDISKS": "2",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "POSTINSTALL": "_support_server",
@@ -2850,7 +2998,13 @@
                 "SUPPORT_ISCSI": "1",
                 "TEST_TARGET": "NONE",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "toolbox": {
@@ -2969,7 +3123,6 @@
             "settings": {
                 "+HDD_1": "disk_f%UP2REL%_server_3_%ARCH%.qcow2",
                 "BOOTFROM": "c",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "upgrade_2_server_domain_controller",
                 "POSTINSTALL": "_setup_browser freeipa_webui freeipa_password_change domain_client",
                 "POST_STATIC": "172.16.2.103 client003.test.openqa.fedoraproject.org",
@@ -2978,7 +3131,13 @@
                 "TEST_TARGET": "COMPOSE",
                 "UPGRADE": "1",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "upgrade_2_server_64bit": {
@@ -3005,7 +3164,6 @@
             "settings": {
                 "+HDD_1": "disk_f%UP2REL%_server_3_%ARCH%.qcow2",
                 "BOOTFROM": "c",
-                "NICTYPE": "tap",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "POSTINSTALL": "role_deploy_domain_controller_check",
                 "POST_STATIC": "172.16.2.100 ipa001.test.openqa.fedoraproject.org",
@@ -3014,7 +3172,13 @@
                 "TEST_TARGET": "COMPOSE",
                 "UPGRADE": "1",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "upgrade_desktop_64bit": {
@@ -3105,7 +3269,6 @@
                 "+HDD_1": "disk_f%UP1REL%_server_3_%ARCH%.qcow2",
                 "BOOTFROM": "c",
                 "MAX_JOB_TIME": "10800",
-                "NICTYPE": "tap",
                 "PARALLEL_WITH": "upgrade_server_domain_controller",
                 "POSTINSTALL": "_setup_browser freeipa_webui freeipa_password_change domain_client",
                 "POST_STATIC": "172.16.2.103 client003.test.openqa.fedoraproject.org",
@@ -3114,7 +3277,13 @@
                 "TEST_TARGET": "COMPOSE",
                 "UPGRADE": "1",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap2"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         },
         "upgrade_server_64bit": {
@@ -3143,7 +3312,6 @@
                 "+HDD_1": "disk_f%UP1REL%_server_3_%ARCH%.qcow2",
                 "BOOTFROM": "c",
                 "MAX_JOB_TIME": "10800",
-                "NICTYPE": "tap",
                 "PARALLEL_CANCEL_WHOLE_CLUSTER": "0",
                 "POSTINSTALL": "role_deploy_domain_controller_check",
                 "POST_STATIC": "172.16.2.100 ipa001.test.openqa.fedoraproject.org",
@@ -3152,7 +3320,13 @@
                 "TEST_TARGET": "COMPOSE",
                 "UPGRADE": "1",
                 "USER_LOGIN": "false",
-                "WORKER_CLASS": "tap2"
+                "NICTYPE": "vde",
+                "NICVLAN": "0",
+                "VDE_SOCKETDIR": "/qa-switch_%BUILD%",
+                "VDE_USE_SLIRP": "0",
+                "VDE_PORT": "0",
+                "QEMU_NON_FATAL_DBUS_CALL": "1",
+                "WORKER_CLASS": "vde_%BUILD%"
             }
         }
     }
