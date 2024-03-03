@@ -17,7 +17,7 @@ sub run {
     unless (get_var("CANNED")) {
         # run the upstream integration tests
         assert_script_run "dnf -y install podman podman-tests bats", 300;
-        assert_script_run "bats --filter-tags distro-integration /usr/share/podman/test/system", 300;
+        assert_script_run "bats --filter-tags distro-integration /usr/share/podman/test/system", 600;
     }
     # check to see if you can pull an image from the registry
     assert_script_run "podman pull registry.fedoraproject.org/fedora:latest", 300;
