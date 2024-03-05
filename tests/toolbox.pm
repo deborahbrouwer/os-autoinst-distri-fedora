@@ -27,7 +27,7 @@ sub run {
         assert_script_run "curl -o /var/tmp/toolbox.tar.gz $image", 300;
         # this registers the downloaded image such that `toolbox create`
         # will use it, rather than downloading one. it takes a while
-        
+
         assert_script_run "skopeo copy docker-archive:/var/tmp/toolbox.tar.gz containers-storage:registry.fedoraproject.org/fedora-toolbox:$relnum", 600;
         # we do not pass -y this time as we do not want to allow a
         # download, if toolbox wants to do one, something has gone

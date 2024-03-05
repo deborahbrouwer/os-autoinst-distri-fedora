@@ -17,7 +17,7 @@ sub run {
                 record_soft_failure "No backgrounds for F40 yet: https://bugzilla.redhat.com/show_bug.cgi?id=2230720";
             }
             else {
-                die "Correct background not found!"
+                die "Correct background not found!";
             }
         }
     }
