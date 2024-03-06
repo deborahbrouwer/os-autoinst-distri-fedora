@@ -6,6 +6,22 @@ use utils;
 use tapnet;
 use anaconda;
 
+sub _handle_incomplete_hub {
+    if (match_has_tag "anaconda_main_hub_keyboard_layout_incomplete") {
+        # workaround IoT/osbuild issue
+        # https://github.com/osbuild/images/issues/309
+        # by visiting the incomplete spokes
+        assert_and_click "anaconda_main_hub_keyboard_layout_incomplete";
+        wait_still_screen 3;
+        assert_and_click "anaconda_spoke_done";
+        assert_and_click "anaconda_main_hub_time_date_incomplete";
+        wait_still_screen 3;
+        assert_and_click "anaconda_spoke_done";
+        wait_still_screen 3;
+        send_key "shift-tab";
+    }
+}
+
 sub run {
     my $self = shift;
     if (get_var("IS_PXE")) {
@@ -183,6 +199,7 @@ sub run {
                 }
                 else {
                     # this is when the hub appeared already, we're done
+                    _handle_incomplete_hub;
                     return;
                 }
             }
@@ -201,6 +218,7 @@ sub run {
             # show by now it never will, so we'll just wait for the
             # hub to show up.
             assert_screen "anaconda_main_hub", 900;
+            _handle_incomplete_hub;
         }
     }
 }
