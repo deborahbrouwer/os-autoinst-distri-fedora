@@ -11,9 +11,11 @@ sub _handle_incomplete_hub {
         # workaround IoT/osbuild issue
         # https://github.com/osbuild/images/issues/309
         # by visiting the incomplete spokes
-        assert_and_click "anaconda_main_hub_keyboard_layout_incomplete";
+        click_lastmatch;
         wait_still_screen 3;
         assert_and_click "anaconda_spoke_done";
+        # for animation
+        wait_still_screen 3;
         assert_and_click "anaconda_main_hub_time_date_incomplete";
         wait_still_screen 3;
         assert_and_click "anaconda_spoke_done";
