@@ -408,6 +408,17 @@
                 "STORE_HDD_1": "disk_%FLAVOR%_%MACHINE%.qcow2"
             }
         },
+        "install_default_ostree": {
+            "profiles": {
+                "fedora-updates-silverblue-dvd_ostree-iso-x86_64-*-uefi": 5
+            },
+            "settings": {
+                "INSTALL": "1",
+                "ISO": "%ADVISORY_OR_TASK%-%SUBVARIANT%-ostree-%ARCH%.iso",
+                "PACKAGE_SET": "default",
+                "+START_AFTER_TEST": "ostree_build@%ARCH_BASE_MACHINE%"
+            }
+        },
         "installer_build": {
             "profiles": {
                 "fedora-updates-everything-boot-iso-x86_64-*-64bit": 5
